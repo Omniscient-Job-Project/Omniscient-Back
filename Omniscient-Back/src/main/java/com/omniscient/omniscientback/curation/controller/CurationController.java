@@ -24,28 +24,27 @@ public class CurationController {
     }
 
     // 등록
+    @PostMapping("/save")
     public ResponseEntity<Curation> saveCuration(@RequestBody CurationDTO dto) {
         Curation item = new Curation();
         item.setCurationId(dto.getCurationId());
         item.setUserId(dto.getUserId());
         item.setCommentsId(dto.getCommentsId());
-        item.setCurationContents(dto.getCurationContents());
-        item.setCurationDate(dto.getCurationDate());
         item.setCurationTitle(dto.getCurationTitle());
+        item.setCurationContents(dto.getCurationContents());
+        item.setImagePath(dto.getImagePath());
         item.setCurationDate(dto.getCurationDate());
+        item.setViewCount(dto.getViewCount());
         item.setCurationStatus(dto.isCurationStatus());
 
         Curation savedItem = curationService.save(item);
         return new ResponseEntity<>(savedItem, HttpStatus.CREATED);
-
     }
 
     // 전체 조회
     @GetMapping
     public ResponseEntity<List<Curation>> getAllItems() {
         List<Curation> items = curationService.findCuration();
-
-        // 검증 로직이 필요하다.....?
         return ResponseEntity.ok(items);
     }
 
@@ -60,5 +59,4 @@ public class CurationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 }

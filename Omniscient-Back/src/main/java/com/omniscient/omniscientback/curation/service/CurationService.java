@@ -49,8 +49,9 @@ public class CurationService {
 
     // 검색 기능 추가
     public List<Curation> searchPosts(String term) {
-        return repository.findByTitleNameInfoContaining(term, term, term);
+        return repository.findByCurationTitleContainingOrCurationContentsContaining(term, term);
     }
+
 
 
 }
