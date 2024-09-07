@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public interface CurationRepository extends JpaRepository<Curation, Integer> {
 
-    List<Curation> findByTitleNameInfoContaining(String term, String term1, String term2);
+    // curationTitle 또는 curationContents에 term이 포함된 항목을 검색하는 메서드
+    List<Curation> findByCurationTitleContainingOrCurationContentsContaining(String term1, String term2);
 
 }
