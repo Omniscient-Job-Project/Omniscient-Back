@@ -7,13 +7,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfigurer implements WebMvcConfigurer {
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("**")
+                .allowedOrigins("http://localhost:8083")  // Vue.js가 실행되는 도메인 추가
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .exposedHeaders("Custom-Header")
-                .allowCredentials(true);
+                .allowCredentials(true);  // 쿠키나 인증 정보를 포함할 경우 true로 설정
     }
 }
