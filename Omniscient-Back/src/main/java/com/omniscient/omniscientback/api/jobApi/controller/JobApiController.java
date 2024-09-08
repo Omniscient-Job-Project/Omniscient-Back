@@ -85,6 +85,7 @@ public class JobApiController {
             jobDTO.setJobSalary(jobJson.getString("HOPE_WAGE"));
             jobDTO.setJobLocation(jobJson.getString("WORK_PARAR_BASS_ADRES_CN"));
             jobDTO.setJobEmploymentType(jobJson.getString("EMPLYM_STLE_CMMN_CODE_SE"));
+            jobDTO.setJobCareerCondition(jobJson.getString("CAREER_CND_NM"));  // 경력 정보 추가
 //            jobDTO.setJobPostedDate(LocalDate.parse(jobJson.getString("JO_REG_DT")));
 //            jobDTO.setJobClosingDate(LocalDate.parse(jobJson.getString("RCEPT_CLOS_NM")));
             jobDTO.setJobWebInfoUrl("http://www.work.go.kr/empInfo/empInfoSrch/list/dtlEmpSrch.do?joReqstNo=" + jobJson.getString("JO_REQST_NO"));

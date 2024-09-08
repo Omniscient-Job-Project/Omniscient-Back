@@ -46,7 +46,22 @@ public class JobEntity {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "job_carrer_condition")
+    private String JobCareerCondition;
+
     public JobEntity() {
+    }
+
+    public JobEntity(String jobCareerCondition) {
+        JobCareerCondition = jobCareerCondition;
+    }
+
+    public String getJobCareerCondition() {
+        return JobCareerCondition;
+    }
+
+    public void setJobCareerCondition(String jobCareerCondition) {
+        JobCareerCondition = jobCareerCondition;
     }
 
     public Integer getJobId() {
@@ -160,6 +175,7 @@ public class JobEntity {
                 ", status='" + status + '\'' +
                 ", date=" + date +
                 ", title='" + title + '\'' +
+                ", JobCareerCondition='" + JobCareerCondition + '\'' +
                 '}';
     }
 }
