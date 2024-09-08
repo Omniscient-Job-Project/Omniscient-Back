@@ -1,0 +1,22 @@
+server:
+  port: 8090
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/omniscient
+    password: omniscient
+    username: omniscient
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: mysql
+    hibernate:
+      ddl-auto: create
+api:
+  key: "7a51575042706f7733376b565a4e64"
+naver:
+  request-token-uri: https://nid.naver.com/oauth2.0/token
+  client-id: uoKRUJcFz__QZBYJa87c
+  client-secret: VS18cIweXW
