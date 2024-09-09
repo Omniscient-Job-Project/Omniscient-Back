@@ -1,6 +1,5 @@
 package com.omniscient.omniscientback.api.jobApi.service;
 
-
 import com.omniscient.omniscientback.api.jobApi.model.JobDTO;
 import com.omniscient.omniscientback.api.jobApi.model.JobEntity;
 import com.omniscient.omniscientback.api.jobApi.repository.JobRepository;
@@ -30,6 +29,7 @@ public class JobService {
 //        jobEntity.setJobClosingDate(jobDTO.getJobClosingDate());
         jobEntity.setJobWebInfoUrl(jobDTO.getJobWebInfoUrl());
         jobEntity.setJobMobileInfoUrl(jobDTO.getJobMobileInfoUrl());
+        jobEntity.setJobCareerCondition(jobDTO.getJobCareerCondition());
 
         jobRepository.save(jobEntity);
 

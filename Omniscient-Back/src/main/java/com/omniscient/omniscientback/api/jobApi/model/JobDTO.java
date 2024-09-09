@@ -13,7 +13,19 @@ public class JobDTO {
 //    private LocalDate jobClosingDate;
     private String jobWebInfoUrl;
     private String jobMobileInfoUrl;
+    private String jobCareerCondition;
 
+    public JobDTO(String jobCareerCondition) {
+        this.jobCareerCondition = jobCareerCondition;
+    }
+
+    public String getJobCareerCondition() {
+        return jobCareerCondition;
+    }
+
+    public void setJobCareerCondition(String jobCareerCondition) {
+        this.jobCareerCondition = jobCareerCondition;
+    }
 
     public JobDTO() {
     }
@@ -103,6 +115,7 @@ public class JobDTO {
                 ", jobEmploymentType='" + jobEmploymentType + '\'' +
                 ", jobWebInfoUrl='" + jobWebInfoUrl + '\'' +
                 ", jobMobileInfoUrl='" + jobMobileInfoUrl + '\'' +
+                ", jobCareerCondition='" + jobCareerCondition + '\'' +
                 '}';
     }
 }
