@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/signup")
-@CrossOrigin(origins = "http://localhost:8083/login")
+@CrossOrigin(origins = "http://localhost:8083")
 public class SignupController {
 
     private final SignupService signupService;
@@ -19,7 +19,7 @@ public class SignupController {
     }
 
     //회원가입 요청
-    @PostMapping("/signup")
+    @PostMapping("/post")
     public ResponseEntity<String> signup(@RequestBody SignupDTO signupDTO){
 
 
