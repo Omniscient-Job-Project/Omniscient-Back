@@ -2,7 +2,6 @@ package com.omniscient.omniscientback.api.jobApi.model;
 
 public class JobDTO {
 
-    private String jobId;
     private String jobCompanyName;
     private String jobInfoTitle;
     private String jobWageType;
@@ -15,27 +14,19 @@ public class JobDTO {
     private String jobMobileInfoUrl;
     private String jobCareerCondition;
 
-    public JobDTO(String jobCareerCondition) {
-        this.jobCareerCondition = jobCareerCondition;
-    }
-
-    public String getJobCareerCondition() {
-        return jobCareerCondition;
-    }
-
-    public void setJobCareerCondition(String jobCareerCondition) {
-        this.jobCareerCondition = jobCareerCondition;
-    }
-
     public JobDTO() {
     }
 
-    public String getJobId() {
-        return jobId;
-    }
-
-    public void setJobId(String jobId) {
-        this.jobId = jobId;
+    public JobDTO(String jobCompanyName, String jobInfoTitle, String jobWageType, String jobSalary, String jobLocation, String jobEmploymentType, String jobWebInfoUrl, String jobMobileInfoUrl, String jobCareerCondition) {
+        this.jobCompanyName = jobCompanyName;
+        this.jobInfoTitle = jobInfoTitle;
+        this.jobWageType = jobWageType;
+        this.jobSalary = jobSalary;
+        this.jobLocation = jobLocation;
+        this.jobEmploymentType = jobEmploymentType;
+        this.jobWebInfoUrl = jobWebInfoUrl;
+        this.jobMobileInfoUrl = jobMobileInfoUrl;
+        this.jobCareerCondition = jobCareerCondition;
     }
 
     public String getJobCompanyName() {
@@ -102,12 +93,18 @@ public class JobDTO {
         this.jobMobileInfoUrl = jobMobileInfoUrl;
     }
 
+    public String getJobCareerCondition() {
+        return jobCareerCondition;
+    }
+
+    public void setJobCareerCondition(String jobCareerCondition) {
+        this.jobCareerCondition = jobCareerCondition;
+    }
 
     @Override
     public String toString() {
         return "JobDTO{" +
-                "jobId='" + jobId + '\'' +
-                ", jobCompanyName='" + jobCompanyName + '\'' +
+                "jobCompanyName='" + jobCompanyName + '\'' +
                 ", jobInfoTitle='" + jobInfoTitle + '\'' +
                 ", jobWageType='" + jobWageType + '\'' +
                 ", jobSalary='" + jobSalary + '\'' +
