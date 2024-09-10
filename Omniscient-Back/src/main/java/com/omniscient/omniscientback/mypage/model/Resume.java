@@ -4,68 +4,73 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.util.List;
 
+/**
+ * Resume 엔티티 클래스
+ * 이력서 정보를 나타냅니다.
+ */
 @Entity
 @Table(name = "resumes")
 @Data
 public class Resume {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer id;  // 이력서 고유 식별자
 
-    @Column(length = 50) // 제목은 50자 제한
-    private String title;
+    @Column(length = 50)
+    private String title;  // 이력서 제목 (50자 제한)
 
-    @Column(length = 10) // 이름은 10자 제한
-    private String name;
+    @Column(length = 10)
+    private String name;  // 이름 (10자 제한)
 
-    @Column(length = 50) // 이메일은 50자 제한
-    private String email;
+    @Column(length = 50)
+    private String email;  // 이메일 (50자 제한)
 
-    @Column(length = 20) // 전화번호는 20자 제한
-    private String phone;
+    @Column(length = 20)
+    private String phone;  // 전화번호 (20자 제한)
 
-    // @ElementCollection: 여러 값을 하나로 묶어 저장하지만, 이 값들은 독립적인 엔티티(객체)가 아니라, 값 타입으로 취급 즉, 별도의 테이블에 저장되지만,
-    //                     그 자체로 중요한 엔티티는 아니고 특정 객체의 부속 정보로만 사용
-    // @CollectionTable: 컬렉션을 저장할 테이블을 지정하고, 외래 키를 설정
-    // Resume이라는 메인 정보에 여러 가지 학력(Education), 경력(Experience), 자격증(Certificate) 같은 여러 정보를 따로 테이블로 분리해서 저장
     @ElementCollection
     @CollectionTable(name = "resume_education", joinColumns = @JoinColumn(name = "resume_id"))
-    private List<Education> education;
+    private List<Education> education;  // 학력 정보 리스트
 
     @ElementCollection
     @CollectionTable(name = "resume_experience", joinColumns = @JoinColumn(name = "resume_id"))
-    private List<Experience> experience;
+    private List<Experience> experience;  // 경력 정보 리스트
 
-    @Column(length = 5000) // 스킬은 1000자 제한
-    private String skills;
+    @Column(length = 1000)
+    private String skills;  // 보유 기술 (1000자 제한)
 
     @ElementCollection
     @CollectionTable(name = "resume_certificates", joinColumns = @JoinColumn(name = "resume_id"))
-    private List<Certificate> certificates;
+    private List<Certificate> certificates;  // 자격증 정보 리스트
+
+    @Column(length = 3000)
+    private String introduction;  // 자기소개 (3000자 제한)
+
+    private Boolean status = true;  // 이력서 상태 (활성화/비활성화)
 
     @Embeddable
     @Data
     public static class Education {
-        private String school;
-        private String major;
-        private String degree;
-        private String graduationYear;
+        private String school;  // 학교명
+        private String major;  // 전공
+        private String degree;  // 학위
+        private String graduationYear;  // 졸업연도
     }
 
     @Embeddable
     @Data
     public static class Experience {
-        private String company;
-        private String position;
-        private String startDate;
-        private String endDate;
-        private String description;
+        private String company;  // 회사명
+        private String position;  // 직책
+        private String startDate;  // 시작일
+        private String endDate;  // 종료일
+        private String description;  // 업무 설명
     }
 
     @Embeddable
     @Data
     public static class Certificate {
-        private String name;
-        private String date;
+        private String name;  // 자격증명
+        private String date;  // 취득일
     }
 }

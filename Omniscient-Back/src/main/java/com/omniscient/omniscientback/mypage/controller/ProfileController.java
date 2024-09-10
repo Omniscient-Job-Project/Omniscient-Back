@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/mypage")
+@RequestMapping("/api/v1/mypage")
 @CrossOrigin(origins = "http://localhost:8083")
 public class ProfileController {
     private final ProfileService profileService;
@@ -27,27 +27,27 @@ public class ProfileController {
 
     @GetMapping
     public ResponseEntity<List<ProfileDTO>> getAllProfiles() {
-        logger.info("Fetching all profiles");
+        logger.info("모든 프로필 조회");
         try {
             List<ProfileDTO> profiles = profileService.getAllProfiles();
             return ResponseEntity.ok(profiles);
         } catch (Exception e) {
-            logger.error("Error fetching all profiles", e);
+            logger.error("모든 프로필 조회 중 오류 발생", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProfileDTO> getProfile(@PathVariable Integer id) {
-        logger.info("Fetching profile for id: {}", id);
+        logger.info("프로필 조회: ID {}", id);
         try {
             ProfileDTO profile = profileService.getProfile(id);
             return ResponseEntity.ok(profile);
         } catch (IllegalArgumentException e) {
-            logger.warn("Profile not found for id: {}", id);
+            logger.warn("프로필을 찾을 수 없음: ID {}", id);
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            logger.error("Error fetching profile for id: {}", id, e);
+            logger.error("프로필 조회 중 오류 발생: ID {}", id, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -55,7 +55,7 @@ public class ProfileController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProfileDTO> createProfile(@ModelAttribute ProfileDTO profileDTO,
                                                     @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) {
-        logger.info("Creating new profile: {}", profileDTO);
+        logger.info("새 프로필 생성: {}", profileDTO);
         try {
             if (profileImage != null && !profileImage.isEmpty()) {
                 profileDTO.setProfileImage(profileImage.getBytes());
@@ -67,7 +67,7 @@ public class ProfileController {
             ProfileDTO createdProfile = profileService.createProfile(profileDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProfile);
         } catch (Exception e) {
-            logger.error("Error creating new profile", e);
+            logger.error("새 프로필 생성 중 오류 발생", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -76,36 +76,36 @@ public class ProfileController {
     public ResponseEntity<ProfileDTO> updateProfile(@PathVariable Integer id,
                                                     @ModelAttribute ProfileDTO profileDTO,
                                                     @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) {
-        logger.info("Updating profile for id: {}", id);
-        logger.debug("Received profile data: {}", profileDTO);
+        logger.info("프로필 업데이트: ID {}", id);
+        logger.debug("수신된 프로필 데이터: {}", profileDTO);
         try {
-            profileDTO.setId(id);  // 이 부분은 그대로 유지됩니다.
+            profileDTO.setId(id);
             if (profileImage != null && !profileImage.isEmpty()) {
                 profileDTO.setProfileImage(profileImage.getBytes());
             }
             ProfileDTO updatedProfile = profileService.updateProfile(profileDTO);
-            logger.info("Profile updated successfully for id: {}", id);
+            logger.info("프로필 업데이트 성공: ID {}", id);
             return ResponseEntity.ok(updatedProfile);
         } catch (IllegalArgumentException e) {
-            logger.warn("Profile not found for update, id: {}", id);
+            logger.warn("업데이트할 프로필을 찾을 수 없음: ID {}", id);
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            logger.error("Error updating profile for id: {}", id, e);
+            logger.error("프로필 업데이트 중 오류 발생: ID {}", id, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProfile(@PathVariable Integer id) {
-        logger.info("Deleting profile for id: {}", id);
+    public ResponseEntity<Void> deactivateProfile(@PathVariable Integer id) {
+        logger.info("프로필 비활성화: ID {}", id);
         try {
-            profileService.deleteProfile(id);
+            profileService.deactivateProfile(id);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
-            logger.warn("Profile not found for deletion, id: {}", id);
+            logger.warn("비활성화할 프로필을 찾을 수 없음: ID {}", id);
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            logger.error("Error deleting profile for id: {}", id, e);
+            logger.error("프로필 비활성화 중 오류 발생: ID {}", id, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
