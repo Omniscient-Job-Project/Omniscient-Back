@@ -22,12 +22,21 @@ public class SignupService {
 
     // 모든 필드의 유효성 검증
     public boolean isAllFieldsValid(SignupDTO signupDTO) {
-        return signupDTO.getUsername() != null && !signupDTO.getUsername().trim().isEmpty() &&
+        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        return  signupDTO.getUserId() != null && !signupDTO.getUserId().trim().isEmpty() &&
+                signupDTO.getUsername() != null && !signupDTO.getUsername().trim().isEmpty() &&
                 signupDTO.getPassword() != null && !signupDTO.getPassword().trim().isEmpty() &&
-                signupDTO.getEmail() != null && !signupDTO.getEmail().trim().isEmpty() &&
+                signupDTO.getEmail() != null && signupDTO.getEmail().matches(emailRegex) &&
                 signupDTO.getPhoneNumber() != null && !signupDTO.getPhoneNumber().trim().isEmpty();
 
     }
+
+
+
+
+
+
+
 
     // 회원가입
     public boolean signup(SignupDTO signupDTO) {
@@ -43,7 +52,7 @@ public class SignupService {
         String phoneNumber = signupDTO.getPhoneNumber();
 
         // 아이디 중복 체크
-        if (userRepository.existsByUsername(username)) {
+        if (userRepository.existsByUserId(userId)) {
             return false; // 중복된 아이디가 존재하면 false 반환
         }
 
@@ -53,12 +62,12 @@ public class SignupService {
         // UserEntity 생성
         UserEntity userEntity = new UserEntity.Builder()
                 .userId(userId)
-                .username(username)
+                .username(signupDTO.getUsername())
                 .password(encodedPassword)
                 .role(UserRole.ROLE_USER)
                 .userStatus(true)
-                .phoneNumber(phoneNumber)
-                .email(email)
+                .phoneNumber(signupDTO.getPhoneNumber())
+                .email(signupDTO.getEmail())
                 .build();
 
         // UserEntity 저장
@@ -67,8 +76,8 @@ public class SignupService {
     }
 
     // 로그인
-    public boolean authenticate(String username, String password) {
-        UserEntity userEntity = userRepository.findByUsername(username);
+    public boolean authenticate(String userId, String password) {
+        UserEntity userEntity = userRepository.findByUserId(userId);
 
         // 사용자 정보 존재여부 확인
         if (userEntity != null) {

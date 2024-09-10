@@ -11,7 +11,7 @@ public class UserEntity {
     @Column(name = "id")
     private Integer Id;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private String userId;
 
     @Column(name = "user_name", nullable = false)
@@ -27,7 +27,7 @@ public class UserEntity {
     @Column(name = "user_role")
     private UserRole role;
 
-    @Column(name = "birth_date", nullable = false)
+    @Column(name = "birth_date")
     private String birthDate;
 
     @Column(name = "phone_number", nullable = false)
