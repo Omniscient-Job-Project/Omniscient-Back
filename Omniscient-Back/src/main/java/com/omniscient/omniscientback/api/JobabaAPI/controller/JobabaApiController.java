@@ -1,15 +1,16 @@
 package com.omniscient.omniscientback.api.JobabaAPI.controller;
 
-
 import com.omniscient.omniscientback.api.JobabaAPI.model.JobabaDTO;
 import com.omniscient.omniscientback.api.JobabaAPI.service.JobabaService;
-import org.apache.tomcat.util.json.ParseException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,12 +20,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("/api/v1/jobaba")
 public class JobabaApiController {
 
-    // yml 파일에 key 값 등록되어 있음.
     @Value("${api_jobaba.key}")
     private String apiKey;
 
@@ -35,31 +37,26 @@ public class JobabaApiController {
         this.jobabaService = jobabaService;
     }
 
-//    경기데이터드림 API
+    // 전체조회
     @GetMapping("/jobinfo")
-    public String jobabainfo() throws IOException, ParseException {
-        StringBuilder urlBuilder = new StringBuilder("https://openapi.gg.go.kr:8088");
-
-        urlBuilder.append("/" + URLEncoder.encode(apiKey, "UTF-8")); // 인증키
-        urlBuilder.append("/" + URLEncoder.encode("xml", "UTF-8")); /* 요청파일타입 (xml,xmlf,xls,json) */
-        urlBuilder.append("/" + URLEncoder.encode("GetJobInfo", "UTF-8")); /* 서비스명 (대소문자 구분 필수입니다.) */
-        urlBuilder.append("/" + URLEncoder.encode("1", "UTF-8")); /* 요청시작위치 (sample인증키 사용시 5이내 숫자) */
-        urlBuilder.append("/" + URLEncoder.encode("100", "UTF-8")); /* 요청종료위치(sample인증키 사용시 5이상 숫자 선택 안 됨) */
+    public String jobabainfo() throws IOException {
+        StringBuilder urlBuilder = new StringBuilder("https://openapi.gg.go.kr/GGJOBABARECRUSTM?");
+        urlBuilder.append("KEY=").append(URLEncoder.encode(apiKey, "UTF-8"));
+        urlBuilder.append("&TYPE=").append(URLEncoder.encode("xml", "UTF-8"));
+        urlBuilder.append("&pIndex=").append(URLEncoder.encode("1", "UTF-8"));
+        urlBuilder.append("&pSize=").append(URLEncoder.encode("100", "UTF-8"));
 
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
 
-        conn.setRequestProperty("Content-type", "application/xml");
-        System.out.println("Response code: " + conn.getResponseCode()); /* 연결 자체에 대한 확인이 필요하므로 추가합니다. */
         BufferedReader rd;
-
-        /* 서비스코드가 정상이면 200~300사이의 숫자가 나옵니다. */
         if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         } else {
             rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
         }
+
         StringBuilder sb = new StringBuilder();
         String line;
         while ((line = rd.readLine()) != null) {
@@ -71,31 +68,90 @@ public class JobabaApiController {
         String rawData = sb.toString();
         String jsonData = convertXmlToJson(rawData);
 
-
         // JSON 데이터 파싱하여 DTO 리스트로 변환
         JSONObject jsonObject = new JSONObject(jsonData);
-        JSONArray jsonArray = jsonObject.getJSONObject("GetJobInfo").getJSONArray("row");
+        JSONArray jsonArray = jsonObject.getJSONObject("GGJOBABARECRUSTM").getJSONArray("row");
+
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jobJson = jsonArray.getJSONObject(i);
             JobabaDTO jobDTO = new JobabaDTO();
-            jobDTO.setJobabaCompanyName(jobJson.getString("CMPNY_NM"));
-            jobDTO.setJobabaInfoTitle(jobJson.getString("JO_SJ"));
-            jobDTO.setJobabaWageType(jobJson.getString("HOPE_WAGE"));
-            jobDTO.setJobabaSalary(jobJson.getString("HOPE_WAGE"));
-            jobDTO.setJobabaLocation(jobJson.getString("WORK_PARAR_BASS_ADRES_CN"));
-            jobDTO.setJobabaEmploymentType(jobJson.getString("EMPLYM_STLE_CMMN_CODE_SE"));
-            jobDTO.setJobabaCareerCondition(jobJson.getString("CAREER_CND_NM"));  // 경력 정보 추가
-//            jobDTO.setJobabaPostedDate(LocalDate.parse(jobJson.getString("JO_REG_DT")));
-//            jobDTO.setJobabaClosingDate(LocalDate.parse(jobJson.getString("RCEPT_CLOS_NM")));
-            jobDTO.setJobabaWebInfoUrl("http://www.work.go.kr/empInfo/empInfoSrch/list/dtlEmpSrch.do?joReqstNo=" + jobJson.getString("JO_REQST_NO"));
-            jobDTO.setJobabaMobileInfoUrl("http://www.work.go.kr/empInfo/empInfoSrch/list/dtlEmpSrch.do?joReqstNo=" + jobJson.getString("JO_REQST_NO"));
+            jobDTO.setJobabaCompanyName(jobJson.optString("ENTRPRS_NM", ""));
+            jobDTO.setJobabaInfoTitle(jobJson.optString("PBANC_CONT", ""));
+            jobDTO.setJobabaWageType(jobJson.optString("PBANC_FORM_DIV", ""));
+            jobDTO.setJobabaSalary(jobJson.optString("SALARY_COND", ""));
+            jobDTO.setJobabaLocation(jobJson.optString("WORK_REGION_CONT", ""));
+            jobDTO.setJobabaEmploymentType(jobJson.optString("PBANC_FORM_DIV", ""));
+            jobDTO.setJobabaCareerCondition(jobJson.optString("CAREER_DIV", ""));
+
+            // 날짜 변환 처리
+//            String postedDateStr = jobJson.optString("RCPT_BGNG_DE", "");
+//            String closingDateStr = jobJson.optString("RCPT_END_DE", "");
+//            LocalDate postedDate = LocalDate.parse(postedDateStr, formatter);
+//            LocalDate closingDate = LocalDate.parse(closingDateStr, formatter);
+//
+//            jobDTO.setJobabaPostedDate(postedDate);
+//            jobDTO.setJobabaClosingDate(closingDate);
+
+            jobDTO.setJobabaWebInfoUrl(jobJson.optString("URL", ""));
+            jobDTO.setWorkRegionCdCont(jobJson.optInt("WORK_REGION_CD_CONT", 0));
+            jobDTO.setRecrutFieldCdNm(jobJson.optInt("RECRUT_FIELD_CD_NM", 0));
+            jobDTO.setRecrutFieldNm(jobJson.optString("RECRUT_FIELD_NM", ""));
+            jobDTO.setEmplmntPsncnt(jobJson.optInt("EMPLMNT_PSNCNT", 0));
 
             jobabaService.saveJob(jobDTO);
-
         }
 
         return jsonData;
+    }
 
+    // 상세조회
+    @GetMapping("/jobinfo/{Id}")
+    public ResponseEntity<String> getJobInfoById(@PathVariable("Id") String jobId) throws IOException {
+        StringBuilder urlBuilder = new StringBuilder("https://openapi.gg.go.kr/GGJOBABARECRUSTM?");
+        urlBuilder.append("KEY=").append(URLEncoder.encode(apiKey, "UTF-8"));
+        urlBuilder.append("&TYPE=").append(URLEncoder.encode("xml", "UTF-8"));
+        urlBuilder.append("&pIndex=").append(URLEncoder.encode("1", "UTF-8"));
+        urlBuilder.append("&pSize=").append(URLEncoder.encode("100", "UTF-8"));
+
+        URL url = new URL(urlBuilder.toString());
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-type", "application/xml");
+
+        BufferedReader rd;
+        if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        } else {
+            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+        }
+
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = rd.readLine()) != null) {
+            sb.append(line);
+        }
+        rd.close();
+        conn.disconnect();
+
+        String rawData = sb.toString();
+        String jsonData = convertXmlToJson(rawData);
+
+        // 특정 jobId에 맞는 데이터를 필터링하여 반환
+        JSONObject jsonObject = new JSONObject(jsonData);
+        JSONArray jsonArray = jsonObject.getJSONObject("GGJOBABARECRUSTM").getJSONArray("row");
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jobJson = jsonArray.getJSONObject(i);
+            if (jobJson.getString("JO_REQST_NO").equals(jobId)) {
+                // 해당 jobId에 맞는 데이터 반환
+                return ResponseEntity.ok(jobJson.toString(4)); // 예쁘게 출력 (4칸 들여쓰기)
+            }
+        }
+
+        // 해당 jobId가 없을 때의 처리
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 채용정보의 ID값을 찾을 수 없습니다.");
     }
 
     private String convertXmlToJson(String xmlData) {
@@ -104,6 +160,4 @@ public class JobabaApiController {
         // JSON 데이터를 예쁘게 포맷팅 (4개의 공백으로 들여쓰기)
         return json.toString(4);
     }
-
 }
-

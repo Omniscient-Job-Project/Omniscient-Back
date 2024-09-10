@@ -1,6 +1,5 @@
 package com.omniscient.omniscientback.api.JobabaAPI.model;
 
-
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -31,29 +30,38 @@ public class JobabaEntity {
     @Column(name = "jobaba_employment_type")
     private String jobabaEmploymentType;
 
+    @Column(name = "jobaba_career_condition")
+    private String jobabaCareerCondition;
+
+    @Column(name = "jobaba_posted_date")
+    private LocalDate jobabaPostedDate;
+
+    @Column(name = "jobaba_closing_date")
+    private LocalDate jobabaClosingDate;
 
     @Column(name = "jobaba_web_info_url")
     private String jobabaWebInfoUrl;
 
-    @Column(name = "jobaba_mobile_info_url")
-    private String jobabaMobileInfoUrl;
+    // 추가된 필드들
+    @Column(name = "work_region_cd_cont")
+    private Integer workRegionCdCont;
 
-    @Column(name = "jobaba_stauts")
-    private String jobabaStatus;
+    @Column(name = "work_region_cont")
+    private String workRegionCont;
 
-    @Column(name = "jobaba_date")
-    private LocalDate jobabaDate;
+    @Column(name = "recrut_field_cd_nm")
+    private int recrutFieldCdNm;
 
-    @Column(name = "jobaba_title")
-    private String jobabaTitle;
+    @Column(name = "recrut_field_nm")
+    private String recrutFieldNm;
 
-    @Column(name = "jobaba_carrer_condition")
-    private String jobabaCareerCondition;
+    @Column(name = "emplmnt_psncnt")
+    private int emplmntPsncnt;
 
     public JobabaEntity() {
     }
 
-    public JobabaEntity(Integer jobabaId, String jobabaCompanyName, String jobabaInfoTitle, String jobabaWageType, String jobabaSalary, String jobabaLocation, String jobabaEmploymentType, String jobabaWebInfoUrl, String jobabaMobileInfoUrl, String jobabaStatus, LocalDate jobabaDate, String jobabaTitle, String jobabaCareerCondition) {
+    public JobabaEntity(Integer jobabaId, String jobabaCompanyName, String jobabaInfoTitle, String jobabaWageType, String jobabaSalary, String jobabaLocation, String jobabaEmploymentType, String jobabaCareerCondition, LocalDate jobabaPostedDate, LocalDate jobabaClosingDate, String jobabaWebInfoUrl, Integer workRegionCdCont, String workRegionCont, int recrutFieldCdNm, String recrutFieldNm, int emplmntPsncnt) {
         this.jobabaId = jobabaId;
         this.jobabaCompanyName = jobabaCompanyName;
         this.jobabaInfoTitle = jobabaInfoTitle;
@@ -61,12 +69,15 @@ public class JobabaEntity {
         this.jobabaSalary = jobabaSalary;
         this.jobabaLocation = jobabaLocation;
         this.jobabaEmploymentType = jobabaEmploymentType;
-        this.jobabaWebInfoUrl = jobabaWebInfoUrl;
-        this.jobabaMobileInfoUrl = jobabaMobileInfoUrl;
-        this.jobabaStatus = jobabaStatus;
-        this.jobabaDate = jobabaDate;
-        this.jobabaTitle = jobabaTitle;
         this.jobabaCareerCondition = jobabaCareerCondition;
+        this.jobabaPostedDate = jobabaPostedDate;
+        this.jobabaClosingDate = jobabaClosingDate;
+        this.jobabaWebInfoUrl = jobabaWebInfoUrl;
+        this.workRegionCdCont = workRegionCdCont;
+        this.workRegionCont = workRegionCont;
+        this.recrutFieldCdNm = recrutFieldCdNm;
+        this.recrutFieldNm = recrutFieldNm;
+        this.emplmntPsncnt = emplmntPsncnt;
     }
 
     public Integer getJobabaId() {
@@ -125,6 +136,30 @@ public class JobabaEntity {
         this.jobabaEmploymentType = jobabaEmploymentType;
     }
 
+    public String getJobabaCareerCondition() {
+        return jobabaCareerCondition;
+    }
+
+    public void setJobabaCareerCondition(String jobabaCareerCondition) {
+        this.jobabaCareerCondition = jobabaCareerCondition;
+    }
+
+    public LocalDate getJobabaPostedDate() {
+        return jobabaPostedDate;
+    }
+
+    public void setJobabaPostedDate(LocalDate jobabaPostedDate) {
+        this.jobabaPostedDate = jobabaPostedDate;
+    }
+
+    public LocalDate getJobabaClosingDate() {
+        return jobabaClosingDate;
+    }
+
+    public void setJobabaClosingDate(LocalDate jobabaClosingDate) {
+        this.jobabaClosingDate = jobabaClosingDate;
+    }
+
     public String getJobabaWebInfoUrl() {
         return jobabaWebInfoUrl;
     }
@@ -133,44 +168,44 @@ public class JobabaEntity {
         this.jobabaWebInfoUrl = jobabaWebInfoUrl;
     }
 
-    public String getJobabaMobileInfoUrl() {
-        return jobabaMobileInfoUrl;
+    public Integer getWorkRegionCdCont() {
+        return workRegionCdCont;
     }
 
-    public void setJobabaMobileInfoUrl(String jobabaMobileInfoUrl) {
-        this.jobabaMobileInfoUrl = jobabaMobileInfoUrl;
+    public void setWorkRegionCdCont(Integer workRegionCdCont) {
+        this.workRegionCdCont = workRegionCdCont;
     }
 
-    public String getJobabaStatus() {
-        return jobabaStatus;
+    public String getWorkRegionCont() {
+        return workRegionCont;
     }
 
-    public void setJobabaStatus(String jobabaStatus) {
-        this.jobabaStatus = jobabaStatus;
+    public void setWorkRegionCont(String workRegionCont) {
+        this.workRegionCont = workRegionCont;
     }
 
-    public LocalDate getJobabaDate() {
-        return jobabaDate;
+    public int getRecrutFieldCdNm() {
+        return recrutFieldCdNm;
     }
 
-    public void setJobabaDate(LocalDate jobabaDate) {
-        this.jobabaDate = jobabaDate;
+    public void setRecrutFieldCdNm(int recrutFieldCdNm) {
+        this.recrutFieldCdNm = recrutFieldCdNm;
     }
 
-    public String getJobabaTitle() {
-        return jobabaTitle;
+    public String getRecrutFieldNm() {
+        return recrutFieldNm;
     }
 
-    public void setJobabaTitle(String jobabaTitle) {
-        this.jobabaTitle = jobabaTitle;
+    public void setRecrutFieldNm(String recrutFieldNm) {
+        this.recrutFieldNm = recrutFieldNm;
     }
 
-    public String getJobabaCareerCondition() {
-        return jobabaCareerCondition;
+    public int getEmplmntPsncnt() {
+        return emplmntPsncnt;
     }
 
-    public void setJobabaCareerCondition(String jobabaCareerCondition) {
-        this.jobabaCareerCondition = jobabaCareerCondition;
+    public void setEmplmntPsncnt(int emplmntPsncnt) {
+        this.emplmntPsncnt = emplmntPsncnt;
     }
 
     @Override
@@ -183,12 +218,15 @@ public class JobabaEntity {
                 ", jobabaSalary='" + jobabaSalary + '\'' +
                 ", jobabaLocation='" + jobabaLocation + '\'' +
                 ", jobabaEmploymentType='" + jobabaEmploymentType + '\'' +
-                ", jobabaWebInfoUrl='" + jobabaWebInfoUrl + '\'' +
-                ", jobabaMobileInfoUrl='" + jobabaMobileInfoUrl + '\'' +
-                ", jobabaStatus='" + jobabaStatus + '\'' +
-                ", jobabaDate=" + jobabaDate +
-                ", jobabaTitle='" + jobabaTitle + '\'' +
                 ", jobabaCareerCondition='" + jobabaCareerCondition + '\'' +
+                ", jobabaPostedDate='" + jobabaPostedDate + '\'' +
+                ", jobabaClosingDate='" + jobabaClosingDate + '\'' +
+                ", jobabaWebInfoUrl='" + jobabaWebInfoUrl + '\'' +
+                ", workRegionCdCont='" + workRegionCdCont + '\'' +
+                ", workRegionCont='" + workRegionCont + '\'' +
+                ", recrutFieldCdNm='" + recrutFieldCdNm + '\'' +
+                ", recrutFieldNm='" + recrutFieldNm + '\'' +
+                ", emplmntPsncnt=" + emplmntPsncnt +
                 '}';
     }
 }
