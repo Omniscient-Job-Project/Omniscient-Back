@@ -9,9 +9,13 @@ import org.json.JSONObject;
 import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +25,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1/seoul")
 public class JobApiController {
 
     // yml 파일에 key 값 등록되어 있음.
@@ -37,6 +41,7 @@ public class JobApiController {
 
     // 서울 열린데이터 광장 api
     // https://data.seoul.go.kr/
+    // 전체조회
     @GetMapping("/jobinfo")
     public String jobinfo() throws IOException, ParseException {
         StringBuilder urlBuilder = new StringBuilder("http://openapi.seoul.go.kr:8088");
@@ -72,7 +77,6 @@ public class JobApiController {
         String rawData = sb.toString();
         String jsonData = convertXmlToJson(rawData);
 
-
         // JSON 데이터 파싱하여 DTO 리스트로 변환
         JSONObject jsonObject = new JSONObject(jsonData);
         JSONArray jsonArray = jsonObject.getJSONObject("GetJobInfo").getJSONArray("row");
@@ -99,12 +103,59 @@ public class JobApiController {
 
     }
 
+    // 상세 조회
+    @GetMapping("/jobinfo/{jobId}")
+    public ResponseEntity<String> getJobInfoById(@PathVariable("jobId") String jobId) throws IOException {
+        StringBuilder urlBuilder = new StringBuilder("http://openapi.seoul.go.kr:8088");
+        urlBuilder.append("/" + URLEncoder.encode(apiKey, "UTF-8"));
+        urlBuilder.append("/" + URLEncoder.encode("xml", "UTF-8"));
+        urlBuilder.append("/" + URLEncoder.encode("GetJobInfo", "UTF-8"));
+        urlBuilder.append("/" + URLEncoder.encode("1", "UTF-8"));
+        urlBuilder.append("/" + URLEncoder.encode("100", "UTF-8"));
+
+        URL url = new URL(urlBuilder.toString());
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-type", "application/xml");
+
+        BufferedReader rd;
+        if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        } else {
+            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+        }
+
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = rd.readLine()) != null) {
+            sb.append(line);
+        }
+        rd.close();
+        conn.disconnect();
+
+        String rawData = sb.toString();
+        String jsonData = convertXmlToJson(rawData);
+
+        // 특정 jobId에 맞는 데이터를 필터링하여 반환
+        JSONObject jsonObject = new JSONObject(jsonData);
+        JSONArray jsonArray = jsonObject.getJSONObject("GetJobInfo").getJSONArray("row");
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jobJson = jsonArray.getJSONObject(i);
+            if (jobJson.getString("JO_REQST_NO").equals(jobId)) {
+                return ResponseEntity.ok(jobJson.toString());
+            }
+        }
+
+        // 해당 jobId가 없을 때의 처리
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 채용정보의 ID값을 찾을 수 없습니다.");
+    }
+
+    // xml 파일을 json 형식으로 변환해주기
     private String convertXmlToJson(String xmlData) {
         // XML 데이터를 JSON 객체로 변환
         JSONObject json = XML.toJSONObject(xmlData);
         // JSON 데이터를 예쁘게 포맷팅 (4개의 공백으로 들여쓰기)
         return json.toString(4);
     }
-
 }
-
