@@ -68,26 +68,23 @@ public class NoticeController {
         }
     }
 
-
-    @Operation(summary = "공지사항 수정", description = "ID를 기반으로 특정 공지사항을 수정합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공적으로 수정되었습니다."),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
-            @ApiResponse(responseCode = "500", description = "서버 오류로 인해 공지사항을 수정할 수 없습니다.")
-    })
     @PutMapping("/{id}")
     public ResponseEntity<Notice> updateNotice(
             @Parameter(description = "수정할 공지사항의 ID", example = "1") @PathVariable Integer id,
             @RequestBody NoticeDTO noticeDTO) {
         try {
             // Convert DTO to Entity
-            Notice notice = new Notice();
-            notice.setNoticeId(id);
+            Optional<Notice> existingNoticeOpt = noticeService.getNoticeById(id);
+            if (existingNoticeOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 공지사항이 존재하지 않는 경우
+            }
+            Notice notice = existingNoticeOpt.get();
             notice.setUserId(noticeDTO.getUserId());
             notice.setNoticeTitle(noticeDTO.getNoticeTitle());
             notice.setNoticeContent(noticeDTO.getNoticeContent());
             notice.setNoticeCreateAt(noticeDTO.getNoticeCreateAt());
             notice.setNoticeUpdateAt(noticeDTO.getNoticeUpdateAt());
+            notice.setStatus(noticeDTO.getStatus());
 
             Notice updatedNotice = noticeService.updateNotice(notice);
             return ResponseEntity.ok(updatedNotice);
@@ -109,13 +106,16 @@ public class NoticeController {
     public ResponseEntity<Void> deleteNotice(
             @Parameter(description = "삭제할 공지사항의 ID", example = "1") @PathVariable Integer id) {
         try {
-            noticeService.deleteNotice(id);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            boolean isDeleted = noticeService.deleteNotice(id);
+
+            if (isDeleted) {
+                return ResponseEntity.noContent().build();  // 성공적으로 처리된 경우 noContent 리턴
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // 공지사항을 찾을 수 없는 경우
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();  // 서버 오류 발생 시
         }
     }
 }

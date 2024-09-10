@@ -28,16 +28,21 @@ public class Notice {
     @Column(name = "notice_update_at")
     private LocalDateTime noticeUpdateAt;
 
+    // 공지사항의 활성화 상태 (true: 활성, false: 삭제된 상태)
+    @Column(name = "status")
+    private Boolean status = true;  // 기본값은 true로 설정
+
     public Notice() {
     }
 
-    public Notice(Integer noticeId, Integer userId, String noticeTitle, String noticeContent, LocalDateTime noticeCreateAt, LocalDateTime noticeUpdateAt) {
+    public Notice(Integer noticeId, Integer userId, String noticeTitle, String noticeContent, LocalDateTime noticeCreateAt, LocalDateTime noticeUpdateAt, Boolean status) {
         this.noticeId = noticeId;
         this.userId = userId;
         this.noticeTitle = noticeTitle;
         this.noticeContent = noticeContent;
         this.noticeCreateAt = noticeCreateAt;
         this.noticeUpdateAt = noticeUpdateAt;
+        this.status = status;  // 상태 필드 추가
     }
 
     public Integer getNoticeId() {
@@ -88,6 +93,14 @@ public class Notice {
         this.noticeUpdateAt = noticeUpdateAt;
     }
 
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Notice{" +
@@ -97,6 +110,7 @@ public class Notice {
                 ", noticeContent='" + noticeContent + '\'' +
                 ", noticeCreateAt=" + noticeCreateAt +
                 ", noticeUpdateAt=" + noticeUpdateAt +
+                ", status=" + status +   // 상태 필드 포함
                 '}';
     }
 }

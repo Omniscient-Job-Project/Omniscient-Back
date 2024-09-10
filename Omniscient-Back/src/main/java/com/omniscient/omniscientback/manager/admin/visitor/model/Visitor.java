@@ -1,4 +1,4 @@
-package com.omniscient.omniscientback.manager.admin.visitor;
+package com.omniscient.omniscientback.manager.admin.visitor.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

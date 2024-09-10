@@ -1,0 +1,78 @@
+package com.omniscient.omniscientback.manager.faq.service;
+
+import com.omniscient.omniscientback.manager.faq.model.Faq;
+import com.omniscient.omniscientback.manager.faq.model.FaqDTO;
+import com.omniscient.omniscientback.manager.faq.repository.FaqRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+public class FaqService {
+
+    @Autowired
+    private FaqRepository faqRepository;
+
+    public List<FaqDTO> getAllFaqs() {
+        return faqRepository.findAll().stream()
+                .filter(Faq::getStatus)  // 활성 상태인 FAQ만 반환
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public FaqDTO getFaqById(Long id) {
+        return faqRepository.findById(id)
+                .filter(Faq::getStatus)  // 활성 상태인 FAQ만 반환
+                .map(this::toDto)
+                .orElseThrow(() -> new RuntimeException("FAQ not found"));
+    }
+
+    public FaqDTO createFaq(FaqDTO faqDTO) {
+        Faq faq = fromDto(faqDTO);
+        faq.setStatus(true);  // 생성 시 상태를 활성으로 설정
+        Faq savedFaq = faqRepository.save(faq);
+        return toDto(savedFaq);
+    }
+
+    public FaqDTO updateFaq(Long id, FaqDTO faqDTO) {
+        if (!faqRepository.existsById(id)) {
+            throw new RuntimeException("FAQ not found");
+        }
+        Faq faq = fromDto(faqDTO);
+        faq.setId(id);
+        faq.setStatus(true);  // 업데이트 시 상태를 활성으로 설정
+        Faq updatedFaq = faqRepository.save(faq);
+        return toDto(updatedFaq);
+    }
+
+    public boolean deleteFaq(Long id) {
+        Optional<Faq> faqOpt = faqRepository.findById(id);
+        if (faqOpt.isEmpty()) {
+            throw new RuntimeException("FAQ not found");
+        }
+        Faq faq = faqOpt.get();
+        faq.setStatus(false);  // 상태를 비활성으로 변경
+        faqRepository.save(faq);
+        return true;  // 삭제 성공 시 true 반환
+    }
+
+    private FaqDTO toDto(Faq faq) {
+        FaqDTO dto = new FaqDTO();
+        dto.setId(faq.getId());
+        dto.setQuestion(faq.getQuestion());
+        dto.setAnswer(faq.getAnswer());
+        dto.setStatus(faq.getStatus());  // 상태 필드 추가
+        return dto;
+    }
+
+    private Faq fromDto(FaqDTO dto) {
+        Faq faq = new Faq();
+        faq.setQuestion(dto.getQuestion());
+        faq.setAnswer(dto.getAnswer());
+        faq.setStatus(dto.getStatus());  // 상태 필드 추가
+        return faq;
+    }
+}
