@@ -28,18 +28,20 @@ public class JobabaService {
         jobabaEntity.setJobabaSalary(jobabaDTO.getJobabaSalary());
         jobabaEntity.setJobabaLocation(jobabaDTO.getJobabaLocation());
         jobabaEntity.setJobabaEmploymentType(jobabaDTO.getJobabaEmploymentType());
-//        jobabaEntity.setJobabaPostedDate(jobabaDTO.getJobabaPostedDate());
-//        jobabaEntity.setJobabaClosingDate(jobabaDTO.getJobabaClosingDate());
-        jobabaEntity.setJobabaWebInfoUrl(jobabaDTO.getJobabaWebInfoUrl());
-        jobabaEntity.setJobabaMobileInfoUrl(jobabaDTO.getJobabaMobileInfoUrl());
         jobabaEntity.setJobabaCareerCondition(jobabaDTO.getJobabaCareerCondition());
 
+        // 날짜 변환
+        jobabaEntity.setJobabaPostedDate(jobabaDTO.getJobabaPostedDate());  // LocalDate로 저장
+        jobabaEntity.setJobabaClosingDate(jobabaDTO.getJobabaClosingDate());  // LocalDate로 저장
+
+        jobabaEntity.setJobabaWebInfoUrl(jobabaDTO.getJobabaWebInfoUrl());
+        jobabaEntity.setWorkRegionCdCont(jobabaDTO.getWorkRegionCdCont());
+        jobabaEntity.setRecrutFieldCdNm(jobabaDTO.getRecrutFieldCdNm());
+        jobabaEntity.setRecrutFieldNm(jobabaDTO.getRecrutFieldNm());
+        jobabaEntity.setEmplmntPsncnt(jobabaDTO.getEmplmntPsncnt());
+
         jobababRepository.save(jobabaEntity);
-
-
     }
-
-    // 취업 정보에 저장된 테이블을 다 불러오는 거
 
     public List<JobabaEntity> getAllJobs() {
         return jobababRepository.findAll();
