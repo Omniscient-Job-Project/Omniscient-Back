@@ -12,9 +12,12 @@ import java.util.Optional;
 @Service
 public class JobService {
 
-    @Autowired
-    private JobRepository jobRepository;
+    private final JobRepository jobRepository;
 
+    @Autowired
+    public JobService(JobRepository jobRepository) {
+        this.jobRepository = jobRepository;
+    }
 
     public void saveJob(JobDTO jobDTO) {
         JobEntity jobEntity = new JobEntity();
@@ -32,8 +35,6 @@ public class JobService {
         jobEntity.setJobCareerCondition(jobDTO.getJobCareerCondition());
 
         jobRepository.save(jobEntity);
-
-
     }
 
     // 취업 정보에 저장된 테이블을 다 불러오는 거
