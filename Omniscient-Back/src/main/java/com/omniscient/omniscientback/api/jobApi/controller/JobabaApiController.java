@@ -1,7 +1,7 @@
-package com.omniscient.omniscientback.api.JobabaAPI.controller;
+package com.omniscient.omniscientback.api.jobApi.controller;
 
-import com.omniscient.omniscientback.api.JobabaAPI.model.JobabaDTO;
-import com.omniscient.omniscientback.api.JobabaAPI.service.JobabaService;
+import com.omniscient.omniscientback.api.jobApi.model.JobTotalDTO;
+import com.omniscient.omniscientback.api.jobApi.service.JobabaService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,6 +22,7 @@ import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("/api/v1/jobaba")
+@CrossOrigin(origins = "http://localhost:8083")
 public class JobabaApiController {
 
     @Value("${api_jobaba.key}")
@@ -71,30 +69,30 @@ public class JobabaApiController {
         // JSON 데이터 파싱하여 DTO 리스트로 변환
         JSONObject jsonObject = new JSONObject(jsonData);
         JSONArray jsonArray = jsonObject.getJSONObject("GGJOBABARECRUSTM").getJSONArray("row");
-
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jobJson = jsonArray.getJSONObject(i);
-            JobabaDTO jobDTO = new JobabaDTO();
-            jobDTO.setJobabaCompanyName(jobJson.optString("ENTRPRS_NM", ""));
-            jobDTO.setJobabaInfoTitle(jobJson.optString("PBANC_CONT", ""));
-            jobDTO.setJobabaWageType(jobJson.optString("PBANC_FORM_DIV", ""));
-            jobDTO.setJobabaSalary(jobJson.optString("SALARY_COND", ""));
-            jobDTO.setJobabaLocation(jobJson.optString("WORK_REGION_CONT", ""));
-            jobDTO.setJobabaEmploymentType(jobJson.optString("PBANC_FORM_DIV", ""));
-            jobDTO.setJobabaCareerCondition(jobJson.optString("CAREER_DIV", ""));
+            JobTotalDTO jobDTO = new JobTotalDTO();
+            jobDTO.setCompanyName(jobJson.optString("ENTRPRS_NM", ""));
+            jobDTO.setInfoTitle(jobJson.optString("PBANC_CONT", ""));
+            jobDTO.setWageType(jobJson.optString("PBANC_FORM_DIV", ""));
+            jobDTO.setSalary(jobJson.optString("SALARY_COND", ""));
+            jobDTO.setLocation(jobJson.optString("WORK_REGION_CONT", ""));
+            jobDTO.setEmploymentType(jobJson.optString("PBANC_FORM_DIV", ""));
+            jobDTO.setCareerCondition(jobJson.optString("CAREER_DIV", ""));
 
-            // 날짜 변환 처리
+//            // 날짜 변환 처리
 //            String postedDateStr = jobJson.optString("RCPT_BGNG_DE", "");
 //            String closingDateStr = jobJson.optString("RCPT_END_DE", "");
-//            LocalDate postedDate = LocalDate.parse(postedDateStr, formatter);
-//            LocalDate closingDate = LocalDate.parse(closingDateStr, formatter);
-//
-//            jobDTO.setJobabaPostedDate(postedDate);
-//            jobDTO.setJobabaClosingDate(closingDate);
+//            if (!postedDateStr.isEmpty()) {
+//                jobDTO.setPostedDate(LocalDate.parse(postedDateStr, formatter));
+//            }
+//            if (!closingDateStr.isEmpty()) {
+//                jobDTO.setClosingDate(LocalDate.parse(closingDateStr, formatter));
+//            }
 
-            jobDTO.setJobabaWebInfoUrl(jobJson.optString("URL", ""));
+            jobDTO.setWebInfoUrl(jobJson.optString("URL", ""));
             jobDTO.setWorkRegionCdCont(jobJson.optInt("WORK_REGION_CD_CONT", 0));
             jobDTO.setRecrutFieldCdNm(jobJson.optInt("RECRUT_FIELD_CD_NM", 0));
             jobDTO.setRecrutFieldNm(jobJson.optString("RECRUT_FIELD_NM", ""));

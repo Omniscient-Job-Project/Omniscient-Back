@@ -1,6 +1,6 @@
-package com.omniscient.omniscientback.api.JobabaAPI.repository;
+package com.omniscient.omniscientback.api.jobApi.repository;
 
-import com.omniscient.omniscientback.api.JobabaAPI.model.JobabaEntity;
+import com.omniscient.omniscientback.api.jobApi.model.JobabaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

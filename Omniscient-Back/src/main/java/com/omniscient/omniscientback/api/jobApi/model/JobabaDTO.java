@@ -1,4 +1,4 @@
-package com.omniscient.omniscientback.api.JobabaAPI.model;
+package com.omniscient.omniscientback.api.jobApi.model;
 
 import java.time.LocalDate;
 

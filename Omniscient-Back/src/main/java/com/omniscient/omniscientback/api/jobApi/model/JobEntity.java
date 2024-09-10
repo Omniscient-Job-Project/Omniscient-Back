@@ -31,7 +31,6 @@ public class JobEntity {
     @Column(name = "job_employment_type")
     private String jobEmploymentType;
 
-
     @Column(name = "job_web_info_url")
     private String jobWebInfoUrl;
 
@@ -53,15 +52,19 @@ public class JobEntity {
     public JobEntity() {
     }
 
-    public JobEntity(String jobCareerCondition) {
-        JobCareerCondition = jobCareerCondition;
-    }
-
-    public String getJobCareerCondition() {
-        return JobCareerCondition;
-    }
-
-    public void setJobCareerCondition(String jobCareerCondition) {
+    public JobEntity(Integer jobId, String jobCompanyName, String jobInfoTitle, String jobWageType, String jobSalary, String jobLocation, String jobEmploymentType, String jobWebInfoUrl, String jobMobileInfoUrl, String status, LocalDate date, String title, String jobCareerCondition) {
+        this.jobId = jobId;
+        this.jobCompanyName = jobCompanyName;
+        this.jobInfoTitle = jobInfoTitle;
+        this.jobWageType = jobWageType;
+        this.jobSalary = jobSalary;
+        this.jobLocation = jobLocation;
+        this.jobEmploymentType = jobEmploymentType;
+        this.jobWebInfoUrl = jobWebInfoUrl;
+        this.jobMobileInfoUrl = jobMobileInfoUrl;
+        this.status = status;
+        this.date = date;
+        this.title = title;
         JobCareerCondition = jobCareerCondition;
     }
 
@@ -159,6 +162,14 @@ public class JobEntity {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getJobCareerCondition() {
+        return JobCareerCondition;
+    }
+
+    public void setJobCareerCondition(String jobCareerCondition) {
+        JobCareerCondition = jobCareerCondition;
     }
 
     @Override
