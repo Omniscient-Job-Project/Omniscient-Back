@@ -1,5 +1,7 @@
-package com.omniscient.omniscientback.manager.admin.visitor;
+package com.omniscient.omniscientback.manager.admin.visitor.service;
 
+import com.omniscient.omniscientback.manager.admin.visitor.model.Visitor;
+import com.omniscient.omniscientback.manager.admin.visitor.repository.VisitorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
