@@ -3,14 +3,12 @@ import com.omniscient.omniscientback.login.model.SignupDTO;
 import com.omniscient.omniscientback.login.service.SignupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 @RequestMapping("/api/v1/signup")
+@CrossOrigin(origins = "http://localhost:8083/login")
 public class SignupController {
 
     private final SignupService signupService;
@@ -24,6 +22,12 @@ public class SignupController {
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody SignupDTO signupDTO){
 
+
+        //모든 필드 빈값 검증
+        if (!signupService.isAllFieldsValid(signupDTO)) {
+            return ResponseEntity.badRequest().body("모든 필드를 올바르게 입력해주세요.");
+        }
+
         boolean isSignupSuccessful = signupService.signup(signupDTO);
 
         if (isSignupSuccessful) {
@@ -33,5 +37,11 @@ public class SignupController {
         }
     }
 
+
+
+
     //회원탈퇴
+
+
+
 }
