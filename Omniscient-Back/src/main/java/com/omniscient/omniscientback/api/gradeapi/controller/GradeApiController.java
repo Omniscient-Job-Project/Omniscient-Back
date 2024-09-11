@@ -1,8 +1,8 @@
-package com.omniscient.omniscientback.api.gradejob.controller;
+package com.omniscient.omniscientback.api.gradeapi.controller;
 
 
-import com.omniscient.omniscientback.api.gradejob.model.GradeDTO;
-import com.omniscient.omniscientback.api.gradejob.service.GradeApiService;
+import com.omniscient.omniscientback.api.gradeapi.model.GradeDTO;
+import com.omniscient.omniscientback.api.gradeapi.service.GradeApiService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
@@ -16,7 +16,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -25,8 +24,8 @@ import java.net.URLEncoder;
 // 한국산업인력공단_등급별 자격취득 상위종목 현황
 public class GradeApiController {
 
-    @Value("${apiCar.key}")
-    private String apiCarKey;
+    @Value("${api_grade.key}")
+    private String apiGradeKey;
 
     private final GradeApiService gradeApiService;
 
@@ -45,7 +44,7 @@ public class GradeApiController {
 
         // URL 생성
         StringBuilder urlBuilder = new StringBuilder(serviceUrl);
-        urlBuilder.append("?ServiceKey=").append(URLEncoder.encode(apiCarKey, "UTF-8"));
+        urlBuilder.append("?ServiceKey=").append(URLEncoder.encode(apiGradeKey, "UTF-8"));
         urlBuilder.append("&pageNo=").append(pageNo);
         urlBuilder.append("&numOfRows=").append(numOfRows);
         urlBuilder.append("&baseYY=").append(baseYY);
@@ -75,10 +74,8 @@ public class GradeApiController {
         conn.disconnect();
 
         String rawData = sb.toString();
-        System.out.println("Raw XML Data: \n" + rawData);
 
         String jsonData = convertXmlToJson(rawData);
-        System.out.println("Converted JSON Data: \n" + jsonData);
 
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
@@ -87,7 +84,6 @@ public class GradeApiController {
 
             for (int i = 0; i < itemsArray.length(); i++) {
                 JSONObject jobJson = itemsArray.getJSONObject(i);
-                System.out.println("Job JSON Object: \n" + jobJson.toString(4)); // 4 칸 들여쓰기로 보기 쉽게 출력
 
                 // DTO로 변환 및 저장
                 GradeDTO gradeDTO = new GradeDTO();
@@ -108,7 +104,7 @@ public class GradeApiController {
                 gradeDTO.setSumYy(jobJson.optString("sumYy", ""));
                 gradeDTO.setTotalCount(jobJson.optString("totalCount", ""));
 
-                 gradeApiService.saveGradeJob(gradeDTO);
+                gradeApiService.saveGradeJob(gradeDTO);
             }
 
         } catch (Exception e) {

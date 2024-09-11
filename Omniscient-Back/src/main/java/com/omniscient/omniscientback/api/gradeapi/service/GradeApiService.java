@@ -1,8 +1,8 @@
-package com.omniscient.omniscientback.api.gradejob.service;
+package com.omniscient.omniscientback.api.gradeapi.service;
 
-import com.omniscient.omniscientback.api.gradejob.model.GradeDTO;
-import com.omniscient.omniscientback.api.gradejob.model.GradeEntity;
-import com.omniscient.omniscientback.api.gradejob.repository.GradeApiRepository;
+import com.omniscient.omniscientback.api.gradeapi.model.GradeDTO;
+import com.omniscient.omniscientback.api.gradeapi.model.GradeEntity;
+import com.omniscient.omniscientback.api.gradeapi.repository.GradeApiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,75 +1,99 @@
-package com.omniscient.omniscientback.api.gradejob.model;
+package com.omniscient.omniscientback.api.gradeapi.model;
 
-public class GradeDTO {
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "grade-job_api")
+public class GradeEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
 
     // 등급코드
+    @Column(name = "grdCd")
     private String grdCd;
 
     // 통계 년도
+    @Column(name = "baseYY")
     private String baseYY;
 
     // 결과코드
+    @Column(name = "resultCode")
     private String resultCode;
 
     // 결과 메세지
+    @Column(name = "resultMsg")
     private String resultMsg;
 
     // 등급명
+    @Column(name = "grdNm")
     private String grdNm;
 
     // 검정기관
+    @Column(name = "instiNm")
     private String instiNm;
 
     // 종목명
+    @Column(name = "jmNm")
     private String jmNm;
 
     // 전년대비 자격 취득 증가율
+    @Column(name = "preyyAcquQualIncRate")
     private String preyyAcquQualIncRate;
 
     // 전년도 자격 취득 수
+    @Column(name = "preyyQualAcquCnt")
     private String preyyQualAcquCnt;
 
     // 자격취득 수
+    @Column(name = "qualAcquCnt")
     private String qualAcquCnt;
 
     // 자격취득 순위
+    @Column(name = "qualAcquRank")
     private String qualAcquRank;
 
     // 통계년도
+    @Column(name = "statisYy")
     private String statisYy;
 
     // 집계년도
+    @Column(name = "sumYy")
     private String sumYy;
 
     // 페이지 당 데이터 수
+    @Column(name = "numOfRows")
     private String numOfRows;
 
     // 페이지 번호
+    @Column(name = "pageNo")
     private String pageNo;
 
     // 데이터 총 개수
+    @Column(name = "totalCount")
     private String totalCount;
 
-    public GradeDTO() {
+    public GradeEntity() {
     }
 
-    public GradeDTO(String grdCd, String baseYY, String resultCode, String resultMsg, String grdNm, String instiNm, String jmNm, String preyyAcquQualIncRate, String preyyQualAcquCnt, String qualAcquCnt, String qualAcquRank, String statisYy, String sumYy, String numOfRows, String pageNo, String totalCount) {
-        this.grdCd = grdCd;
-        this.baseYY = baseYY;
-        this.resultCode = resultCode;
-        this.resultMsg = resultMsg;
-        this.grdNm = grdNm;
-        this.instiNm = instiNm;
-        this.jmNm = jmNm;
-        this.preyyAcquQualIncRate = preyyAcquQualIncRate;
-        this.preyyQualAcquCnt = preyyQualAcquCnt;
-        this.qualAcquCnt = qualAcquCnt;
-        this.qualAcquRank = qualAcquRank;
-        this.statisYy = statisYy;
-        this.sumYy = sumYy;
-        this.numOfRows = numOfRows;
-        this.pageNo = pageNo;
+    public GradeEntity(String totalCount, String pageNo, String numOfRows, String sumYy, String statisYy, String qualAcquRank, String qualAcquCnt, String preyyQualAcquCnt, String preyyAcquQualIncRate, String jmNm, String instiNm, String grdNm, String resultMsg, String resultCode, String baseYY, String grdCd) {
         this.totalCount = totalCount;
+        this.pageNo = pageNo;
+        this.numOfRows = numOfRows;
+        this.sumYy = sumYy;
+        this.statisYy = statisYy;
+        this.qualAcquRank = qualAcquRank;
+        this.qualAcquCnt = qualAcquCnt;
+        this.preyyQualAcquCnt = preyyQualAcquCnt;
+        this.preyyAcquQualIncRate = preyyAcquQualIncRate;
+        this.jmNm = jmNm;
+        this.instiNm = instiNm;
+        this.grdNm = grdNm;
+        this.resultMsg = resultMsg;
+        this.resultCode = resultCode;
+        this.baseYY = baseYY;
+        this.grdCd = grdCd;
     }
 
     public String getGrdCd() {
@@ -202,8 +226,9 @@ public class GradeDTO {
 
     @Override
     public String toString() {
-        return "GradeDTO{" +
-                "grdCd='" + grdCd + '\'' +
+        return "GradeEntity{" +
+                "id=" + id +
+                ", grdCd='" + grdCd + '\'' +
                 ", baseYY='" + baseYY + '\'' +
                 ", resultCode='" + resultCode + '\'' +
                 ", resultMsg='" + resultMsg + '\'' +
