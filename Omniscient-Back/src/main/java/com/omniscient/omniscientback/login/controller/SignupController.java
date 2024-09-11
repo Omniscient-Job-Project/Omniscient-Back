@@ -31,7 +31,7 @@ public class SignupController {
         boolean isSignupSuccessful = signupService.signup(signupDTO);
 
         if (isSignupSuccessful) {
-            return ResponseEntity.ok("회원가입 성공");
+            return ResponseEntity.ok("회원가입 성공!!!!!!");
         } else {
             return ResponseEntity.badRequest().body("아이디가 이미 존재합니다.");
         }
