@@ -10,41 +10,28 @@ public class Notice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "notice_id", updatable = false, nullable = false)
+    @Column(name = "notice_id", nullable = false)
     private Integer noticeId;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)  // 필수 입력 필드
     private Integer userId;
 
-    @Column(name = "notice_title")
+    @Column(name = "notice_title", nullable = false)  // 필수 입력 필드
     private String noticeTitle;
 
-    @Column(name = "notice_content")
+    @Column(name = "notice_content", length = 1000, nullable = false)  // 필수 입력 필드
     private String noticeContent;
 
-    @Column(name = "notice_create_at")
+    @Column(name = "notice_create_at", nullable = false)  // 날짜 및 시간 필드
     private LocalDateTime noticeCreateAt;
 
-    @Column(name = "notice_update_at")
+    @Column(name = "notice_update_at", nullable = false)  // 날짜 및 시간 필드
     private LocalDateTime noticeUpdateAt;
 
-    // 공지사항의 활성화 상태 (true: 활성, false: 삭제된 상태)
-    @Column(name = "status")
-    private Boolean status = true;  // 기본값은 true로 설정
+    @Column(name = "noticeStatus", nullable = false)  // 상태 필드
+    private Boolean noticeStatus = true;  // 기본값은 true로 설정
 
-    public Notice() {
-    }
-
-    public Notice(Integer noticeId, Integer userId, String noticeTitle, String noticeContent, LocalDateTime noticeCreateAt, LocalDateTime noticeUpdateAt, Boolean status) {
-        this.noticeId = noticeId;
-        this.userId = userId;
-        this.noticeTitle = noticeTitle;
-        this.noticeContent = noticeContent;
-        this.noticeCreateAt = noticeCreateAt;
-        this.noticeUpdateAt = noticeUpdateAt;
-        this.status = status;  // 상태 필드 추가
-    }
-
+    // Getters and Setters
     public Integer getNoticeId() {
         return noticeId;
     }
@@ -93,12 +80,12 @@ public class Notice {
         this.noticeUpdateAt = noticeUpdateAt;
     }
 
-    public Boolean getStatus() {
-        return status;
+    public Boolean getNoticeStatus() {
+        return noticeStatus;
     }
 
-    public void setStatus(Boolean status) {
-        this.status = status;
+    public void setNoticeStatus(Boolean status) {
+        this.noticeStatus = status;
     }
 
     @Override
@@ -110,7 +97,7 @@ public class Notice {
                 ", noticeContent='" + noticeContent + '\'' +
                 ", noticeCreateAt=" + noticeCreateAt +
                 ", noticeUpdateAt=" + noticeUpdateAt +
-                ", status=" + status +   // 상태 필드 포함
+                ", status=" + noticeStatus +
                 '}';
     }
 }

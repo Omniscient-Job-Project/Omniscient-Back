@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,31 +69,28 @@ public class NoticeController {
         }
     }
 
+    @Operation(summary = "공지사항 수정", description = "ID를 기반으로 특정 공지사항을 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 수정되었습니다."),
+            @ApiResponse(responseCode = "404", description = "해당 ID를 가진 공지사항을 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "500", description = "서버 오류로 인해 공지사항을 수정할 수 없습니다.")
+    })
     @PutMapping("/{id}")
     public ResponseEntity<Notice> updateNotice(
             @Parameter(description = "수정할 공지사항의 ID", example = "1") @PathVariable Integer id,
             @RequestBody NoticeDTO noticeDTO) {
-        try {
-            // Convert DTO to Entity
-            Optional<Notice> existingNoticeOpt = noticeService.getNoticeById(id);
-            if (existingNoticeOpt.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 공지사항이 존재하지 않는 경우
-            }
+        Optional<Notice> existingNoticeOpt = noticeService.getNoticeById(id);
+        if (existingNoticeOpt.isPresent()) {
             Notice notice = existingNoticeOpt.get();
-            notice.setUserId(noticeDTO.getUserId());
-            notice.setNoticeTitle(noticeDTO.getNoticeTitle());
             notice.setNoticeContent(noticeDTO.getNoticeContent());
-            notice.setNoticeCreateAt(noticeDTO.getNoticeCreateAt());
-            notice.setNoticeUpdateAt(noticeDTO.getNoticeUpdateAt());
-            notice.setStatus(noticeDTO.getStatus());
-
-            Notice updatedNotice = noticeService.updateNotice(notice);
-            return ResponseEntity.ok(updatedNotice);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            notice.setNoticeStatus(noticeDTO.getNoticeStatus());
+            notice.setNoticeTitle(noticeDTO.getNoticeTitle());
+            notice.setNoticeUpdateAt(noticeDTO.getNoticeUpdateAt() != null ? noticeDTO.getNoticeUpdateAt() : LocalDateTime.now());
+            notice.setNoticeCreateAt(notice.getNoticeCreateAt() != null ? notice.getNoticeCreateAt() : LocalDateTime.now()); // Ensure this field is set
+            noticeService.updateNotice(notice);
+            return ResponseEntity.ok(notice);
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 

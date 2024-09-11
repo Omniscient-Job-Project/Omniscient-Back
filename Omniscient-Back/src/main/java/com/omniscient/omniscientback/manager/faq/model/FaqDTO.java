@@ -1,17 +1,18 @@
 package com.omniscient.omniscientback.manager.faq.model;
 
 public class FaqDTO {
-    private Long id;
+    private Integer id;
     private String question;
     private String answer;
     private Boolean status; // 추가된 필드: FAQ의 상태를 나타냅니다.
 
     // Getters and Setters
-    public Long getId() {
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -31,11 +32,11 @@ public class FaqDTO {
         this.answer = answer;
     }
 
-    public Boolean getStatus() {
+    public Boolean getFaqStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setFaqStatus(Boolean status) {
         this.status = status;
     }
 }
