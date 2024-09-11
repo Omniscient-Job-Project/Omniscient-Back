@@ -1,6 +1,7 @@
-package com.omniscient.omniscientback.manager.admin.visitor;
+package com.omniscient.omniscientback.manager.admin.visitor.controller;
 
 
+import com.omniscient.omniscientback.manager.admin.visitor.service.VisitorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
