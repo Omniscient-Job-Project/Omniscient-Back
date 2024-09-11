@@ -1,28 +1,31 @@
 package com.omniscient.omniscientback.manager.faq.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "faq")
 public class Faq {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "faq_id", updatable = false, nullable = false)  // ID 필드는 NULL 값이 없어야 합니다.
+    private Integer id;
 
+    @Column(name = "faq_question", length = 1000, nullable = false)  // question 필드에 1000자 제한과 NULL 값 불허 설정
     private String question;
+
+    @Column(name = "faq_answer", length = 1000, nullable = false)  // answer 필드에 1000자 제한과 NULL 값 불허 설정
     private String answer;
 
-    private Boolean status; // 추가된 필드: FAQ의 상태를 나타냅니다.
+    @Column(name = "faq_status", nullable = false)  // status 필드에 NULL 값 불허 설정
+    private Boolean status; // FAQ 상태를 나타냅니다.
 
     // Getters and Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -42,11 +45,11 @@ public class Faq {
         this.answer = answer;
     }
 
-    public Boolean getStatus() {
+    public Boolean getFaqStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setFaqStatus(Boolean status) {
         this.status = status;
     }
 }

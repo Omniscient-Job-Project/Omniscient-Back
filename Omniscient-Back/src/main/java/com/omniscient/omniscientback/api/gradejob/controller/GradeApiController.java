@@ -25,7 +25,7 @@ import java.net.URLEncoder;
 // 한국산업인력공단_등급별 자격취득 상위종목 현황
 public class GradeApiController {
 
-    @Value("${apiCar.key}")
+    @Value("${api_grade.key}")
     private String apiCarKey;
 
     private final GradeApiService gradeApiService;

@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-// test
+
 @RestController
 @RequestMapping("/api/v1/faqs")
 @CrossOrigin(origins = "http://localhost:8083")
@@ -23,7 +23,7 @@ public class FaqController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FaqDTO> getFaqById(@PathVariable Long id) {
+    public ResponseEntity<FaqDTO> getFaqById(@PathVariable Integer id) {
         FaqDTO faq = faqService.getFaqById(id);
         return ResponseEntity.ok(faq);
     }
@@ -35,15 +35,14 @@ public class FaqController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<FaqDTO> updateFaq(@PathVariable Long id, @RequestBody FaqDTO faqDTO) {
+    public ResponseEntity<FaqDTO> updateFaq(@PathVariable Integer id, @RequestBody FaqDTO faqDTO) {
         FaqDTO updatedFaq = faqService.updateFaq(id, faqDTO);
         return ResponseEntity.ok(updatedFaq);
     }
 
-    // 삭제 후 상태를 false로 반환
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> deleteFaq(@PathVariable Long id) {
+    public ResponseEntity<Boolean> deleteFaq(@PathVariable Integer id) {
         boolean isDeleted = faqService.deleteFaq(id);
-        return ResponseEntity.ok(isDeleted);  // 삭제 성공 여부를 반환
+        return ResponseEntity.ok(isDeleted);
     }
 }
