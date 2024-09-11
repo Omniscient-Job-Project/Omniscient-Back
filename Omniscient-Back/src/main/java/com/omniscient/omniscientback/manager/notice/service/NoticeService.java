@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
 @Service
 public class NoticeService {
 
@@ -34,7 +35,7 @@ public class NoticeService {
         notice.setNoticeContent(noticeDTO.getNoticeContent());
         notice.setNoticeCreateAt(noticeDTO.getNoticeCreateAt());
         notice.setNoticeUpdateAt(noticeDTO.getNoticeUpdateAt());
-        notice.setStatus(noticeDTO.getStatus());  // 상태 필드 설정
+        notice.setNoticeStatus(noticeDTO.getNoticeStatus());  // 상태 필드 설정
 
         return noticeRepository.save(notice);
     }
@@ -47,9 +48,12 @@ public class NoticeService {
         // 기존 공지 사항을 가져와서 업데이트
         Notice existingNotice = noticeRepository.findById(notice.getNoticeId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid notice ID"));
+
         existingNotice.setNoticeTitle(notice.getNoticeTitle());
         existingNotice.setNoticeContent(notice.getNoticeContent());
-        existingNotice.setNoticeUpdateAt(LocalDateTime.now());
+        existingNotice.setNoticeUpdateAt(notice.getNoticeUpdateAt() != null ? notice.getNoticeUpdateAt() : LocalDateTime.now());
+        existingNotice.setNoticeStatus(notice.getNoticeStatus()); // 상태 필드도 업데이트
+
         return noticeRepository.save(existingNotice);
     }
 
@@ -60,24 +64,13 @@ public class NoticeService {
             return false;  // 공지사항이 존재하지 않으면 삭제 실패
         }
         Notice notice = noticeOpt.get();
-        notice.setStatus(false);  // 공지사항을 삭제된 상태로 변경
+        notice.setNoticeStatus(false);  // 공지사항을 삭제된 상태로 변경
         noticeRepository.save(notice);
         return true;  // 성공적으로 처리됨
     }
 
-
-
     @Transactional
     public Notice save(NoticeDTO noticeDTO) {
-        Notice notice = new Notice();
-        notice.setUserId(noticeDTO.getUserId());
-        notice.setNoticeTitle(noticeDTO.getNoticeTitle());
-        notice.setNoticeContent(noticeDTO.getNoticeContent());
-        notice.setNoticeCreateAt(noticeDTO.getNoticeCreateAt());
-        notice.setNoticeUpdateAt(noticeDTO.getNoticeUpdateAt());
-        notice.setStatus(noticeDTO.getStatus());  // 상태 필드 설정
-
-        return noticeRepository.save(notice);
+        return createNotice(noticeDTO); // createNotice()와 동일한 동작 수행
     }
 }
-
