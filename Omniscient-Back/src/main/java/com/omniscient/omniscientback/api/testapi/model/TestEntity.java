@@ -276,10 +276,11 @@ public class TestEntity {
         this.totalCount = totalCount;
     }
 
+
     @Override
     public String toString() {
         return "TestEntity{" +
-                ", numOfRows='" + numOfRows + '\'' +
+                "numOfRows='" + numOfRows + '\'' +
                 ", pageNo='" + pageNo + '\'' +
                 ", dataFormat='" + dataFormat + '\'' +
                 ", implYy='" + implYy + '\'' +

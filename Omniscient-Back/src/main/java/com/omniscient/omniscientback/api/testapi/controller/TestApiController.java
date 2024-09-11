@@ -5,6 +5,8 @@ import com.omniscient.omniscientback.api.testapi.service.TestApiService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,7 @@ import java.net.URLEncoder;
 
 @RestController
 @RequestMapping("/api/v1/testjob")
+// 한국산업인력공단_국가자격 시험일정 조회 서비스
 public class TestApiController {
 
     @Value("${api_test.key}")
@@ -74,11 +77,9 @@ public class TestApiController {
         conn.disconnect();
 
         String rawData = sb.toString();
-        System.out.println("Raw XML Data: \n" + rawData);
 
         // XML을 JSON으로 변환
         String jsonData = convertXmlToJson(rawData);
-        System.out.println("Converted JSON Data: \n" + jsonData);
 
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
@@ -86,8 +87,15 @@ public class TestApiController {
 
             // items 필드 처리
             JSONArray itemsArray;
-            if (bodyObject.has("items") && bodyObject.get("items") instanceof JSONArray) {
-                itemsArray = bodyObject.getJSONArray("items");
+            if (bodyObject.has("items")) {
+                JSONObject itemsObject = bodyObject.getJSONObject("items");
+                if (itemsObject.has("item") && itemsObject.get("item") instanceof JSONArray) {
+                    itemsArray = itemsObject.getJSONArray("item");
+                } else if (itemsObject.has("item") && itemsObject.get("item") instanceof JSONObject) {
+                    itemsArray = new JSONArray().put(itemsObject.getJSONObject("item")); // 단일 객체를 배열로 처리
+                } else {
+                    itemsArray = new JSONArray(); // 빈 배열로 처리
+                }
             } else {
                 itemsArray = new JSONArray(); // 빈 배열로 처리
             }
@@ -95,31 +103,37 @@ public class TestApiController {
             // itemsArray의 각 항목을 처리
             for (int i = 0; i < itemsArray.length(); i++) {
                 JSONObject jobJson = itemsArray.getJSONObject(i);
-                System.out.println("Job JSON Object: \n" + jobJson.toString(4)); // 4 칸 들여쓰기로 보기 쉽게 출력
 
                 // TestDTO 객체에 데이터 매핑
                 TestDTO testDTO = new TestDTO();
-                testDTO.setNumOfRows(bodyObject.optString("numOfRows", ""));
-                testDTO.setPageNo(bodyObject.optString("pageNo", ""));
-                testDTO.setDataFormat(bodyObject.optString("dataFormat", ""));
-                testDTO.setImplYy(bodyObject.optString("implYy", ""));
-                testDTO.setImplSeq(jobJson.optString("implSeq", ""));
-                testDTO.setQualgbNm(jobJson.optString("qualgbCd", "")); // qualgbCd를 qualgbNm으로 수정
-                testDTO.setDescription(jobJson.optString("description", ""));
-                testDTO.setDocRegStartDt(jobJson.optString("docRegStartDt", ""));
-                testDTO.setDocRegEndDt(jobJson.optString("docRegEndDt", ""));
-                testDTO.setDocExamStartDt(jobJson.optString("docExamStartDt", ""));
-                testDTO.setDocExamEndDt(jobJson.optString("docExamEndDt", ""));
-                testDTO.setDocPassDt(jobJson.optString("docPassDt", ""));
-                testDTO.setPracRegStartDt(jobJson.optString("pracRegStartDt", ""));
-                testDTO.setPracRegEndDt(jobJson.optString("pracRegEndDt", ""));
-                testDTO.setPracExamStartDt(jobJson.optString("pracExamStartDt", ""));
-                testDTO.setPracExamEndDt(jobJson.optString("pracExamEndDt", ""));
-                testDTO.setPracPassDt(jobJson.optString("pracPassDt", ""));
-                testDTO.setTotalCount(bodyObject.optString("totalCount", ""));
+                testDTO.setNumOfRows(bodyObject.optString("numOfRows", null));
+                testDTO.setPageNo(bodyObject.optString("pageNo", null));
+                testDTO.setDataFormat(bodyObject.optString("dataFormat", null));
+                testDTO.setImplYy(bodyObject.optString("implYy", null));
+                testDTO.setResultCode(bodyObject.optString("resultCode", null));
+                testDTO.setResultMsg(bodyObject.optString("resultMsg", null));
+                testDTO.setImplSeq(jobJson.optString("implSeq", null));
+                testDTO.setQualgbNm(jobJson.optString("qualgbNm", null)); // qualgbCd를 qualgbNm으로 수정
+                testDTO.setDescription(jobJson.optString("description", null));
+
+                testDTO.setDocRegStartDt(jobJson.optString("docRegStartDt", null));
+                testDTO.setDocRegEndDt(jobJson.optString("docRegEndDt", null));
+
+                testDTO.setDocExamStartDt(jobJson.optString("docExamStartDt", null));
+                testDTO.setDocExamEndDt(jobJson.optString("docExamEndDt", null));
+
+                testDTO.setDocPassDt(jobJson.optString("docPassDt", null));
+
+                testDTO.setPracRegStartDt(jobJson.optString("pracRegStartDt", null));
+                testDTO.setPracRegEndDt(jobJson.optString("pracRegEndDt", null));
+
+                testDTO.setPracExamStartDt(jobJson.optString("pracExamStartDt", null));
+                testDTO.setPracExamEndDt(jobJson.optString("pracExamEndDt", null));
+
+                testDTO.setPracPassDt(jobJson.optString("pracPassDt", null));
+                testDTO.setTotalCount(bodyObject.optString("totalCount", null));
 
                 // 저장 서비스 호출
-                System.out.println("TestDTO: " + testDTO.toString()); // DTO 상태 출력
                 testApiService.saveTestJob(testDTO);
             }
 
