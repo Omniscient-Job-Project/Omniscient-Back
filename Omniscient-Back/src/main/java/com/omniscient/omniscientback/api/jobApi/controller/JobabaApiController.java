@@ -142,7 +142,7 @@ public class JobabaApiController {
 
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jobJson = jsonArray.getJSONObject(i);
-            if (jobJson.getString("JO_REQST_NO").equals(jobId)) {
+            if (jobJson.getString("ENTRPRS_NM").equals(jobId)) {
                 // 해당 jobId에 맞는 데이터 반환
                 return ResponseEntity.ok(jobJson.toString(4)); // 예쁘게 출력 (4칸 들여쓰기)
             }
