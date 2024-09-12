@@ -3,6 +3,7 @@ package com.omniscient.omniscientback.api.testapi.controller;
 import com.omniscient.omniscientback.api.testapi.model.TestDTO;
 import com.omniscient.omniscientback.api.testapi.service.TestApiService;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ import java.net.URLEncoder;
 // 한국산업인력공단_국가자격 시험일정 조회 서비스
 public class TestApiController {
 
-    @Value("${api_test.key}")
+    @Value("${api_grade.key}")
     private String apiTestKey;
 
     private final TestApiService testApiService;
@@ -85,16 +86,35 @@ public class TestApiController {
             JSONObject jsonObject = new JSONObject(jsonData);
             JSONObject bodyObject = jsonObject.getJSONObject("response").getJSONObject("body");
 
-            // items 필드 처리
+// items 필드 처리
             JSONArray itemsArray;
             if (bodyObject.has("items")) {
-                JSONObject itemsObject = bodyObject.getJSONObject("items");
-                if (itemsObject.has("item") && itemsObject.get("item") instanceof JSONArray) {
-                    itemsArray = itemsObject.getJSONArray("item");
-                } else if (itemsObject.has("item") && itemsObject.get("item") instanceof JSONObject) {
-                    itemsArray = new JSONArray().put(itemsObject.getJSONObject("item")); // 단일 객체를 배열로 처리
+                Object itemsObject = bodyObject.get("items");
+
+                // items가 JSONObject인지 String인지 확인
+                if (itemsObject instanceof JSONObject) {
+                    JSONObject itemsJsonObject = (JSONObject) itemsObject;
+                    if (itemsJsonObject.has("item")) {
+                        if (itemsJsonObject.get("item") instanceof JSONArray) {
+                            itemsArray = itemsJsonObject.getJSONArray("item");
+                        } else if (itemsJsonObject.get("item") instanceof JSONObject) {
+                            itemsArray = new JSONArray().put(itemsJsonObject.getJSONObject("item")); // 단일 객체를 배열로 처리
+                        } else {
+                            itemsArray = new JSONArray(); // 빈 배열로 처리
+                        }
+                    } else {
+                        itemsArray = new JSONArray(); // 빈 배열로 처리
+                    }
+                } else if (itemsObject instanceof String) {
+                    // items가 빈 문자열일 때 처리
+                    String itemsString = (String) itemsObject;
+                    if (itemsString.isEmpty()) {
+                        itemsArray = new JSONArray(); // 빈 배열로 처리
+                    } else {
+                        throw new JSONException("Unexpected items format: " + itemsString);
+                    }
                 } else {
-                    itemsArray = new JSONArray(); // 빈 배열로 처리
+                    throw new JSONException("Unexpected items data type: " + itemsObject.getClass().getName());
                 }
             } else {
                 itemsArray = new JSONArray(); // 빈 배열로 처리
