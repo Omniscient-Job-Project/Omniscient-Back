@@ -1,7 +1,6 @@
 package com.omniscient.omniscientback.mypage.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import java.util.List;
 
 /**
@@ -10,7 +9,6 @@ import java.util.List;
  */
 @Entity
 @Table(name = "resumes")
-@Data
 public class Resume {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,7 +47,7 @@ public class Resume {
     private Boolean status = true;  // 이력서 상태 (활성화/비활성화)
 
     @Embeddable
-    @Data
+
     public static class Education {
         private String school;  // 학교명
         private String major;  // 전공
@@ -58,7 +56,7 @@ public class Resume {
     }
 
     @Embeddable
-    @Data
+
     public static class Experience {
         private String company;  // 회사명
         private String position;  // 직책
@@ -68,9 +66,118 @@ public class Resume {
     }
 
     @Embeddable
-    @Data
+
     public static class Certificate {
         private String name;  // 자격증명
         private String date;  // 취득일
     }
+
+    public Resume() {
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public List<Education> getEducation() {
+        return education;
+    }
+
+    public void setEducation(List<Education> education) {
+        this.education = education;
+    }
+
+    public List<Experience> getExperience() {
+        return experience;
+    }
+
+    public void setExperience(List<Experience> experience) {
+        this.experience = experience;
+    }
+
+    public String getSkills() {
+        return skills;
+    }
+
+    public void setSkills(String skills) {
+        this.skills = skills;
+    }
+
+    public List<Certificate> getCertificates() {
+        return certificates;
+    }
+
+    public void setCertificates(List<Certificate> certificates) {
+        this.certificates = certificates;
+    }
+
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Resume{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", education=" + education +
+                ", experience=" + experience +
+                ", skills='" + skills + '\'' +
+                ", certificates=" + certificates +
+                ", introduction='" + introduction + '\'' +
+                ", status=" + status +
+                '}';
+    }
+
 }

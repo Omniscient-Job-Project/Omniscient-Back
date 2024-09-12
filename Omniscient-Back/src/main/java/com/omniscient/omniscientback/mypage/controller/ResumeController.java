@@ -2,71 +2,98 @@ package com.omniscient.omniscientback.mypage.controller;
 
 import com.omniscient.omniscientback.mypage.model.ResumeDTO;
 import com.omniscient.omniscientback.mypage.service.ResumeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/mypage/resume")
+@RequestMapping("/api/v1/mypage/resumes")
 @CrossOrigin(origins = "http://localhost:8083")
 public class ResumeController {
     private final ResumeService resumeService;
+    private static final Logger logger = LoggerFactory.getLogger(ResumeController.class);
 
     @Autowired
     public ResumeController(ResumeService resumeService) {
         this.resumeService = resumeService;
     }
 
-    /**
-     * 모든 활성화된 이력서를 조회합니다.
-     * @return 활성화된 이력서 목록
-     */
     @GetMapping
     public ResponseEntity<List<ResumeDTO>> getAllResumes() {
-        return ResponseEntity.ok(resumeService.getAllResumes());
+        logger.info("모든 활성화된 이력서 조회 요청");
+        try {
+            List<ResumeDTO> resumes = resumeService.getAllResumes();
+            logger.info("이력서 조회 성공: {} 개 조회됨", resumes.size());
+            return ResponseEntity.ok(resumes);
+        } catch (Exception e) {
+            logger.error("이력서 조회 중 오류 발생", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    /**
-     * 특정 ID의 활성화된 이력서를 조회합니다.
-     * @param id 조회할 이력서의 ID
-     * @return 조회된 이력서
-     */
     @GetMapping("/{id}")
     public ResponseEntity<ResumeDTO> getResume(@PathVariable Integer id) {
-        return ResponseEntity.ok(resumeService.getResume(id));
+        logger.info("이력서 조회 요청: ID {}", id);
+        try {
+            ResumeDTO resume = resumeService.getResume(id);
+            logger.info("이력서 조회 성공: ID {}", id);
+            return ResponseEntity.ok(resume);
+        } catch (RuntimeException e) {
+            logger.warn("이력서를 찾을 수 없음: ID {}", id);
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            logger.error("이력서 조회 중 오류 발생: ID {}", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    /**
-     * 새로운 이력서를 생성합니다.
-     * @param resumeDTO 생성할 이력서 정보
-     * @return 생성된 이력서
-     */
     @PostMapping
     public ResponseEntity<ResumeDTO> createResume(@RequestBody ResumeDTO resumeDTO) {
-        return ResponseEntity.ok(resumeService.createResume(resumeDTO));
+        logger.info("새 이력서 생성 요청");
+        try {
+            ResumeDTO createdResume = resumeService.createResume(resumeDTO);
+            logger.info("새 이력서 생성 성공: ID {}", createdResume.getId());
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdResume);
+        } catch (Exception e) {
+            logger.error("새 이력서 생성 중 오류 발생", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    /**
-     * 기존 이력서를 업데이트합니다.
-     * @param id 업데이트할 이력서의 ID
-     * @param resumeDTO 업데이트할 이력서 정보
-     * @return 업데이트된 이력서
-     */
     @PutMapping("/{id}")
     public ResponseEntity<ResumeDTO> updateResume(@PathVariable Integer id, @RequestBody ResumeDTO resumeDTO) {
-        return ResponseEntity.ok(resumeService.updateResume(id, resumeDTO));
+        logger.info("이력서 업데이트 요청: ID {}", id);
+        try {
+            ResumeDTO updatedResume = resumeService.updateResume(id, resumeDTO);
+            logger.info("이력서 업데이트 성공: ID {}", id);
+            return ResponseEntity.ok(updatedResume);
+        } catch (RuntimeException e) {
+            logger.warn("업데이트할 이력서를 찾을 수 없음: ID {}", id);
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            logger.error("이력서 업데이트 중 오류 발생: ID {}", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    /**
-     * 이력서를 비활성화합니다. (삭제 대신 상태 변경)
-     * @param id 비활성화할 이력서의 ID
-     * @return 응답 엔티티
-     */
-    @DeleteMapping("/{id}")
+    @PutMapping("/{id}/deactivate")
     public ResponseEntity<Void> deactivateResume(@PathVariable Integer id) {
-        resumeService.deactivateResume(id);
-        return ResponseEntity.noContent().build();
+        logger.info("이력서 비활성화 요청: ID {}", id);
+        try {
+            resumeService.deactivateResume(id);
+            logger.info("이력서 비활성화 성공: ID {}", id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            logger.warn("비활성화할 이력서를 찾을 수 없음: ID {}", id);
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            logger.error("이력서 비활성화 중 오류 발생: ID {}", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

@@ -27,7 +27,7 @@ public class ProfileController {
 
     @GetMapping
     public ResponseEntity<List<ProfileDTO>> getAllProfiles() {
-        logger.info("모든 프로필 조회");
+        logger.info("모든 활성화된 프로필 조회");
         try {
             List<ProfileDTO> profiles = profileService.getAllProfiles();
             return ResponseEntity.ok(profiles);
@@ -39,12 +39,12 @@ public class ProfileController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProfileDTO> getProfile(@PathVariable Integer id) {
-        logger.info("프로필 조회: ID {}", id);
+        logger.info("활성화된 프로필 조회: ID {}", id);
         try {
             ProfileDTO profile = profileService.getProfile(id);
             return ResponseEntity.ok(profile);
         } catch (IllegalArgumentException e) {
-            logger.warn("프로필을 찾을 수 없음: ID {}", id);
+            logger.warn("활성화된 프로필을 찾을 수 없음: ID {}", id);
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
             logger.error("프로필 조회 중 오류 발생: ID {}", id, e);
@@ -59,10 +59,6 @@ public class ProfileController {
         try {
             if (profileImage != null && !profileImage.isEmpty()) {
                 profileDTO.setProfileImage(profileImage.getBytes());
-            }
-            // id가 null이거나 0이면 새로운 프로필 생성으로 간주
-            if (profileDTO.getId() == null || profileDTO.getId() == 0) {
-                profileDTO.setId((Integer) null);
             }
             ProfileDTO createdProfile = profileService.createProfile(profileDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProfile);
@@ -87,7 +83,7 @@ public class ProfileController {
             logger.info("프로필 업데이트 성공: ID {}", id);
             return ResponseEntity.ok(updatedProfile);
         } catch (IllegalArgumentException e) {
-            logger.warn("업데이트할 프로필을 찾을 수 없음: ID {}", id);
+            logger.warn("업데이트할 활성화된 프로필을 찾을 수 없음: ID {}", id);
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
             logger.error("프로필 업데이트 중 오류 발생: ID {}", id, e);
@@ -95,7 +91,7 @@ public class ProfileController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/deactivate/{id}")
     public ResponseEntity<Void> deactivateProfile(@PathVariable Integer id) {
         logger.info("프로필 비활성화: ID {}", id);
         try {

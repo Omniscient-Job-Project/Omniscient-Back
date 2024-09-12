@@ -49,10 +49,10 @@ public class BoardService {
         return convertToDTO(updatedBoard);
     }
 
-    public void softDeleteBoard(Integer id) {
+    public void updateBoardStatus(Integer id, boolean status) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID의 게시글을 찾을 수 없습니다: " + id));
-        board.setStatus(false); // status를 false로 설정하여 '삭제된 것처럼' 처리
+        board.setStatus(status);
         boardRepository.save(board);
     }
 
