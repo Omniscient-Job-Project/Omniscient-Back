@@ -6,6 +6,16 @@ public class FaqDTO {
     private String answer;
     private Boolean status; // 추가된 필드: FAQ의 상태를 나타냅니다.
 
+    public FaqDTO() {
+    }
+
+    public FaqDTO(Integer id, String question, String answer, Boolean status) {
+        this.id = id;
+        this.question = question;
+        this.answer = answer;
+        this.status = status;
+    }
+
     // Getters and Setters
 
     public Integer getId() {

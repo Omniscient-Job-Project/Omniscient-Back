@@ -20,6 +20,16 @@ public class Faq {
     @Column(name = "faq_status", nullable = false)  // status 필드에 NULL 값 불허 설정
     private Boolean status; // FAQ 상태를 나타냅니다.
 
+    public Faq() {
+    }
+
+    public Faq(Integer id, String question, String answer, Boolean status) {
+        this.id = id;
+        this.question = question;
+        this.answer = answer;
+        this.status = status;
+    }
+
     // Getters and Setters
     public Integer getId() {
         return id;

@@ -13,8 +13,12 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:8083")
 public class FaqController {
 
+    private final FaqService faqService;
+
     @Autowired
-    private FaqService faqService;
+    public FaqController(FaqService faqService) {
+        this.faqService = faqService;
+    }
 
     @GetMapping
     public ResponseEntity<List<FaqDTO>> getAllFaqs() {
@@ -34,13 +38,13 @@ public class FaqController {
         return ResponseEntity.ok(createdFaq);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<FaqDTO> updateFaq(@PathVariable Integer id, @RequestBody FaqDTO faqDTO) {
         FaqDTO updatedFaq = faqService.updateFaq(id, faqDTO);
         return ResponseEntity.ok(updatedFaq);
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/delete/{id}")
     public ResponseEntity<Boolean> deleteFaq(@PathVariable Integer id) {
         boolean isDeleted = faqService.deleteFaq(id);
         return ResponseEntity.ok(isDeleted);

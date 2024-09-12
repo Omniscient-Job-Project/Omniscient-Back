@@ -21,6 +21,15 @@ public class NoticeDTO {
     public NoticeDTO() {
     }
 
+    public NoticeDTO(Integer userId, String noticeTitle, String noticeContent, LocalDateTime noticeCreateAt, LocalDateTime noticeUpdateAt, Boolean noticeStatus) {
+        this.userId = userId;
+        this.noticeTitle = noticeTitle;
+        this.noticeContent = noticeContent;
+        this.noticeCreateAt = noticeCreateAt;
+        this.noticeUpdateAt = noticeUpdateAt;
+        this.noticeStatus = noticeStatus;
+    }
+
     // Getter 및 Setter
     public Integer getUserId() {
         return userId;
