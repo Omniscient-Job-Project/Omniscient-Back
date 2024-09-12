@@ -1,7 +1,6 @@
 package com.omniscient.omniscientback.manager.notice.model;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,28 +12,31 @@ public class Notice {
     @Column(name = "notice_id", nullable = false)
     private Integer noticeId;
 
-    @Column(name = "user_id", nullable = false)  // 필수 입력 필드
+    @Column(name = "user_id", nullable = false)
     private Integer userId;
 
-    @Column(name = "notice_title", nullable = false)  // 필수 입력 필드
+    @Column(name = "notice_title", nullable = false)
     private String noticeTitle;
 
-    @Column(name = "notice_content", length = 1000, nullable = false)  // 필수 입력 필드
+    @Column(name = "notice_content", length = 1000, nullable = false)
     private String noticeContent;
 
-    @Column(name = "notice_create_at", nullable = false)  // 날짜 및 시간 필드
+    @Column(name = "notice_create_at", nullable = false)
     private LocalDateTime noticeCreateAt;
 
-    @Column(name = "notice_update_at", nullable = false)  // 날짜 및 시간 필드
+    @Column(name = "notice_update_at", nullable = false)
     private LocalDateTime noticeUpdateAt;
 
-    @Column(name = "noticeStatus", nullable = false)  // 상태 필드
-    private Boolean noticeStatus = true;  // 기본값은 true로 설정
+    @Column(name = "notice_status", nullable = false)
+    private Boolean noticeStatus = true;
+
+    @Column(name = "notice_views")  // 조회수 필드 추가
+    private Integer noticeViews = 0;
 
     public Notice() {
     }
 
-    public Notice(Integer noticeId, Integer userId, String noticeTitle, String noticeContent, LocalDateTime noticeCreateAt, LocalDateTime noticeUpdateAt, Boolean noticeStatus) {
+    public Notice(Integer noticeId, Integer userId, String noticeTitle, String noticeContent, LocalDateTime noticeCreateAt, LocalDateTime noticeUpdateAt, Boolean noticeStatus, Integer noticeViews) {
         this.noticeId = noticeId;
         this.userId = userId;
         this.noticeTitle = noticeTitle;
@@ -42,6 +44,7 @@ public class Notice {
         this.noticeCreateAt = noticeCreateAt;
         this.noticeUpdateAt = noticeUpdateAt;
         this.noticeStatus = noticeStatus;
+        this.noticeViews = noticeViews;
     }
 
     // Getters and Setters
@@ -101,6 +104,14 @@ public class Notice {
         this.noticeStatus = status;
     }
 
+    public Integer getNoticeViews() {
+        return noticeViews;
+    }
+
+    public void setNoticeViews(Integer noticeViews) {
+        this.noticeViews = noticeViews;
+    }
+
     @Override
     public String toString() {
         return "Notice{" +
@@ -111,6 +122,7 @@ public class Notice {
                 ", noticeCreateAt=" + noticeCreateAt +
                 ", noticeUpdateAt=" + noticeUpdateAt +
                 ", status=" + noticeStatus +
+                ", views=" + noticeViews +
                 '}';
     }
 }
