@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -116,4 +117,17 @@ public class NoticeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();  // 서버 오류 발생 시
         }
     }
+
+    @Operation(summary = "공지사항 조회수 증가", description = "공지사항의 조회수를 증가시킵니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 조회수가 증가되었습니다."),
+            @ApiResponse(responseCode = "404", description = "해당 ID를 가진 공지사항을 찾을 수 없습니다.")
+    })
+    @PutMapping("/views/{id}")
+    public ResponseEntity<Map<String, String>> incrementViews(
+            @Parameter(description = "조회수를 증가시킬 공지사항의 ID", example = "1") @PathVariable Integer id) {
+        noticeService.incrementViews(id);
+        return ResponseEntity.ok(Map.of("message", "조회수가 증가하였습니다."));
+    }
 }
+

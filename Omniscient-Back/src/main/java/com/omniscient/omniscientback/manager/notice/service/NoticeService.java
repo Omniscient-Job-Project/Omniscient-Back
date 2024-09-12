@@ -4,11 +4,15 @@ import com.omniscient.omniscientback.manager.notice.model.Notice;
 import com.omniscient.omniscientback.manager.notice.model.NoticeDTO;
 import com.omniscient.omniscientback.manager.notice.repository.NoticeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -45,7 +49,7 @@ public class NoticeService {
         if (notice.getNoticeId() == null || !noticeRepository.existsById(notice.getNoticeId())) {
             throw new IllegalArgumentException("Invalid notice ID");
         }
-        // 기존 공지 사항을 가져와서 업데이트
+
         Notice existingNotice = noticeRepository.findById(notice.getNoticeId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid notice ID"));
 
@@ -72,5 +76,14 @@ public class NoticeService {
     @Transactional
     public Notice save(NoticeDTO noticeDTO) {
         return createNotice(noticeDTO); // createNotice()와 동일한 동작 수행
+    }
+
+    public Notice incrementViews(Integer noticeId) {
+        return noticeRepository.findById(noticeId)
+                .map(notice -> {
+                    notice.setNoticeViews(notice.getNoticeViews() + 1);
+                    return noticeRepository.save(notice);
+                })
+                .orElse(null);
     }
 }
