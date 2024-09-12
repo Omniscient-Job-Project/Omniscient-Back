@@ -2,12 +2,15 @@ package com.omniscient.omniscientback.mypage.controller;
 
 import com.omniscient.omniscientback.mypage.model.CertificateDTO;
 import com.omniscient.omniscientback.mypage.service.CertificateService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +56,7 @@ public class CertificateController {
     }
 
     @PostMapping
-    public ResponseEntity<CertificateDTO> createCertificate(@RequestBody CertificateDTO certificateDTO) {
+    public ResponseEntity<?> createCertificate(@Valid @RequestBody CertificateDTO certificateDTO) {
         logger.info("새 자격증 생성 요청: {}", certificateDTO);
         try {
             CertificateDTO createdCertificate = certificateService.createCertificate(certificateDTO);
@@ -61,15 +64,15 @@ public class CertificateController {
             return ResponseEntity.status(HttpStatus.CREATED).body(createdCertificate);
         } catch (IllegalArgumentException e) {
             logger.error("새 자격증 생성 중 검증 오류 발생: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         } catch (Exception e) {
             logger.error("새 자격증 생성 중 오류 발생", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "내부 서버 오류가 발생했습니다."));
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CertificateDTO> updateCertificate(@PathVariable Integer id, @RequestBody CertificateDTO certificateDTO) {
+    public ResponseEntity<CertificateDTO> updateCertificate(@PathVariable Integer id, @Valid @RequestBody CertificateDTO certificateDTO) {
         logger.info("자격증 업데이트 요청: ID {}", id);
         try {
             certificateDTO.setId(id);
@@ -84,17 +87,25 @@ public class CertificateController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deactivateCertificate(@PathVariable Integer id) {
+    @PutMapping("/{id}/deactivate")
+    public ResponseEntity<Map<String, Object>> deactivateCertificate(@PathVariable Integer id) {
         try {
-            certificateService.deactivateCertificate(id);
-            return ResponseEntity.ok().body(Map.of("message", "자격증이 성공적으로 비활성화되었습니다.", "id", id));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+            boolean deactivated = certificateService.deactivateCertificate(id);
+            if (deactivated) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("message", "자격증이 성공적으로 비활성화되었습니다.");
+                response.put("id", id);
+                return ResponseEntity.ok(response);
+            } else {
+                Map<String, Object> error = new HashMap<>();
+                error.put("error", "자격증을 찾을 수 없습니다.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            }
         } catch (Exception e) {
             logger.error("자격증 비활성화 중 오류 발생: ID {}", id, e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "내부 서버 오류가 발생했습니다."));
+            Map<String, Object> error = new HashMap<>();
+            error.put("error", "내부 서버 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }
 }

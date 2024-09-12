@@ -1,6 +1,5 @@
 package com.omniscient.omniscientback.mypage.model;
-
-import lombok.Data;
+import java.util.Arrays;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -8,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * ProfileDTO 클래스
  * 프로필 정보를 전송하기 위한 데이터 전송 객체입니다.
  */
-@Data
+
 public class ProfileDTO {
     private Integer id;  // 프로필 고유 식별자
     private String name;  // 사용자 이름
@@ -22,6 +21,9 @@ public class ProfileDTO {
 
     @JsonIgnore
     private byte[] profileImage;  // 프로필 이미지 (JSON 직렬화에서 제외)
+
+    public ProfileDTO() {
+    }
 
     /**
      * Integer 타입의 id를 설정합니다.
@@ -43,5 +45,95 @@ public class ProfileDTO {
         }
     }
 
-    // Lombok의 @Data 어노테이션에 의해 다른 필드들의 getter와 setter가 자동 생성됩니다.
+    public Integer getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getJobTitle() {
+        return jobTitle;
+    }
+
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public List<String> getCertificates() {
+        return certificates;
+    }
+
+    public void setCertificates(List<String> certificates) {
+        this.certificates = certificates;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public byte[] getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(byte[] profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    @Override
+    public String toString() {
+        return "ProfileDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", jobTitle='" + jobTitle + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", age=" + age +
+                ", address='" + address + '\'' +
+                ", certificates=" + certificates +
+                ", status=" + status +
+                ", profileImage=" + Arrays.toString(profileImage) +
+                '}';
+    }
 }

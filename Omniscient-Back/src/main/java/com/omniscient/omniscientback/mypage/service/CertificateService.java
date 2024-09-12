@@ -5,12 +5,10 @@ import com.omniscient.omniscientback.mypage.model.CertificateDTO;
 import com.omniscient.omniscientback.mypage.repository.CertificateRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,14 +45,6 @@ public class CertificateService {
 
     public CertificateDTO createCertificate(CertificateDTO certificateDTO) {
         logger.info("새로운 자격증 생성 시작: {}", certificateDTO);
-
-        List<String> missingFields = validateCertificateFields(certificateDTO);
-        if (!missingFields.isEmpty()) {
-            String errorMessage = "자격증 생성 실패: 다음 필수 필드가 누락되었습니다 - " + String.join(", ", missingFields);
-            logger.error(errorMessage);
-            throw new IllegalArgumentException(errorMessage);
-        }
-
         Certificate certificate = convertToEntity(certificateDTO);
         certificate.setIsActive(true);
         Certificate savedCertificate = certificateRepository.save(certificate);
@@ -65,20 +55,13 @@ public class CertificateService {
 
     public CertificateDTO updateCertificate(CertificateDTO certificateDTO) {
         logger.info("자격증 업데이트 시작. ID: {}", certificateDTO.getId());
-
-        List<String> missingFields = validateCertificateFields(certificateDTO);
-        if (!missingFields.isEmpty()) {
-            String errorMessage = "자격증 업데이트 실패: 다음 필수 필드가 누락되었습니다 - " + String.join(", ", missingFields);
-            logger.error(errorMessage);
-            throw new IllegalArgumentException(errorMessage);
-        }
-
         Certificate existingCertificate = certificateRepository.findByIdAndIsActiveTrue(certificateDTO.getId())
                 .orElseThrow(() -> {
                     logger.warn("업데이트할 자격증을 찾을 수 없음. ID: {}", certificateDTO.getId());
                     return new IllegalArgumentException("자격증을 찾을 수 없습니다");
                 });
-        BeanUtils.copyProperties(certificateDTO, existingCertificate, "id", "isActive");
+
+        updateCertificateFields(existingCertificate, certificateDTO);
         Certificate updatedCertificate = certificateRepository.save(existingCertificate);
         CertificateDTO updatedDTO = convertToDTO(updatedCertificate);
         logger.info("자격증 업데이트 완료. ID: {}", updatedDTO.getId());
@@ -86,40 +69,45 @@ public class CertificateService {
     }
 
     @Transactional
-    public void deactivateCertificate(Integer id) {
+    public boolean deactivateCertificate(Integer id) {
         logger.info("자격증 비활성화 시작. ID: {}", id);
-        Certificate certificate = certificateRepository.findById(id)
-                .orElseThrow(() -> {
-                    logger.warn("비활성화할 자격증을 찾을 수 없음. ID: {}", id);
-                    return new IllegalArgumentException("자격증을 찾을 수 없습니다");
-                });
-        certificate.setIsActive(false);
-        certificateRepository.save(certificate);
-        logger.info("자격증 비활성화 완료. ID: {}", id);
-    }
-
-    private List<String> validateCertificateFields(CertificateDTO certificateDTO) {
-        List<String> missingFields = new ArrayList<>();
-        if (isNullOrEmpty(certificateDTO.getName())) missingFields.add("name");
-        if (isNullOrEmpty(certificateDTO.getDate())) missingFields.add("date");
-        if (isNullOrEmpty(certificateDTO.getIssuer())) missingFields.add("issuer");
-        if (isNullOrEmpty(certificateDTO.getNumber())) missingFields.add("number");
-        return missingFields;
-    }
-
-    private boolean isNullOrEmpty(String value) {
-        return value == null || value.trim().isEmpty();
+        int updatedCount = certificateRepository.updateIsActiveById(id, false);
+        boolean deactivated = updatedCount > 0;
+        if (deactivated) {
+            logger.info("자격증 비활성화 완료. ID: {}", id);
+        } else {
+            logger.warn("비활성화할 자격증을 찾을 수 없음. ID: {}", id);
+        }
+        return deactivated;
     }
 
     private CertificateDTO convertToDTO(Certificate certificate) {
-        CertificateDTO dto = new CertificateDTO();
-        BeanUtils.copyProperties(certificate, dto);
-        return dto;
+        return new CertificateDTO(
+                certificate.getId(),
+                certificate.getName(),
+                certificate.getDate(),
+                certificate.getIssuer(),
+                certificate.getNumber(),
+                certificate.getIsActive()
+        );
     }
 
     private Certificate convertToEntity(CertificateDTO dto) {
-        Certificate certificate = new Certificate();
-        BeanUtils.copyProperties(dto, certificate);
-        return certificate;
+        return new Certificate(
+                dto.getId(),
+                dto.getName(),
+                dto.getDate(),
+                dto.getIssuer(),
+                dto.getNumber(),
+                dto.getIsActive()
+        );
+    }
+    // 프로필 이미지는 아직 구문 안만들었습니당
+    // 추후에 여기 코드에 추가
+    private void updateCertificateFields(Certificate certificate, CertificateDTO dto) {
+        certificate.setName(dto.getName());
+        certificate.setDate(dto.getDate());
+        certificate.setIssuer(dto.getIssuer());
+        certificate.setNumber(dto.getNumber());
     }
 }
