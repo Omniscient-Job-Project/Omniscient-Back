@@ -9,8 +9,6 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
 @Entity
 public class Visitor {
 
@@ -20,4 +18,35 @@ public class Visitor {
 
     private LocalDate visitDate;
     private Integer visitCount;
+
+    public Visitor() {
+    }
+
+    public Visitor(Integer id, LocalDate visitDate, Integer visitCount) {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public LocalDate getVisitDate() {
+        return visitDate;
+    }
+
+    public void setVisitDate(LocalDate visitDate) {
+        this.visitDate = visitDate;
+    }
+
+    public Integer getVisitCount() {
+        return visitCount;
+    }
+
+    public void setVisitCount(Integer visitCount) {
+        this.visitCount = visitCount;
+    }
 }
+

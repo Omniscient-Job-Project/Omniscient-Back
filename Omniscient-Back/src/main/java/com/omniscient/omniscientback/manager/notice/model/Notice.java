@@ -31,6 +31,19 @@ public class Notice {
     @Column(name = "noticeStatus", nullable = false)  // 상태 필드
     private Boolean noticeStatus = true;  // 기본값은 true로 설정
 
+    public Notice() {
+    }
+
+    public Notice(Integer noticeId, Integer userId, String noticeTitle, String noticeContent, LocalDateTime noticeCreateAt, LocalDateTime noticeUpdateAt, Boolean noticeStatus) {
+        this.noticeId = noticeId;
+        this.userId = userId;
+        this.noticeTitle = noticeTitle;
+        this.noticeContent = noticeContent;
+        this.noticeCreateAt = noticeCreateAt;
+        this.noticeUpdateAt = noticeUpdateAt;
+        this.noticeStatus = noticeStatus;
+    }
+
     // Getters and Setters
     public Integer getNoticeId() {
         return noticeId;

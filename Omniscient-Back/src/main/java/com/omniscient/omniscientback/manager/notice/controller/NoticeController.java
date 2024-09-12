@@ -75,7 +75,7 @@ public class NoticeController {
             @ApiResponse(responseCode = "404", description = "해당 ID를 가진 공지사항을 찾을 수 없습니다."),
             @ApiResponse(responseCode = "500", description = "서버 오류로 인해 공지사항을 수정할 수 없습니다.")
     })
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Notice> updateNotice(
             @Parameter(description = "수정할 공지사항의 ID", example = "1") @PathVariable Integer id,
             @RequestBody NoticeDTO noticeDTO) {
@@ -100,7 +100,7 @@ public class NoticeController {
             @ApiResponse(responseCode = "404", description = "해당 ID를 가진 공지사항을 찾을 수 없습니다."),
             @ApiResponse(responseCode = "500", description = "서버 오류로 인해 공지사항을 삭제할 수 없습니다.")
     })
-    @DeleteMapping("/{id}")
+    @PutMapping("/delete/{id}")
     public ResponseEntity<Void> deleteNotice(
             @Parameter(description = "삭제할 공지사항의 ID", example = "1") @PathVariable Integer id) {
         try {
