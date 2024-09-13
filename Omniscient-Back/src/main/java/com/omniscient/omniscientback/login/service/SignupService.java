@@ -91,4 +91,13 @@ public class SignupService {
         // 사용자가 존재하지 않거나 비밀번호가 없는 경우 인증 실패
         return false;
     }
+
+    // Refresh 토큰 무효화 메서드
+    public boolean invalidateRefreshToken(String token) {
+        // 이 메서드에서 토큰을 무효화하는 로직을 추가할 수 있습니다.
+        // 예를 들어, 해당 토큰을 데이터베이스에서 삭제하거나,
+        // 사용자 엔티티의 refreshToken 필드를 비워서 무효화할 수 있습니다.
+        // 현재는 예시로 true를 반환하도록 설정하였습니다.
+        return true; // 성공적으로 무효화했다고 가정
+    }
 }

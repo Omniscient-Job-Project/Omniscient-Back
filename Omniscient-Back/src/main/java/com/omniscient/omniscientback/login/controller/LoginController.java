@@ -48,5 +48,22 @@ public class LoginController {
 
         return ResponseEntity.ok(tokenDTO); // JWT 토큰을 클라이언트에 반환
     }
+
+    // 로그아웃
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String authorization) {
+        // Authorization 헤더에서 Bearer 토큰 추출
+        String token = authorization.substring(7); // "Bearer " 이후의 토큰 부분만 가져옴
+
+        // 토큰 무효화 로직 (필요에 따라 추가)
+        boolean isInvalidated = signupService.invalidateRefreshToken(token);
+
+        if (isInvalidated) {
+            return ResponseEntity.ok("로그아웃 성공");
+        } else {
+            return ResponseEntity.status(400).body("로그아웃 실패");
+        }
     }
+
+  }
 
