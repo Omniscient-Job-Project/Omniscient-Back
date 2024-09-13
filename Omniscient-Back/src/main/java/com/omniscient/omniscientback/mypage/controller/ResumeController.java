@@ -56,6 +56,12 @@ public class ResumeController {
     public ResponseEntity<ResumeDTO> createResume(@RequestBody ResumeDTO resumeDTO) {
         logger.info("새 이력서 생성 요청");
         try {
+            // null 체크 및 기본값 설정
+            if (resumeDTO.getTitle() == null || resumeDTO.getTitle().trim().isEmpty()) {
+                logger.warn("이력서 제목이 비어있음");
+                return ResponseEntity.badRequest().build();
+            }
+
             ResumeDTO createdResume = resumeService.createResume(resumeDTO);
             logger.info("새 이력서 생성 성공: ID {}", createdResume.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(createdResume);
@@ -69,7 +75,24 @@ public class ResumeController {
     public ResponseEntity<ResumeDTO> updateResume(@PathVariable Integer id, @RequestBody ResumeDTO resumeDTO) {
         logger.info("이력서 업데이트 요청: ID {}", id);
         try {
-            ResumeDTO updatedResume = resumeService.updateResume(id, resumeDTO);
+            // null 체크 및 기존 데이터 유지
+            ResumeDTO existingResume = resumeService.getResume(id);
+            if (existingResume == null) {
+                logger.warn("업데이트할 이력서를 찾을 수 없음: ID {}", id);
+                return ResponseEntity.notFound().build();
+            }
+            // null이 아닌 필드만 업데이트
+            if (resumeDTO.getTitle() != null) existingResume.setTitle(resumeDTO.getTitle());
+            if (resumeDTO.getName() != null) existingResume.setName(resumeDTO.getName());
+            if (resumeDTO.getEmail() != null) existingResume.setEmail(resumeDTO.getEmail());
+            if (resumeDTO.getPhone() != null) existingResume.setPhone(resumeDTO.getPhone());
+            if (resumeDTO.getEducation() != null) existingResume.setEducation(resumeDTO.getEducation());
+            if (resumeDTO.getExperience() != null) existingResume.setExperience(resumeDTO.getExperience());
+            if (resumeDTO.getSkills() != null) existingResume.setSkills(resumeDTO.getSkills());
+            if (resumeDTO.getCertificates() != null) existingResume.setCertificates(resumeDTO.getCertificates());
+            if (resumeDTO.getIntroduction() != null) existingResume.setIntroduction(resumeDTO.getIntroduction());
+
+            ResumeDTO updatedResume = resumeService.updateResume(id, existingResume);
             logger.info("이력서 업데이트 성공: ID {}", id);
             return ResponseEntity.ok(updatedResume);
         } catch (RuntimeException e) {
