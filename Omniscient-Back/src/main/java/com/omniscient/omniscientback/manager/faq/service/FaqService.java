@@ -5,6 +5,7 @@ import com.omniscient.omniscientback.manager.faq.model.FaqDTO;
 import com.omniscient.omniscientback.manager.faq.repository.FaqRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -65,6 +66,7 @@ public class FaqService {
         dto.setQuestion(faq.getQuestion());
         dto.setAnswer(faq.getAnswer());
         dto.setFaqStatus(faq.getFaqStatus());  // 상태 필드 추가
+        dto.setFaqViews(faq.getFaqViews());  // 조회수 필드 추가
         return dto;
     }
 
@@ -73,6 +75,18 @@ public class FaqService {
         faq.setQuestion(dto.getQuestion());
         faq.setAnswer(dto.getAnswer());
         faq.setFaqStatus(dto.getFaqStatus());  // 상태 필드 추가
+        faq.setFaqViews(dto.getFaqViews());  // 조회수 필드 추가
         return faq;
+    }
+
+    @Transactional
+    public Faq incrementViews(Integer faqId) {
+        System.out.println("Incrementing views for faqId: " + faqId);
+        return faqRepository.findById(faqId)
+                .map(faq -> {
+                    faq.setFaqViews(faq.getFaqViews() + 1);
+                    return faqRepository.save(faq);
+                })
+                .orElse(null);
     }
 }

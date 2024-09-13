@@ -20,17 +20,21 @@ public class Faq {
     @Column(name = "faq_status", nullable = false)  // status 필드에 NULL 값 불허 설정
     private Boolean status; // FAQ 상태를 나타냅니다.
 
+    @Column(name = "faq_views")  // 조회수 필드 추가
+    private Integer faqViews = 0;
+
+
     public Faq() {
     }
 
-    public Faq(Integer id, String question, String answer, Boolean status) {
+    public Faq(Integer id, String question, String answer, Boolean status, Integer faqViews) {
         this.id = id;
         this.question = question;
         this.answer = answer;
         this.status = status;
+        this.faqViews = faqViews;
     }
 
-    // Getters and Setters
     public Integer getId() {
         return id;
     }
@@ -61,5 +65,24 @@ public class Faq {
 
     public void setFaqStatus(Boolean status) {
         this.status = status;
+    }
+
+    public Integer getFaqViews() {
+        return faqViews;
+    }
+
+    public void setFaqViews(Integer faqViews) {
+        this.faqViews = faqViews;
+    }
+
+    @Override
+    public String toString() {
+        return "Faq{" +
+                "id=" + id +
+                ", question='" + question + '\'' +
+                ", answer='" + answer + '\'' +
+                ", status=" + status +
+                ", faqViews=" + faqViews +
+                '}';
     }
 }
