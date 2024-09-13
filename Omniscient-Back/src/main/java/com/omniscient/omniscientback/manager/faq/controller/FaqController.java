@@ -2,7 +2,11 @@ package com.omniscient.omniscientback.manager.faq.controller;
 
 import com.omniscient.omniscientback.manager.faq.model.FaqDTO;
 import com.omniscient.omniscientback.manager.faq.service.FaqService;
+import com.omniscient.omniscientback.manager.notice.model.Notice;
+import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,5 +52,17 @@ public class FaqController {
     public ResponseEntity<Boolean> deleteFaq(@PathVariable Integer id) {
         boolean isDeleted = faqService.deleteFaq(id);
         return ResponseEntity.ok(isDeleted);
+    }
+    @PutMapping("/views/{id}")
+    public ResponseEntity<String> incrementViews(
+            @Parameter(description = "조회수를 증가시킬 FAQ의 ID", example = "1") @PathVariable Integer id) {
+        try {
+            faqService.incrementViews(id);
+            return ResponseEntity.ok("조회수가 증가하였습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("조회수 증가 중 오류 발생");
+        }
+
     }
 }

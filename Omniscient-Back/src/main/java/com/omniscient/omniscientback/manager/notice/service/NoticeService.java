@@ -4,15 +4,11 @@ import com.omniscient.omniscientback.manager.notice.model.Notice;
 import com.omniscient.omniscientback.manager.notice.model.NoticeDTO;
 import com.omniscient.omniscientback.manager.notice.repository.NoticeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -65,20 +61,23 @@ public class NoticeService {
     public boolean deleteNotice(Integer noticeId) {
         Optional<Notice> noticeOpt = noticeRepository.findById(noticeId);
         if (noticeOpt.isEmpty()) {
-            return false;  // 공지사항이 존재하지 않으면 삭제 실패
+            return false;
         }
         Notice notice = noticeOpt.get();
-        notice.setNoticeStatus(false);  // 공지사항을 삭제된 상태로 변경
+        notice.setNoticeStatus(false);
         noticeRepository.save(notice);
-        return true;  // 성공적으로 처리됨
+        return true;
     }
+
 
     @Transactional
     public Notice save(NoticeDTO noticeDTO) {
         return createNotice(noticeDTO); // createNotice()와 동일한 동작 수행
     }
 
+    @Transactional
     public Notice incrementViews(Integer noticeId) {
+        System.out.println("Incrementing views for noticeId: " + noticeId);
         return noticeRepository.findById(noticeId)
                 .map(notice -> {
                     notice.setNoticeViews(notice.getNoticeViews() + 1);
@@ -86,4 +85,5 @@ public class NoticeService {
                 })
                 .orElse(null);
     }
+
 }

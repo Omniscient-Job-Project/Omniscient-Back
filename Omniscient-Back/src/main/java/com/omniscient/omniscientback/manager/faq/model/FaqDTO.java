@@ -5,18 +5,18 @@ public class FaqDTO {
     private String question;
     private String answer;
     private Boolean status; // 추가된 필드: FAQ의 상태를 나타냅니다.
+    private Integer faqViews = 0;  // 조회수 필드 추가
 
     public FaqDTO() {
     }
 
-    public FaqDTO(Integer id, String question, String answer, Boolean status) {
+    public FaqDTO(Integer id, String question, String answer, Boolean status, Integer faqViews) {
         this.id = id;
         this.question = question;
         this.answer = answer;
         this.status = status;
+        this.faqViews = faqViews;
     }
-
-    // Getters and Setters
 
     public Integer getId() {
         return id;
@@ -48,5 +48,24 @@ public class FaqDTO {
 
     public void setFaqStatus(Boolean status) {
         this.status = status;
+    }
+
+    public Integer getFaqViews() {
+        return faqViews;
+    }
+
+    public void setFaqViews(Integer faqViews) {
+        this.faqViews = faqViews;
+    }
+
+    @Override
+    public String toString() {
+        return "FaqDTO{" +
+                "id=" + id +
+                ", question='" + question + '\'' +
+                ", answer='" + answer + '\'' +
+                ", status=" + status +
+                ", faqViews=" + faqViews +
+                '}';
     }
 }
