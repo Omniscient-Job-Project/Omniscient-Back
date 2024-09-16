@@ -20,7 +20,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/notice")
-@CrossOrigin(origins = "http://localhost:8083")
 @Tag(name = "Notice API", description = "공지사항 관련 컨트롤러")
 public class NoticeController {
 

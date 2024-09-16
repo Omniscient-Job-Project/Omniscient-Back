@@ -26,7 +26,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/gradejob")
-@CrossOrigin(origins = "http://localhost:8083")
 // 한국산업인력공단_등급별 자격취득 상위종목 현황
 public class GradeApiController {
 

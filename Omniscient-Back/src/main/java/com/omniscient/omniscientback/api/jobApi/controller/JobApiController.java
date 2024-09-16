@@ -23,7 +23,6 @@ import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("/api/v1/seoul")
-@CrossOrigin(origins = "http://localhost:8083")
 public class JobApiController {
 
     @Value("${api.key}")
