@@ -11,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/boards")
-@CrossOrigin(origins = "http://localhost:8083")
 public class BoardController {
     private final BoardService boardService;
 

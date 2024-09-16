@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/login")
-@CrossOrigin(origins = "http://localhost:8083")
 public class LoginController {
 
     private final SignupService signupService;

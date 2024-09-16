@@ -15,7 +15,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/mypage")
-@CrossOrigin(origins = "http://localhost:8083")
 public class ProfileController {
     private final ProfileService profileService;
     private static final Logger logger = LoggerFactory.getLogger(ProfileController.class);

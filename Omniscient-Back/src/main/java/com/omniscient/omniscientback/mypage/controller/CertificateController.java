@@ -16,7 +16,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/certificates")
-@CrossOrigin(origins = "http://localhost:8083")
 public class CertificateController {
     private static final Logger logger = LoggerFactory.getLogger(CertificateController.class);
     private final CertificateService certificateService;

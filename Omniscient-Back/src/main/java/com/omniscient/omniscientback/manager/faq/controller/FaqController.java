@@ -14,7 +14,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/faqs")
-@CrossOrigin(origins = "http://localhost:8083")
 public class FaqController {
 
     private final FaqService faqService;

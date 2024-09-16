@@ -22,7 +22,6 @@ import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("/api/v1/jobaba")
-@CrossOrigin(origins = "http://localhost:8083")
 public class JobabaApiController {
 
     @Value("${api_jobaba.key}")
