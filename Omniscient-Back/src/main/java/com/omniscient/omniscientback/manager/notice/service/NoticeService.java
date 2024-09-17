@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 public class NoticeService {
 
@@ -29,9 +28,15 @@ public class NoticeService {
     }
 
     @Transactional
-    public Notice createNotice(Notice notice) {
-        notice.setNoticeCreateAt(LocalDateTime.now());
-        notice.setNoticeUpdateAt(LocalDateTime.now());
+    public Notice createNotice(NoticeDTO noticeDTO) {
+        Notice notice = new Notice();
+        notice.setUserId(noticeDTO.getUserId());
+        notice.setNoticeTitle(noticeDTO.getNoticeTitle());
+        notice.setNoticeContent(noticeDTO.getNoticeContent());
+        notice.setNoticeCreateAt(noticeDTO.getNoticeCreateAt());
+        notice.setNoticeUpdateAt(noticeDTO.getNoticeUpdateAt());
+        notice.setNoticeStatus(noticeDTO.getNoticeStatus());  // 상태 필드 설정
+
         return noticeRepository.save(notice);
     }
 
@@ -40,28 +45,45 @@ public class NoticeService {
         if (notice.getNoticeId() == null || !noticeRepository.existsById(notice.getNoticeId())) {
             throw new IllegalArgumentException("Invalid notice ID");
         }
-        notice.setNoticeUpdateAt(LocalDateTime.now());
-        return noticeRepository.save(notice);
+
+        Notice existingNotice = noticeRepository.findById(notice.getNoticeId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid notice ID"));
+
+        existingNotice.setNoticeTitle(notice.getNoticeTitle());
+        existingNotice.setNoticeContent(notice.getNoticeContent());
+        existingNotice.setNoticeUpdateAt(notice.getNoticeUpdateAt() != null ? notice.getNoticeUpdateAt() : LocalDateTime.now());
+        existingNotice.setNoticeStatus(notice.getNoticeStatus()); // 상태 필드도 업데이트
+
+        return noticeRepository.save(existingNotice);
     }
 
     @Transactional
-    public void deleteNotice(Integer noticeId) {
-        if (!noticeRepository.existsById(noticeId)) {
-            throw new IllegalArgumentException("Notice not found");
+    public boolean deleteNotice(Integer noticeId) {
+        Optional<Notice> noticeOpt = noticeRepository.findById(noticeId);
+        if (noticeOpt.isEmpty()) {
+            return false;
         }
-        noticeRepository.deleteById(noticeId);
+        Notice notice = noticeOpt.get();
+        notice.setNoticeStatus(false);
+        noticeRepository.save(notice);
+        return true;
+    }
+
+
+    @Transactional
+    public Notice save(NoticeDTO noticeDTO) {
+        return createNotice(noticeDTO); // createNotice()와 동일한 동작 수행
     }
 
     @Transactional
-    public Notice save(NoticeDTO notificationDTO) {
-        Notice notice = new Notice();
-        notice.setUserId(notificationDTO.getUserId());
-        notice.setNoticeTitle(notificationDTO.getNoticeTitle());
-        notice.setNoticeContent(notificationDTO.getNoticeContent());
-        notice.setNoticeCreateAt(notificationDTO.getNoticeCreateAt());
-        notice.setNoticeUpdateAt(notificationDTO.getNoticeUpdateAt());
-
-        return noticeRepository.save(notice);
+    public Notice incrementViews(Integer noticeId) {
+        System.out.println("Incrementing views for noticeId: " + noticeId);
+        return noticeRepository.findById(noticeId)
+                .map(notice -> {
+                    notice.setNoticeViews(notice.getNoticeViews() + 1);
+                    return noticeRepository.save(notice);
+                })
+                .orElse(null);
     }
 
 }

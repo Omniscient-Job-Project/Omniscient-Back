@@ -15,17 +15,14 @@ public class NoticeDTO {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime noticeUpdateAt;
 
+    private Boolean noticeStatus = true;  // 기본값은 true로 설정
+    private Integer noticeViews = 0;  // 조회수 필드 추가
+
+    // 기본 생성자
     public NoticeDTO() {
     }
 
-    public NoticeDTO(Integer userId, String noticeTitle, String noticeContent, LocalDateTime noticeCreateAt, LocalDateTime noticeUpdateAt) {
-        this.userId = userId;
-        this.noticeTitle = noticeTitle;
-        this.noticeContent = noticeContent;
-        this.noticeCreateAt = noticeCreateAt;
-        this.noticeUpdateAt = noticeUpdateAt;
-    }
-
+    // Getter 및 Setter
     public Integer getUserId() {
         return userId;
     }
@@ -66,6 +63,22 @@ public class NoticeDTO {
         this.noticeUpdateAt = noticeUpdateAt;
     }
 
+    public Boolean getNoticeStatus() {
+        return noticeStatus;
+    }
+
+    public void setNoticeStatus(Boolean noticeStatus) {
+        this.noticeStatus = noticeStatus;
+    }
+
+    public Integer getNoticeViews() {
+        return noticeViews;
+    }
+
+    public void setNoticeViews(Integer noticeViews) {
+        this.noticeViews = noticeViews;
+    }
+
     @Override
     public String toString() {
         return "NoticeDTO{" +
@@ -74,6 +87,8 @@ public class NoticeDTO {
                 ", noticeContent='" + noticeContent + '\'' +
                 ", noticeCreateAt=" + noticeCreateAt +
                 ", noticeUpdateAt=" + noticeUpdateAt +
+                ", noticeStatus=" + noticeStatus +
+                ", noticeViews=" + noticeViews +
                 '}';
     }
 }

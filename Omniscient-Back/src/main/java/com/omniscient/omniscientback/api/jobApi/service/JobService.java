@@ -1,7 +1,6 @@
 package com.omniscient.omniscientback.api.jobApi.service;
 
-
-import com.omniscient.omniscientback.api.jobApi.model.JobDTO;
+import com.omniscient.omniscientback.api.jobApi.model.JobTotalDTO;
 import com.omniscient.omniscientback.api.jobApi.model.JobEntity;
 import com.omniscient.omniscientback.api.jobApi.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,30 +12,30 @@ import java.util.Optional;
 @Service
 public class JobService {
 
+    private final JobRepository jobRepository;
+
     @Autowired
-    private JobRepository jobRepository;
-
-
-    public void saveJob(JobDTO jobDTO) {
-        JobEntity jobEntity = new JobEntity();
-
-        jobEntity.setJobCompanyName(jobDTO.getJobCompanyName());
-        jobEntity.setJobInfoTitle(jobDTO.getJobInfoTitle());
-        jobEntity.setJobWageType(jobDTO.getJobWageType());
-        jobEntity.setJobSalary(jobDTO.getJobSalary());
-        jobEntity.setJobLocation(jobDTO.getJobLocation());
-        jobEntity.setJobEmploymentType(jobDTO.getJobEmploymentType());
-//        jobEntity.setJobPostedDate(jobDTO.getJobPostedDate());
-//        jobEntity.setJobClosingDate(jobDTO.getJobClosingDate());
-        jobEntity.setJobWebInfoUrl(jobDTO.getJobWebInfoUrl());
-        jobEntity.setJobMobileInfoUrl(jobDTO.getJobMobileInfoUrl());
-
-        jobRepository.save(jobEntity);
-
-
+    public JobService(JobRepository jobRepository) {
+        this.jobRepository = jobRepository;
     }
 
-    // 취업 정보에 저장된 테이블을 다 불러오는 거
+    public void saveJob(JobTotalDTO jobDTO) {
+        JobEntity jobEntity = new JobEntity();
+
+        jobEntity.setJobCompanyName(jobDTO.getCompanyName());
+        jobEntity.setJobInfoTitle(jobDTO.getInfoTitle());
+        jobEntity.setJobWageType(jobDTO.getWageType());
+        jobEntity.setJobSalary(jobDTO.getSalary());
+        jobEntity.setJobLocation(jobDTO.getLocation());
+        jobEntity.setJobEmploymentType(jobDTO.getEmploymentType());
+//        jobEntity.setJobPostedDate(jobDTO.getPostedDate());
+//        jobEntity.setJobClosingDate(jobDTO.getClosingDate());
+        jobEntity.setJobWebInfoUrl(jobDTO.getWebInfoUrl());
+        jobEntity.setJobMobileInfoUrl(jobDTO.getMobileInfoUrl());
+        jobEntity.setJobCareerCondition(jobDTO.getCareerCondition());
+
+        jobRepository.save(jobEntity);
+    }
 
     public List<JobEntity> getAllJobs() {
         return jobRepository.findAll();

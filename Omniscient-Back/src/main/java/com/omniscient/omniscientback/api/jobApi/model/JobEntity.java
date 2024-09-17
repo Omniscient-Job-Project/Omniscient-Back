@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "JobAPI")
 public class JobEntity {
 
     @Id
@@ -30,7 +31,6 @@ public class JobEntity {
     @Column(name = "job_employment_type")
     private String jobEmploymentType;
 
-
     @Column(name = "job_web_info_url")
     private String jobWebInfoUrl;
 
@@ -46,7 +46,26 @@ public class JobEntity {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "job_carrer_condition")
+    private String JobCareerCondition;
+
     public JobEntity() {
+    }
+
+    public JobEntity(Integer jobId, String jobCompanyName, String jobInfoTitle, String jobWageType, String jobSalary, String jobLocation, String jobEmploymentType, String jobWebInfoUrl, String jobMobileInfoUrl, String status, LocalDate date, String title, String jobCareerCondition) {
+        this.jobId = jobId;
+        this.jobCompanyName = jobCompanyName;
+        this.jobInfoTitle = jobInfoTitle;
+        this.jobWageType = jobWageType;
+        this.jobSalary = jobSalary;
+        this.jobLocation = jobLocation;
+        this.jobEmploymentType = jobEmploymentType;
+        this.jobWebInfoUrl = jobWebInfoUrl;
+        this.jobMobileInfoUrl = jobMobileInfoUrl;
+        this.status = status;
+        this.date = date;
+        this.title = title;
+        JobCareerCondition = jobCareerCondition;
     }
 
     public Integer getJobId() {
@@ -145,6 +164,14 @@ public class JobEntity {
         this.title = title;
     }
 
+    public String getJobCareerCondition() {
+        return JobCareerCondition;
+    }
+
+    public void setJobCareerCondition(String jobCareerCondition) {
+        JobCareerCondition = jobCareerCondition;
+    }
+
     @Override
     public String toString() {
         return "JobEntity{" +
@@ -160,6 +187,7 @@ public class JobEntity {
                 ", status='" + status + '\'' +
                 ", date=" + date +
                 ", title='" + title + '\'' +
+                ", JobCareerCondition='" + JobCareerCondition + '\'' +
                 '}';
     }
 }
