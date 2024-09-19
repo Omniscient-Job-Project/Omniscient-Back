@@ -90,4 +90,7 @@ public class BoardDTO {
                 ", updatedAt='" + updatedAt + '\'' +
                 '}';
     }
+
+    public BoardDTO() {
+    }
 }
