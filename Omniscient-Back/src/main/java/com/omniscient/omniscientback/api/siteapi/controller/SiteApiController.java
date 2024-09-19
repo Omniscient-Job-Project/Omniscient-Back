@@ -7,6 +7,8 @@ import org.json.JSONObject;
 import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +22,7 @@ import java.net.URLEncoder;
 
 @RestController
 @RequestMapping("/api/v1/sitejob")
-// 한국산업인력공단_국가자격시험 시험장소 정보
+// 국가자격시험 시험장소 정보
 public class SiteApiController {
 
     @Value("${api_site.key}")
@@ -34,100 +36,104 @@ public class SiteApiController {
     }
 
     @GetMapping
-    public String getSiteJobList() throws IOException {
+    public ResponseEntity<String> getSiteJobList() {
         String serviceUrl = "http://openapi.q-net.or.kr/api/service/rest/InquiryExamAreaSVC/getList";
         String brchCd = "01";
         String numOfRows = "5";
         String pageNo = "1";
 
-        StringBuilder urlBuilder = new StringBuilder(serviceUrl); /*URL*/
-        urlBuilder.append("?ServiceKey=").append(URLEncoder.encode(apiSiteKey,"UTF-8")); /*Service Key*/
-        urlBuilder.append("&brchCd=").append(brchCd); /*00 : 본부 , 01 : 서울, 02: 서부, 03 : 부산, 04 : 대구 ,05 : 인천 , 06 : 광주 , 07 : 남부 , 08 : 충남 , 09 : 울산 , 10 : 경기 , 11: 강원 , 12 : 충북 , 13: 대전, 14: 전북 , 15 : 전남 , 16 : 경북 , 17 : 경남 , 18 : 제주 , 19 : 강원동부, 20 : 전남서부 , 21 : 부산남부 , 22 : 경북동부 , 23 : 경기북부 , 24 : 경기동부*/
-        urlBuilder.append("&numOfRows=").append(numOfRows); /*한 페이지 결과 수*/
-        urlBuilder.append("&pageNo=").append(pageNo);/*페이지 번호*/
-
-
-        URL url = new URL(urlBuilder.toString());
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("Content-type", "application/xml");
-
-        // 응답 코드 확인
-        int responseCode = conn.getResponseCode();
-        BufferedReader rd;
-        if (responseCode >= 200 && responseCode <= 300) {
-            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        } else {
-            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-        }
-
-        // 응답 데이터 처리
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = rd.readLine()) != null) {
-            sb.append(line);
-        }
-        rd.close();
-        conn.disconnect();
-
-        String rawData = sb.toString();
-
-        String jsonData = convertXmlToJson(rawData);
-
+        StringBuilder urlBuilder = new StringBuilder(serviceUrl);
         try {
-            JSONObject jsonObject = new JSONObject(jsonData);
-            JSONObject bodyObject = jsonObject.getJSONObject("response").getJSONObject("body");
+            urlBuilder.append("?ServiceKey=").append(URLEncoder.encode(apiSiteKey, "UTF-8"));
+            urlBuilder.append("&brchCd=").append(brchCd);
+            urlBuilder.append("&numOfRows=").append(numOfRows);
+            urlBuilder.append("&pageNo=").append(pageNo);
 
-            // items 필드 처리
-            JSONArray itemsArray;
-            if (bodyObject.has("items")) {
-                if (bodyObject.get("items") instanceof JSONArray) {
-                    itemsArray = bodyObject.getJSONArray("items");
-                } else if (bodyObject.get("items") instanceof JSONObject) {
-                    // 'items'가 JSONObject일 때, 'item' 배열을 가져옴
-                    JSONObject itemsObject = bodyObject.getJSONObject("items");
-                    if (itemsObject.has("item") && itemsObject.get("item") instanceof JSONArray) {
-                        itemsArray = itemsObject.getJSONArray("item");
-                    } else {
-                        itemsArray = new JSONArray(); // 'item'이 없거나 빈 배열일 경우
+            URL url = new URL(urlBuilder.toString());
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Content-type", "application/xml");
+
+            // 응답 코드 확인
+            int responseCode = conn.getResponseCode();
+            BufferedReader rd = responseCode >= 200 && responseCode <= 300
+                    ? new BufferedReader(new InputStreamReader(conn.getInputStream()))
+                    : new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+
+            // 응답 데이터 처리
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = rd.readLine()) != null) {
+                sb.append(line);
+            }
+            rd.close();
+            conn.disconnect();
+
+            String rawData = sb.toString();
+            String jsonData = convertXmlToJson(rawData);
+
+            // JSON 데이터 파싱 및 유효성 검사
+            try {
+                JSONObject jsonObject = new JSONObject(jsonData);
+                JSONObject bodyObject = jsonObject.getJSONObject("response").getJSONObject("body");
+
+                // items 필드 처리
+                JSONArray itemsArray = new JSONArray();
+                if (bodyObject.has("items")) {
+                    if (bodyObject.get("items") instanceof JSONArray) {
+                        itemsArray = bodyObject.getJSONArray("items");
+                    } else if (bodyObject.get("items") instanceof JSONObject) {
+                        JSONObject itemsObject = bodyObject.getJSONObject("items");
+                        if (itemsObject.has("item") && itemsObject.get("item") instanceof JSONArray) {
+                            itemsArray = itemsObject.getJSONArray("item");
+                        }
                     }
-                } else {
-                    itemsArray = new JSONArray(); // 'items'가 배열이나 객체가 아닌 경우
                 }
-            } else {
-                itemsArray = new JSONArray(); // 'items'가 없는 경우
+
+                // DTO 변환 및 서비스 호출
+                for (int i = 0; i < itemsArray.length(); i++) {
+                    JSONObject jobJson = itemsArray.getJSONObject(i);
+
+                    SiteDTO siteDTO = new SiteDTO();
+                    siteDTO.setNumOfRows(jobJson.optString("numOfRows", null));
+                    siteDTO.setPageNo(jobJson.optString("pageNo", null));
+                    siteDTO.setBrchCd(jobJson.optString("brchCd", null));
+                    siteDTO.setAddress(jobJson.optString("address", null));
+                    siteDTO.setBrchNm(jobJson.optString("brchNm", null));
+                    siteDTO.setExamAreaGbNm(jobJson.optString("examAreaGbNm", null));
+                    siteDTO.setExamAreaNm(jobJson.optString("examAreaNm", null));
+                    siteDTO.setPlceLoctGid(jobJson.optString("plceLoctGid", null));
+                    siteDTO.setTelNo(jobJson.optString("telNo", null));
+                    siteDTO.setResultCode(jobJson.optString("resultCode", null));
+                    siteDTO.setResultMsg(jobJson.optString("resultMsg", null));
+                    siteDTO.setTotalCount(jobJson.optString("totalCount", null));
+
+                    // 예외 처리 및 데이터 저장
+                    try {
+                        siteApiService.saveSiteJob(siteDTO);
+                    } catch (Exception e) {
+                        // 로깅 및 예외 처리
+                        System.err.println("Site 작업 저장 중 오류 발생: " + e.getMessage());
+                    }
+                }
+            } catch (Exception e) {
+                return new ResponseEntity<>("응답 데이터 처리 오류", HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
+            return new ResponseEntity<>(jsonData, HttpStatus.OK);
 
-            for (int i = 0; i < itemsArray.length(); i++) {
-                JSONObject jobJson = itemsArray.getJSONObject(i);
-
-                SiteDTO siteDTO = new SiteDTO();
-                siteDTO.setNumOfRows(jobJson.optString("numOfRows",null));
-                siteDTO.setPageNo(jobJson.optString("pageNo",null));
-                siteDTO.setBrchCd(jobJson.optString("brchCd",null));
-                siteDTO.setAddress(jobJson.optString("address",null));
-                siteDTO.setBrchNm(jobJson.optString("brchNm",null));
-                siteDTO.setExamAreaGbNm(jobJson.optString("examAreaGbNm",null));
-                siteDTO.setExamAreaNm(jobJson.optString("examAreaNm",null));
-                siteDTO.setPlceLoctGid(jobJson.optString("plceLoctGid",null));
-                siteDTO.setTelNo(jobJson.optString("telNo",null));
-                siteDTO.setResultCode(jobJson.optString("resultCode",null));
-                siteDTO.setResultMsg(jobJson.optString("resultMsg",null));
-                siteDTO.setTotalCount(jobJson.optString("totalCount",null));
-
-                siteApiService.saveSiteJob(siteDTO);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            return new ResponseEntity<>("API에 연결하는 동안 오류 발생", HttpStatus.BAD_REQUEST);
         }
-        return jsonData;
     }
-
+// 확인
     // XML 데이터를 JSON으로 변환하는 메소드
     private String convertXmlToJson(String xmlData) {
-        JSONObject json = XML.toJSONObject(xmlData);
-        return json.toString(4); // JSON 데이터를 보기 쉽게 4칸 들여쓰기 처리
+        try {
+            JSONObject json = XML.toJSONObject(xmlData);
+            return json.toString(4); // JSON 데이터를 보기 쉽게 4칸 들여쓰기 처리
+        } catch (Exception e) {
+            throw new RuntimeException("XML을 JSON으로 변환하는 동안 오류가 발생", e);
+        }
     }
 }
-

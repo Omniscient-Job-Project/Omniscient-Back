@@ -16,7 +16,10 @@ public class UserEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id; // 사용자 ID
+
+
+    private Integer id;
+
 
     @Column(name = "user_id", nullable = false)
     private String userId; // 사용자 ID
@@ -44,7 +47,13 @@ public class UserEntity implements UserDetails {
     private String email; // 이메일
 
     @Column(name = "refresh_token", nullable = false)
-    private String refreshToken; // 리프레시 토큰
+
+    private String refreshToken;
+
+    @Column(name = "is_active")
+    private boolean active = true;
+
+  
 
     // Builder 패턴을 위한 생성자
     private UserEntity(Builder builder) {
@@ -58,6 +67,7 @@ public class UserEntity implements UserDetails {
         this.phoneNumber = builder.phoneNumber;
         this.email = builder.email;
         this.refreshToken = builder.refreshToken;
+        this.active = builder.active;
     }
 
     // 기본 생성자
@@ -112,6 +122,7 @@ public class UserEntity implements UserDetails {
     }
 
     public static class Builder {
+
         private Integer id; // 사용자 ID
         private String userId; // 사용자 ID
         private String username; // 사용자 이름
@@ -122,6 +133,8 @@ public class UserEntity implements UserDetails {
         private String phoneNumber; // 전화번호
         private String email; // 이메일
         private String refreshToken; // 리프레시 토큰
+        private boolean active = true;
+
 
         public Builder id(Integer id) {
             this.id = id;
@@ -173,6 +186,13 @@ public class UserEntity implements UserDetails {
             return this;
         }
 
+
+        public Builder active(boolean active) {
+            this.active = active;
+            return this;
+        }
+
+
         public UserEntity build() {
             return new UserEntity(this); // UserEntity 객체 반환
         }
@@ -180,10 +200,18 @@ public class UserEntity implements UserDetails {
 
     // Getter 및 Setter 메서드
     public Integer getId() {
-        return id; // 사용자 ID 반환
+
+
+        return id;
+
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getUserId() {
+
         return userId; // 사용자 ID 반환
     }
 
@@ -241,5 +269,6 @@ public class UserEntity implements UserDetails {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken; // 리프레시 토큰 설정
+
     }
 }

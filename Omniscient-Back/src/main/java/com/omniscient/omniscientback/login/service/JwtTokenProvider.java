@@ -147,7 +147,11 @@ public class JwtTokenProvider {
     // 토큰 정보를 검증하는 메서드
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .setAllowedClockSkewSeconds(60)  // 60초의 시간 차이를 허용
+                    .build()
+                    .parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
             System.err.println("Invalid JWT Token: " + e.getMessage());
@@ -179,5 +183,12 @@ public class JwtTokenProvider {
         }
         return null;
     }
+
+    // 토큰에서 사용자 ID를 추출하는 메서드
+    public String getUserIdFromToken(String token) {
+        Claims claims = parseClaims(token);
+        return claims.getSubject();
+    }
+
 
 }
