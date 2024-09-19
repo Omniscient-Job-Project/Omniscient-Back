@@ -3,6 +3,7 @@ package com.omniscient.omniscientback.ftpserver.service;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -22,14 +23,26 @@ public class FtpImgLoaderUtil2 {
 
     private static final Logger logger = Logger.getLogger(FtpImgLoaderUtil2.class.getName()); // 로깅을 위한 Logger 객체 생성
 
+    @Value("${ftp.server}")
+    private String server;
+
+    @Value("${ftp.port}")
+    private Integer Ftp_port;
+
+    @Value("${ftp.user}")
+    private String user_id;
+
+    @Value("${ftp.pass}")
+    private String pass;
+
     // FTP 서버의 호스트 주소
-    private String host = "1.214.19.22";
+    private String host = server;
     // FTP 서버의 포트 번호
-    private Integer port = 2121;
+    private Integer port = Ftp_port;
     // FTP 서버에 로그인할 사용자 이름
-    private String user = "omniscient";
+    private String user = user_id;
     // FTP 서버에 로그인할 비밀번호
-    private String password = "omniscient";
+    private String password = pass;
 
     public FtpImgLoaderUtil2() {
 
