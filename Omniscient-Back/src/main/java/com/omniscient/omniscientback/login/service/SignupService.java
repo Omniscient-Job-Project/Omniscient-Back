@@ -5,10 +5,12 @@ import com.omniscient.omniscientback.login.model.UserEntity;
 import com.omniscient.omniscientback.login.model.UserRole;
 import com.omniscient.omniscientback.login.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class SignupService {
@@ -16,26 +18,24 @@ public class SignupService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
+
     @Autowired
     public SignupService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
+
     }
 
     // 모든 필드의 유효성 검증
     public boolean isAllFieldsValid(SignupDTO signupDTO) {
         String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
-        return  signupDTO.getUserId() != null && !signupDTO.getUserId().trim().isEmpty() &&
+        return signupDTO.getUserId() != null && !signupDTO.getUserId().trim().isEmpty() &&
                 signupDTO.getUsername() != null && !signupDTO.getUsername().trim().isEmpty() &&
                 signupDTO.getPassword() != null && !signupDTO.getPassword().trim().isEmpty() &&
                 signupDTO.getEmail() != null && signupDTO.getEmail().matches(emailRegex) &&
                 signupDTO.getPhoneNumber() != null && !signupDTO.getPhoneNumber().trim().isEmpty();
 
     }
-
-
-
-
 
 
     // 회원가입
@@ -101,3 +101,9 @@ public class SignupService {
         return true; // 성공적으로 무효화했다고 가정
     }
 }
+
+
+
+
+
+

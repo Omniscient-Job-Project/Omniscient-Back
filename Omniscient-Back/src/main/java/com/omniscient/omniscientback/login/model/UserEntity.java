@@ -13,7 +13,7 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id; // 변경된 부분: 'Id'를 'id'로 수정
+    private Integer id;
 
     @Column(name = "user_id", nullable = false)
     private String userId;
@@ -27,7 +27,7 @@ public class UserEntity {
     @Column(name = "user_status")
     private boolean userStatus;
 
-    @Enumerated(EnumType.STRING) // Enum을 문자열로 저장
+    @Enumerated(EnumType.STRING)
     @Column(name = "user_role")
     private UserRole role;
 
@@ -40,16 +40,18 @@ public class UserEntity {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "refresh_token", nullable = false) // 변경된 부분: 'refresh_Token'을 'refresh_token'으로 수정
+    @Column(name = "refresh_token", nullable = false)
     private String refreshToken;
 
+    @Column(name = "is_active")
+    private boolean active = true;
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // 사용자의 권한을 반환하는 로직
-        return List.of(new SimpleGrantedAuthority("ROLE_USER")); // 예시로 ROLE_USER 권한 반환
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     private UserEntity(Builder builder) {
-        this.id = builder.id; // 변경된 부분: 'Id'를 'id'로 수정
+        this.id = builder.id;
         this.userId = builder.userId;
         this.username = builder.username;
         this.password = builder.password;
@@ -59,6 +61,7 @@ public class UserEntity {
         this.phoneNumber = builder.phoneNumber;
         this.email = builder.email;
         this.refreshToken = builder.refreshToken;
+        this.active = builder.active;
     }
 
     public UserEntity() {
@@ -66,7 +69,7 @@ public class UserEntity {
 
     // Builder 패턴 적용
     public static class Builder {
-        private Integer id; // 변경된 부분: 'Id'를 'id'로 수정
+        private Integer id;
         private String userId;
         private String username;
         private String password;
@@ -76,8 +79,9 @@ public class UserEntity {
         private String phoneNumber;
         private String email;
         private String refreshToken;
+        private boolean active = true;
 
-        public Builder id(Integer id) { // 변경된 부분: 'Id'를 'id'로 수정
+        public Builder id(Integer id) {
             this.id = id;
             return this;
         }
@@ -127,89 +131,102 @@ public class UserEntity {
             return this;
         }
 
-        // build() 메서드: UserEntity 객체를 반환
+        public Builder active(boolean active) {
+            this.active = active;
+            return this;
+        }
+
         public UserEntity build() {
             return new UserEntity(this);
         }
     }
 
-    public Integer getId() { // 변경된 부분: 'Id'를 'id'로 수정
+    // Getter 및 Setter 메서드
+    public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getUserId() {
         return userId;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public boolean isUserStatus() {
-        return userStatus;
-    }
-
-    public UserRole getRole() {
-        return role;
-    }
-
-    public String getBirthDate() {
-        return birthDate;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public void setId(Integer id) { // 변경된 부분: 'Id'를 'id'로 수정
-        this.id = id;
-    }
-
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isUserStatus() {
+        return userStatus;
     }
 
     public void setUserStatus(boolean userStatus) {
         this.userStatus = userStatus;
     }
 
+    public UserRole getRole() {
+        return role;
+    }
+
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public String getBirthDate() {
+        return birthDate;
     }
 
     public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
