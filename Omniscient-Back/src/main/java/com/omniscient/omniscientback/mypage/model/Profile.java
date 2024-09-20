@@ -4,81 +4,39 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Profile 엔티티 클래스
- * 사용자 프로필 정보를 나타냅니다.
- */
 @Entity
+@Table(name = "profiles")
 public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;  // 프로필 고유 식별자
-    private String name;  // 사용자 이름
-    private String jobTitle;  // 직책
-    private String email;  // 이메일 주소
-    private String phone;  // 전화번호
-    private Integer age;  // 나이
-    private String address;  // 주소
-    private Boolean status = true;  // 프로필 상태 (활성화/비활성화)
+    private Integer id;
+
+    private String name;
+    private String jobTitle;
+    private String email;
+    private String phone;
+    private Integer age;
+    private String address;
+    private Boolean status = true;
 
     @ElementCollection
-        // 1대 N 관계를 사용하기 위해
-    private List<String> certificates = new ArrayList<>();  // 자격증 목록
+    @CollectionTable(name = "profile_certificates", joinColumns = @JoinColumn(name = "profile_id"))
+    @Column(name = "certificate")
+    private List<String> certificates = new ArrayList<>();
 
-    public List<String> getCertificates() {
-        return certificates;
+    @ElementCollection
+    @CollectionTable(name = "profile_images", joinColumns = @JoinColumn(name = "profile_id"))
+    @Column(name = "image", length = 5 * 1024 * 1024) // 5MB 제한
+    private List<byte[]> profileImages = new ArrayList<>();
+
+    // Getters and setters
+
+    public Integer getId() {
+        return id;
     }
 
-    public void setCertificates(List<String> certificates) {
-        this.certificates = certificates;
-    }
-
-    public Boolean getStatus() {
-        return status;
-    }
-
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getJobTitle() {
-        return jobTitle;
-    }
-
-    public void setJobTitle(String jobTitle) {
-        this.jobTitle = jobTitle;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -89,12 +47,68 @@ public class Profile {
         this.name = name;
     }
 
-    public Integer getId() {
-        return id;
+    public String getJobTitle() {
+        return jobTitle;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public List<String> getCertificates() {
+        return certificates;
+    }
+
+    public void setCertificates(List<String> certificates) {
+        this.certificates = certificates;
+    }
+
+    public List<byte[]> getProfileImages() {
+        return profileImages;
+    }
+
+    public void setProfileImages(List<byte[]> profileImages) {
+        this.profileImages = profileImages;
     }
 
     @Override
@@ -109,6 +123,10 @@ public class Profile {
                 ", address='" + address + '\'' +
                 ", status=" + status +
                 ", certificates=" + certificates +
+                ", profileImages=" + (profileImages != null ? profileImages.size() + " images" : "null") +
                 '}';
+    }
+
+    public Profile() {
     }
 }
