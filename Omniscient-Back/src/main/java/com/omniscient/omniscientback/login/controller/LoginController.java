@@ -64,5 +64,35 @@ public class LoginController {
         }
     }
 
-  }
+
+
+
+
+
+
+//    @PostMapping("/deactivate")
+//    public ResponseEntity<String> deactivateAccount(@RequestHeader("Authorization") String authorization) {
+//        try {
+//            // Authorization 헤더에서 Bearer 토큰 추출
+//            String token = authorization.substring(7); // "Bearer " 이후의 토큰 부분만 가져옴
+//
+//            // 토큰에서 사용자 ID 추출
+//            String userId = jwtTokenProvider.getUserIdFromToken(token);
+//
+//            if (userId != null) {
+//                boolean isDeactivated = signupService.deactivateAccount(userId);
+//                if (isDeactivated) {
+//                    return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
+//                } else {
+//                    return ResponseEntity.status(400).body("회원 탈퇴에 실패했습니다.");
+//                }
+//            } else {
+//                return ResponseEntity.status(401).body("유효하지 않은 토큰입니다.");
+//            }
+//        } catch (Exception e) {
+//            return ResponseEntity.status(500).body("서버 오류가 발생했습니다.");
+//        }
+//    }
+
+}
 

@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 public class Visitor {
@@ -21,6 +22,9 @@ public class Visitor {
     }
 
     public Visitor(Integer id, LocalDate visitDate, Integer visitCount) {
+        this.id = id;
+        this.visitDate = visitDate;
+        this.visitCount = visitCount;
     }
 
     public Integer getId() {
@@ -46,5 +50,17 @@ public class Visitor {
     public void setVisitCount(Integer visitCount) {
         this.visitCount = visitCount;
     }
-}
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Visitor)) return false;
+        Visitor visitor = (Visitor) o;
+        return Objects.equals(id, visitor.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+}

@@ -38,16 +38,41 @@ public class VisitorService {
         Visitor visitor = visitorRepository.findByVisitDate(today);
         return (visitor != null) ? visitor.getVisitCount() : 0;
     }
-
     public List<Integer> getDailyVisitors() {
-        // 여기에 일별 방문자 수를 가져오는 로직을 구현합니다.
-        // 예를 들어, 최근 한 달 동안의 방문자 수를 반환할 수 있습니다.
-        return IntStream.range(1, 32).map(i -> 0).boxed().collect(Collectors.toList());
+        LocalDate startDate = LocalDate.now().minusDays(30); // 최근 30일
+        List<Visitor> visitors = visitorRepository.findAll()
+                .stream()
+                .filter(visitor -> !visitor.getVisitDate().isBefore(startDate))
+                .collect(Collectors.toList());
+
+        return IntStream.range(0, 30)
+                .mapToObj(i -> {
+                    LocalDate date = LocalDate.now().minusDays(i);
+                    return visitors.stream()
+                            .filter(visitor -> visitor.getVisitDate().isEqual(date))
+                            .map(Visitor::getVisitCount)
+                            .findFirst()
+                            .orElse(0);
+                })
+                .collect(Collectors.toList());
     }
 
     public List<Integer> getMonthlyVisitors() {
-        // 여기에 월별 방문자 수를 가져오는 로직을 구현합니다.
-        // 예를 들어, 최근 12개월 동안의 방문자 수를 반환할 수 있습니다.
-        return IntStream.range(1, 13).map(i -> 0).boxed().collect(Collectors.toList());
+        LocalDate startDate = LocalDate.now().minusMonths(12); // 최근 12개월
+        List<Visitor> visitors = visitorRepository.findAll()
+                .stream()
+                .filter(visitor -> !visitor.getVisitDate().isBefore(startDate))
+                .collect(Collectors.toList());
+
+        return IntStream.range(0, 12)
+                .mapToObj(i -> {
+                    LocalDate date = LocalDate.now().minusMonths(i);
+                    return visitors.stream()
+                            .filter(visitor -> visitor.getVisitDate().getMonth() == date.getMonth())
+                            .map(Visitor::getVisitCount)
+                            .reduce(0, Integer::sum);
+                })
+                .collect(Collectors.toList());
     }
+
 }

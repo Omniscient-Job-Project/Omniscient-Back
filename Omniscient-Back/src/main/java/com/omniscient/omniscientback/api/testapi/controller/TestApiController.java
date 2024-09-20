@@ -39,8 +39,8 @@ public class TestApiController {
     @GetMapping
     public String getTestJobList() throws IOException {
         String serviceUrl = "http://apis.data.go.kr/B490007/qualExamSchd/getQualExamSchdList";
-        String numOfRows = "10";
-        String pageNo = "1";
+        String numOfRows = "5";
+        String pageNo = "10";
         String dataFormat = "xml";
         String implYy = "2024";
         String qualgbCd = "T";
@@ -86,7 +86,7 @@ public class TestApiController {
             JSONObject jsonObject = new JSONObject(jsonData);
             JSONObject bodyObject = jsonObject.getJSONObject("response").getJSONObject("body");
 
-// items 필드 처리
+            // items 필드 처리
             JSONArray itemsArray;
             if (bodyObject.has("items")) {
                 Object itemsObject = bodyObject.get("items");

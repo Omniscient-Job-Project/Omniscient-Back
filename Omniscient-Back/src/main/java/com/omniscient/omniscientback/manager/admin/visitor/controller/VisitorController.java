@@ -1,10 +1,14 @@
+// VisitorController.java
 package com.omniscient.omniscientback.manager.admin.visitor.controller;
-
 
 import com.omniscient.omniscientback.manager.admin.visitor.service.VisitorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -18,24 +22,44 @@ public class VisitorController {
     }
 
     @PostMapping("/visitor-today")
+    @PreAuthorize("hasRole('USER')") // USER 역할만 접근 가능
     public ResponseEntity<Void> trackVisitorToday() {
-        visitorService.trackVisitorToday();
-        return ResponseEntity.ok().build();
+        try {
+            visitorService.trackVisitorToday();
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/visitor-today")
-    public ResponseEntity<Object> getTodayVisitorCount() {
-        Integer count = visitorService.getTodayVisitorCount();
-        return ResponseEntity.ok().body(count);
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Integer> getTodayVisitorCount() {
+        try {
+            Integer count = visitorService.getTodayVisitorCount();
+            return ResponseEntity.ok(count);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/dailyVisitors")
-    public ResponseEntity<Object> getDailyVisitors() {
-        return ResponseEntity.ok().body(visitorService.getDailyVisitors());
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<List<Integer>> getDailyVisitors() {
+        try {
+            return ResponseEntity.ok(visitorService.getDailyVisitors());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/monthlyVisitors")
-    public ResponseEntity<Object> getMonthlyVisitors() {
-        return ResponseEntity.ok().body(visitorService.getMonthlyVisitors());
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<List<Integer>> getMonthlyVisitors() {
+        try {
+            return ResponseEntity.ok(visitorService.getMonthlyVisitors());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
