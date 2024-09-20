@@ -1,16 +1,23 @@
 package com.omniscient.omniscientback.login.service;
 
+
 import com.omniscient.omniscientback.login.model.SignupDTO;
 import com.omniscient.omniscientback.login.model.UserEntity;
 import com.omniscient.omniscientback.login.model.UserRole;
 import com.omniscient.omniscientback.login.repository.UserRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
 import java.util.Random;
+
 
 @Service
 public class SignupService {
@@ -23,6 +30,7 @@ public class SignupService {
     public SignupService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
+
 
     }
 
@@ -94,12 +102,42 @@ public class SignupService {
 
     // Refresh 토큰 무효화 메서드
     public boolean invalidateRefreshToken(String token) {
-        // 이 메서드에서 토큰을 무효화하는 로직을 추가할 수 있습니다.
-        // 예를 들어, 해당 토큰을 데이터베이스에서 삭제하거나,
-        // 사용자 엔티티의 refreshToken 필드를 비워서 무효화할 수 있습니다.
-        // 현재는 예시로 true를 반환하도록 설정하였습니다.
-        return true; // 성공적으로 무효화했다고 가정
+
+        return true;
     }
+
+//    public String generateVerificationCode() {
+//        Random random = new Random();
+//        int code = 100000 + random.nextInt(900000);
+//        return String.format("%06d", code);
+//    }
+
+
+//    @Transactional
+//    public boolean deactivateAccount(String userId) {
+//        try {
+//            // 1. 사용자 조회
+//            UserEntity user = userRepository.findById(Integer.valueOf(userId))
+//                    .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + userId));
+//
+//            // 2. 사용자 계정 비활성화
+//            user.setActive(false);
+//            // 3. 계정 비활성화 시간 기록
+//            user.setDeactivatedAt(LocalDateTime.now());
+//            // 4. 개인정보 보호를 위한 데이터 익명화
+//            user.setEmail("deactivated_" + userId + "@example.com");
+//            user.setPhoneNumber(null);
+//            // 5. 변경된 사용자 정보 저장
+//            userRepository.save(user);
+//            // 6. 비활성화 성공 반환
+//            return true;
+//        } catch (Exception e) {
+//            // 예외 처리: 로그 기록 및 적절한 예외 전환
+//            // 예: Logger.error("계정 비활성화 중 오류 발생: ", e);
+//            throw new RuntimeException("계정 비활성화 중 오류가 발생했습니다: " + e.getMessage());
+//        }
+//    }
+
 }
 
 

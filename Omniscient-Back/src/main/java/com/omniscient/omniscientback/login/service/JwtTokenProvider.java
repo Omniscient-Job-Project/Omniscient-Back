@@ -186,8 +186,36 @@ public class JwtTokenProvider {
 
     // 토큰에서 사용자 ID를 추출하는 메서드
     public String getUserIdFromToken(String token) {
-        Claims claims = parseClaims(token);
-        return claims.getSubject();
+        try {
+            Claims claims = parseClaims(token);
+            return claims.getSubject();
+        } catch (ExpiredJwtException e) {
+            throw new JwtTokenException("토큰이 만료되었습니다.");
+        } catch (JwtException e) {
+            throw new JwtTokenException("유효하지 않은 토큰입니다.");
+        }
+    }
+
+
+    // 새로운 Access Token 발급 메서드
+    public String renewAccessToken(String refreshToken) {
+        try {
+            // Refresh Token 검증 (만료되었으면 ExpiredJwtException 발생)
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(refreshToken);
+
+            // Refresh Token이 유효한 경우 사용자 ID 추출
+            String userId = getUserIdFromToken(refreshToken);
+
+            // 새로운 Access Token 발급
+            return createAccessToken(userId);
+        } catch (ExpiredJwtException e) {
+            throw new JwtTokenException("Refresh Token이 만료되었습니다.");
+        } catch (JwtException e) {
+            throw new JwtTokenException("유효하지 않은 Refresh Token입니다.");
+        }
     }
 
 

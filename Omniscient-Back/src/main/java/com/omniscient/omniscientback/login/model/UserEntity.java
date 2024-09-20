@@ -3,59 +3,57 @@ package com.omniscient.omniscientback.login.model;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "user_entity")
-public class UserEntity implements UserDetails {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-
-
     private Integer id;
 
-
     @Column(name = "user_id", nullable = false)
-    private String userId; // 사용자 ID
+    private String userId;
 
     @Column(name = "user_name", nullable = false)
-    private String username; // 사용자 이름
+    private String username;
 
     @Column(name = "user_password", nullable = false)
-    private String password; // 비밀번호
+    private String password;
 
     @Column(name = "user_status")
-    private boolean userStatus; // 사용자 상태
+    private boolean userStatus;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "user_role")
-    private UserRole role; // 사용자 역할
+    private UserRole role;
 
     @Column(name = "birth_date")
-    private String birthDate; // 생년월일
+    private String birthDate;
 
     @Column(name = "phone_number", nullable = false)
-    private String phoneNumber; // 전화번호
+    private String phoneNumber;
 
     @Column(name = "email", nullable = false)
-    private String email; // 이메일
+    private String email;
 
     @Column(name = "refresh_token", nullable = false)
-
     private String refreshToken;
 
     @Column(name = "is_active")
     private boolean active = true;
 
-  
+    @Column(name = "deactivated_at")
+    private LocalDateTime deactivatedAt;
 
-    // Builder 패턴을 위한 생성자
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
     private UserEntity(Builder builder) {
         this.id = builder.id;
         this.userId = builder.userId;
@@ -68,73 +66,26 @@ public class UserEntity implements UserDetails {
         this.email = builder.email;
         this.refreshToken = builder.refreshToken;
         this.active = builder.active;
+        this.deactivatedAt = builder.deactivatedAt;
     }
 
-    // 기본 생성자
     public UserEntity() {
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        if (this.role != null) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + this.role.name()));
-        }
-        return authorities; // 권한 리스트 반환
-    }
-
-    @Override
-    public String getPassword() {
-        return password; // 비밀번호 반환
-    }
-
-    @Override
-    public String getUsername() {
-        return username; // 사용자 이름 반환
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true; // 계정 만료 여부
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true; // 계정 잠김 여부
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true; // 자격 증명 만료 여부
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return userStatus; // 사용자 활성화 여부
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role; // 사용자 역할 설정
-    }
-
-    public UserRole getRole() {
-        return role; // 사용자 역할 반환
-    }
-
+    // Builder 패턴 적용
     public static class Builder {
-
-        private Integer id; // 사용자 ID
-        private String userId; // 사용자 ID
-        private String username; // 사용자 이름
-        private String password; // 비밀번호
-        private boolean userStatus; // 사용자 상태
-        private UserRole role; // 사용자 역할
-        private String birthDate; // 생년월일
-        private String phoneNumber; // 전화번호
-        private String email; // 이메일
-        private String refreshToken; // 리프레시 토큰
+        private Integer id;
+        private String userId;
+        private String username;
+        private String password;
+        private boolean userStatus;
+        private UserRole role;
+        private String birthDate;
+        private String phoneNumber;
+        private String email;
+        private String refreshToken;
         private boolean active = true;
-
+        private LocalDateTime deactivatedAt;
 
         public Builder id(Integer id) {
             this.id = id;
@@ -186,81 +137,117 @@ public class UserEntity implements UserDetails {
             return this;
         }
 
-
         public Builder active(boolean active) {
             this.active = active;
             return this;
         }
 
+        public Builder deactivatedAt(LocalDateTime deactivatedAt) {
+            this.deactivatedAt = deactivatedAt;
+            return this;
+        }
+
+
 
         public UserEntity build() {
-            return new UserEntity(this); // UserEntity 객체 반환
+            return new UserEntity(this);
         }
     }
 
     // Getter 및 Setter 메서드
     public Integer getId() {
-
-
         return id;
+    }
 
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getUserId() {
-
-        return userId; // 사용자 ID 반환
-    }
-
-    public boolean isUserStatus() {
-        return userStatus; // 사용자 상태 반환
-    }
-
-    public String getBirthDate() {
-        return birthDate; // 생년월일 반환
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber; // 전화번호 반환
-    }
-
-    public String getEmail() {
-        return email; // 이메일 반환
-    }
-
-    public String getRefreshToken() {
-        return refreshToken; // 리프레시 토큰 반환
+        return userId;
     }
 
     public void setUserId(String userId) {
-        this.userId = userId; // 사용자 ID 설정
+        this.userId = userId;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public void setUsername(String username) {
-        this.username = username; // 사용자 이름 설정
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {
-        this.password = password; // 비밀번호 설정
+        this.password = password;
+    }
+
+    public boolean isUserStatus() {
+        return userStatus;
     }
 
     public void setUserStatus(boolean userStatus) {
-        this.userStatus = userStatus; // 사용자 상태 설정
+        this.userStatus = userStatus;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
+    public String getBirthDate() {
+        return birthDate;
     }
 
     public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate; // 생년월일 설정
+        this.birthDate = birthDate;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber; // 전화번호 설정
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public void setEmail(String email) {
-        this.email = email; // 이메일 설정
+        this.email = email;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
     }
 
     public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken; // 리프레시 토큰 설정
+        this.refreshToken = refreshToken;
+    }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public LocalDateTime getDeactivatedAt() {
+        return deactivatedAt;
+    }
+
+    public void setDeactivatedAt(LocalDateTime deactivatedAt) {
+        this.deactivatedAt = deactivatedAt;
     }
 }
