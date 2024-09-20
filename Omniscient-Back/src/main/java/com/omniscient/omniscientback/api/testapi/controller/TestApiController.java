@@ -126,8 +126,6 @@ public class TestApiController {
 
                 // TestDTO 객체에 데이터 매핑
                 TestDTO testDTO = new TestDTO();
-                testDTO.setNumOfRows(bodyObject.optString("numOfRows", null));
-                testDTO.setPageNo(bodyObject.optString("pageNo", null));
                 testDTO.setDataFormat(bodyObject.optString("dataFormat", null));
                 testDTO.setImplYy(bodyObject.optString("implYy", null));
                 testDTO.setResultCode(bodyObject.optString("resultCode", null));

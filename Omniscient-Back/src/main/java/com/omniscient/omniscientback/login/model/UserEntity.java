@@ -231,10 +231,6 @@ public class UserEntity implements UserDetails {
         return refreshToken; // 리프레시 토큰 반환
     }
 
-    public void setId(Integer id) {
-        this.id = id; // 사용자 ID 설정
-    }
-
     public void setUserId(String userId) {
         this.userId = userId; // 사용자 ID 설정
     }
