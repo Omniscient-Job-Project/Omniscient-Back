@@ -59,8 +59,6 @@ public class GradeApiController {
                 continue; // 빈 grdCd 값은 무시
             }
 
-            // grdCd 값 로그 출력
-            System.out.println("Fetching data for grdCd: " + grdCd);
 
             try {
                 StringBuilder urlBuilder = new StringBuilder(serviceUrl);
@@ -103,6 +101,24 @@ public class GradeApiController {
                 // 모든 항목을 통합
                 for (int i = 0; i < itemsArray.length(); i++) {
                     allItemsArray.put(itemsArray.getJSONObject(i));
+                    JSONObject jobJson = itemsArray.getJSONObject(i);
+                    GradeDTO gradeDTO = new GradeDTO();
+                    gradeDTO.setResultCode(jobJson.optString("resultCode", null));
+                    gradeDTO.setResultMsg(jobJson.optString("resultMsg", null));
+                    gradeDTO.setGrdNm(jobJson.optString("grdNm", null));
+                    gradeDTO.setInstiNm(jobJson.optString("instiNm", null));
+                    gradeDTO.setJmNm(jobJson.optString("jmNm", null));
+                    gradeDTO.setPreyyAcquQualIncRate(jobJson.optString("preyyAcquQualIncRate", null));
+                    gradeDTO.setPreyyQualAcquCnt(jobJson.optString("preyyQualAcquCnt", null));
+                    gradeDTO.setQualAcquCnt(jobJson.optString("qualAcquCnt", null));
+                    gradeDTO.setQualAcquRank(jobJson.optString("qualAcquRank", null));
+                    gradeDTO.setStatisYy(jobJson.optString("statisYy", null));
+                    gradeDTO.setSumYy(jobJson.optString("sumYy", null));
+                    gradeDTO.setNumOfRows(jobJson.optString("numOfRows", null));
+                    gradeDTO.setPageNo(jobJson.optString("pageNo", null));
+                    gradeDTO.setTotalCount(jobJson.optString("totalCount", null));
+
+                    gradeApiService.saveGradeJob(gradeDTO);
                 }
 
             } catch (Exception e) {
@@ -175,6 +191,8 @@ public class GradeApiController {
             // gradeId에 맞는 항목 찾기
             for (int i = 0; i < itemsArray.length(); i++) {
                 JSONObject jobJson = itemsArray.getJSONObject(i);
+
+
                 if (jobJson.getString("grdCd").equals(gradeId)) { // grdCd로 비교
                     return ResponseEntity.ok(jobJson.toString(4)); // 예쁘게 출력 (4칸 들여쓰기)
                 }

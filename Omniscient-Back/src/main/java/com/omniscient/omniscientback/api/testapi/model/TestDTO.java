@@ -2,12 +2,6 @@ package com.omniscient.omniscientback.api.testapi.model;
 
 public class TestDTO {
 
-    // 한 페이지 결과 수
-    private String numOfRows;
-
-    // 페이지 번호
-    private String pageNo;
-
     // 응답 데이터 포맷
     private String dataFormat;
 
@@ -65,9 +59,7 @@ public class TestDTO {
     public TestDTO() {
     }
 
-    public TestDTO(String numOfRows, String pageNo, String dataFormat, String implYy, String resultCode, String resultMsg, String implSeq, String qualgbNm, String description, String docRegStartDt, String docRegEndDt, String docExamStartDt, String docExamEndDt, String docPassDt, String pracRegStartDt, String pracRegEndDt, String pracExamStartDt, String pracExamEndDt, String pracPassDt, String totalCount) {
-        this.numOfRows = numOfRows;
-        this.pageNo = pageNo;
+    public TestDTO(String dataFormat, String implYy, String resultCode, String resultMsg, String implSeq, String qualgbNm, String description, String docRegStartDt, String docRegEndDt, String docExamStartDt, String docExamEndDt, String docPassDt, String pracRegStartDt, String pracRegEndDt, String pracExamStartDt, String pracExamEndDt, String pracPassDt, String totalCount) {
         this.dataFormat = dataFormat;
         this.implYy = implYy;
         this.resultCode = resultCode;
@@ -86,22 +78,6 @@ public class TestDTO {
         this.pracExamEndDt = pracExamEndDt;
         this.pracPassDt = pracPassDt;
         this.totalCount = totalCount;
-    }
-
-    public String getNumOfRows() {
-        return numOfRows;
-    }
-
-    public void setNumOfRows(String numOfRows) {
-        this.numOfRows = numOfRows;
-    }
-
-    public String getPageNo() {
-        return pageNo;
-    }
-
-    public void setPageNo(String pageNo) {
-        this.pageNo = pageNo;
     }
 
     public String getDataFormat() {
@@ -251,8 +227,6 @@ public class TestDTO {
     @Override
     public String toString() {
         return "TestDTO{" +
-                "numOfRows='" + numOfRows + '\'' +
-                ", pageNo='" + pageNo + '\'' +
                 ", dataFormat='" + dataFormat + '\'' +
                 ", implYy='" + implYy + '\'' +
                 ", resultCode='" + resultCode + '\'' +

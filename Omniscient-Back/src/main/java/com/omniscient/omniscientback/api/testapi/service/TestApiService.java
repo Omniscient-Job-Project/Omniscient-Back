@@ -44,8 +44,6 @@ public class TestApiService {
     private TestEntity convertToEntity(TestDTO testDTO) {
         TestEntity testEntity = new TestEntity();
 
-        testEntity.setNumOfRows(testDTO.getNumOfRows());
-        testEntity.setPageNo(testDTO.getPageNo());
         testEntity.setDataFormat(testDTO.getDataFormat());
         testEntity.setImplYy(testDTO.getImplYy());
         testEntity.setResultCode(testDTO.getResultCode());
