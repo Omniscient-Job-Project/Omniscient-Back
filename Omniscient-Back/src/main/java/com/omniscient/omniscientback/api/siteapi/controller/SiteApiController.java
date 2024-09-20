@@ -25,7 +25,7 @@ import java.net.URLEncoder;
 // 국가자격시험 시험장소 정보
 public class SiteApiController {
 
-    @Value("${api_site.key}")
+    @Value("${api_grade.key}")
     private String apiSiteKey;
 
     private final SiteApiService siteApiService;

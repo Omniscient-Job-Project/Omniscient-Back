@@ -206,10 +206,6 @@ public class UserEntity implements UserDetails {
 
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getUserId() {
 
         return userId; // 사용자 ID 반환
