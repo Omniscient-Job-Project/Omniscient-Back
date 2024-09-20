@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/mypage")
+@RequestMapping("/api/v1/mypage/profile")
 public class ProfileController {
     private final ProfileService profileService;
     private static final Logger logger = LoggerFactory.getLogger(ProfileController.class);
@@ -37,7 +37,7 @@ public class ProfileController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProfileDTO> getProfile(@PathVariable Integer id) {
+    public ResponseEntity<ProfileDTO> getProfile(@PathVariable("id") Integer id) {
         logger.info("활성화된 프로필 조회: ID {}", id);
         try {
             ProfileDTO profile = profileService.getProfile(id);
@@ -51,47 +51,49 @@ public class ProfileController {
         }
     }
 
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ProfileDTO> createProfile(@ModelAttribute ProfileDTO profileDTO,
-                                                    @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) {
+    public ResponseEntity<ProfileDTO> createProfile(
+            @ModelAttribute ProfileDTO profileDTO,  // ModelAttribute는 따로 파라미터 이름을 명시하지 않아도 됩니다.
+            @RequestParam(value = "profileImages", required = false) List<MultipartFile> profileImages) {  // RequestParam에 명시적 이름 지정
         logger.info("새 프로필 생성: {}", profileDTO);
         try {
-            if (profileImage != null && !profileImage.isEmpty()) {
-                profileDTO.setProfileImage(profileImage.getBytes());
-            }
-            ProfileDTO createdProfile = profileService.createProfile(profileDTO);
+            ProfileDTO createdProfile = profileService.createProfile(profileDTO, profileImages);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProfile);
+        } catch (IllegalArgumentException e) {
+            logger.warn("프로필 생성 중 유효성 검사 실패: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(null);
         } catch (Exception e) {
             logger.error("새 프로필 생성 중 오류 발생", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
+
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ProfileDTO> updateProfile(@PathVariable Integer id,
-                                                    @ModelAttribute ProfileDTO profileDTO,
-                                                    @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) {
+    public ResponseEntity<ProfileDTO> updateProfile(
+            @PathVariable("id") Integer id,  // PathVariable에 명시적 이름 지정
+            @ModelAttribute ProfileDTO profileDTO,  // ModelAttribute는 따로 파라미터 이름을 명시하지 않아도 됩니다.
+            @RequestParam(value = "profileImages", required = false) List<MultipartFile> profileImages) {  // RequestParam에 명시적 이름 지정
         logger.info("프로필 업데이트: ID {}", id);
         logger.debug("수신된 프로필 데이터: {}", profileDTO);
         try {
             profileDTO.setId(id);
-            if (profileImage != null && !profileImage.isEmpty()) {
-                profileDTO.setProfileImage(profileImage.getBytes());
-            }
-            ProfileDTO updatedProfile = profileService.updateProfile(profileDTO);
+            ProfileDTO updatedProfile = profileService.updateProfile(profileDTO, profileImages);
             logger.info("프로필 업데이트 성공: ID {}", id);
             return ResponseEntity.ok(updatedProfile);
         } catch (IllegalArgumentException e) {
-            logger.warn("업데이트할 활성화된 프로필을 찾을 수 없음: ID {}", id);
-            return ResponseEntity.notFound().build();
+            logger.warn("프로필 업데이트 중 유효성 검사 실패: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(null);
         } catch (Exception e) {
             logger.error("프로필 업데이트 중 오류 발생: ID {}", id, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
+
     @PutMapping("/deactivate/{id}")
-    public ResponseEntity<Void> deactivateProfile(@PathVariable Integer id) {
+    public ResponseEntity<Void> deactivateProfile(@PathVariable("id") Integer id) {  // PathVariable에 명시적 이름 지정
         logger.info("프로필 비활성화: ID {}", id);
         try {
             profileService.deactivateProfile(id);

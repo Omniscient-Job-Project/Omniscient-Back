@@ -1,53 +1,20 @@
 package com.omniscient.omniscientback.mypage.model;
-import java.util.Arrays;
-import java.util.List;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
-/**
- * ProfileDTO 클래스
- * 프로필 정보를 전송하기 위한 데이터 전송 객체입니다.
- */
+import java.util.List;
 
 public class ProfileDTO {
-    private Integer id;  // 프로필 고유 식별자
-    private String name;  // 사용자 이름
-    private String jobTitle;  // 직책
-    private String email;  // 이메일 주소
-    private String phone;  // 전화번호
-    private Integer age;  // 나이
-    private String address;  // 주소
-    private List<String> certificates;  // 자격증 목록
-    private Boolean status;  // 프로필 상태 (활성화/비활성화)
+    private Integer id;
+    private String name;
+    private String jobTitle;
+    private String email;
+    private String phone;
+    private Integer age;
+    private String address;
+    private List<String> certificates;
+    private Boolean status;
+    private List<String> profileImageBase64; // Base64 인코딩된 이미지 문자열 리스트
 
-    @JsonIgnore
-    private byte[] profileImage;  // 프로필 이미지 (JSON 직렬화에서 제외)
-
-    public ProfileDTO() {
-    }
-
-    /**
-     * Integer 타입의 id를 설정합니다.
-     * @param id 설정할 id 값
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
-     * String 타입의 id를 Integer로 변환하여 설정합니다.
-     * @param id 설정할 id 값 (문자열)
-     */
-    public void setId(String id) {
-        if (id != null && !id.equals("null")) {
-            this.id = Integer.parseInt(id);
-        } else {
-            this.id = null;
-        }
-    }
-
-    public Integer getId() {
-        return id;
-    }
+    // Getters and setters
 
     public String getName() {
         return name;
@@ -113,12 +80,30 @@ public class ProfileDTO {
         this.status = status;
     }
 
-    public byte[] getProfileImage() {
-        return profileImage;
+    public Integer getId() {
+        return id;
     }
 
-    public void setProfileImage(byte[] profileImage) {
-        this.profileImage = profileImage;
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setId(String id) {
+        if (id != null && !id.equals("null")) {
+            this.id = Integer.parseInt(id);
+        } else {
+            this.id = null;
+        }
+    }
+
+    // Other getters and setters remain the same
+
+    public List<String> getProfileImageBase64() {
+        return profileImageBase64;
+    }
+
+    public void setProfileImageBase64(List<String> profileImageBase64) {
+        this.profileImageBase64 = profileImageBase64;
     }
 
     @Override
@@ -133,7 +118,10 @@ public class ProfileDTO {
                 ", address='" + address + '\'' +
                 ", certificates=" + certificates +
                 ", status=" + status +
-                ", profileImage=" + Arrays.toString(profileImage) +
+                ", profileImageBase64=" + (profileImageBase64 != null ? profileImageBase64.size() + " images" : "null") +
                 '}';
+    }
+
+    public ProfileDTO() {
     }
 }
