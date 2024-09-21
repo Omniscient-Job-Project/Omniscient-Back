@@ -18,8 +18,8 @@ public class WebConfigurer implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-//                .allowedOrigins("http://localhost:8083")  // Vue.js가 실행되는 도메인 추가
-                .allowedOrigins(allowedOrigins)  // Vue.js가 실행되는 도메인 추가
+                .allowedOrigins(allowedOrigins) // Vue.js가 실행되는 도메인 추가
+                .allowedOrigins("http://localhost:8080")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .exposedHeaders("Custom-Header")
