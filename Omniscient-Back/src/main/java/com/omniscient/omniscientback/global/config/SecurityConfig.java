@@ -27,6 +27,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configure(http)) // CORS 활성화
                 .csrf(csrf -> csrf.disable())  // CSRF 비활성화
                 .authorizeHttpRequests(authz -> authz
+                        // Swagger 경로에 대한 요청 허용
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .requestMatchers("/api/v1/login/post").permitAll()
                         .requestMatchers("/api/v1/signout/post").permitAll()
                         .requestMatchers("/api/v1/notice/**").permitAll()
@@ -44,3 +46,5 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
+
+
