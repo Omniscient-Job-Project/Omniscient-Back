@@ -72,7 +72,7 @@ public class SignupService {
                 .userId(userId)
                 .username(username)
                 .password(encodedPassword)
-                .role(UserRole.ROLE_USER) // 기본 역할 설정
+                .role(UserRole.USER) // 기본 역할 설정
                 .userStatus(true) // 기본 사용자 상태 설정
                 .phoneNumber(phoneNumber)
                 .email(email)

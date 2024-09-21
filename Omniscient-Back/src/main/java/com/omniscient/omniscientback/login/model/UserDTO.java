@@ -2,14 +2,15 @@ package com.omniscient.omniscientback.login.model;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public class UserDTO {
     private Integer id; // 사용자 ID
 
+    @NotBlank
     private String userId; // 사용자 ID
 
+    @NotBlank
     private String username; // 사용자 이름
 
     @NotBlank // 빈 값 허용 안 함
@@ -32,74 +33,74 @@ public class UserDTO {
 
     // Getter 및 Setter 메서드
     public Integer getId() {
-        return id; // 사용자 ID 반환
+        return id;
     }
 
     public void setId(Integer id) {
-        this.id = id; // 사용자 ID 설정
+        this.id = id;
     }
 
     public String getUserId() {
-        return userId; // 사용자 ID 반환
+        return userId;
     }
 
     public void setUserId(String userId) {
-        this.userId = userId; // 사용자 ID 설정
+        this.userId = userId;
     }
 
     public String getUsername() {
-        return username; // 사용자 이름 반환
+        return username;
     }
 
     public void setUsername(String username) {
-        this.username = username; // 사용자 이름 설정
+        this.username = username;
     }
 
     public String getPassword() {
-        return password; // 비밀번호 반환
+        return password;
     }
 
     public void setPassword(String password) {
-        this.password = password; // 비밀번호 설정
+        this.password = password;
     }
 
     public Boolean isUserStatus() {
-        return userStatus; // 사용자 상태 반환
+        return userStatus;
     }
 
     public void setUserStatus(Boolean userStatus) {
-        this.userStatus = userStatus; // 사용자 상태 설정
+        this.userStatus = userStatus;
     }
 
     public String getRole() {
-        return role; // 사용자 역할 반환
+        return role;
     }
 
     public void setRole(String role) {
-        this.role = role; // 사용자 역할 설정
+        this.role = role;
     }
 
     public String getBirthDate() {
-        return birthDate; // 생년월일 반환
+        return birthDate;
     }
 
     public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate; // 생년월일 설정
+        this.birthDate = birthDate;
     }
 
     public String getPhoneNumber() {
-        return phoneNumber; // 전화번호 반환
+        return phoneNumber;
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber; // 전화번호 설정
+        this.phoneNumber = phoneNumber;
     }
 
     public String getEmail() {
-        return email; // 이메일 반환
+        return email;
     }
 
     public void setEmail(String email) {
-        this.email = email; // 이메일 설정
+        this.email = email;
     }
 }

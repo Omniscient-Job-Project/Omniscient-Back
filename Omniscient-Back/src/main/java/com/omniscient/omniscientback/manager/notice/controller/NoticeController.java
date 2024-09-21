@@ -48,8 +48,7 @@ public class NoticeController {
             @ApiResponse(responseCode = "404", description = "해당 ID를 가진 공지사항을 찾을 수 없습니다.")
     })
     @GetMapping("/{noticeId}")
-    public ResponseEntity<Notice> getNoticeById(
-            @Parameter(description = "조회할 공지사항의 ID", example = "1") @PathVariable Integer noticeId) {
+    public ResponseEntity<Notice> getNoticeById(@PathVariable("noticeId") Integer noticeId) {
         Optional<Notice> notice = noticeService.getNoticeById(noticeId);
         return notice.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -80,9 +79,8 @@ public class NoticeController {
     })
     @PreAuthorize("hasRole('ADMIN')") // 관리자만 접근 가능
     @PutMapping("/update/{noticeId}")
-    public ResponseEntity<Notice> updateNotice(
-            @Parameter(description = "수정할 공지사항의 ID", example = "1") @PathVariable Integer noticeId,
-            @RequestBody NoticeDTO noticeDTO) {
+    public ResponseEntity<Notice> updateNotice(@PathVariable("noticeId") Integer noticeId,
+                                               @RequestBody NoticeDTO noticeDTO) {
         try {
             Notice updatedNotice = noticeService.updateNotice(noticeId, noticeDTO);
             updatedNotice.setNoticeUpdateAt(LocalDateTime.now()); // Set update timestamp
@@ -103,8 +101,7 @@ public class NoticeController {
     })
     @PreAuthorize("hasRole('ADMIN')") // 관리자만 접근 가능
     @PutMapping("/delete/{noticeId}")
-    public ResponseEntity<Void> softDeleteNotice(
-            @Parameter(description = "삭제할 공지사항의 ID", example = "1") @PathVariable Integer noticeId) {
+    public ResponseEntity<Void> softDeleteNotice(@PathVariable("noticeId") Integer noticeId) {
         try {
             noticeService.softDeleteNotice(noticeId);
             return ResponseEntity.noContent().build(); // 성공적으로 처리된 경우 noContent 리턴
@@ -121,11 +118,10 @@ public class NoticeController {
             @ApiResponse(responseCode = "200", description = "성공적으로 조회수가 증가되었습니다."),
             @ApiResponse(responseCode = "404", description = "해당 ID를 가진 공지사항을 찾을 수 없습니다.")
     })
-    @PutMapping("/views/{id}")
-    public ResponseEntity<Map<String, String>> incrementViews(
-            @Parameter(description = "조회수를 증가시킬 공지사항의 ID", example = "1") @PathVariable Integer id) {
+    @PutMapping("/views/{noticeId}") // 경로 변수 이름 일관성 유지
+    public ResponseEntity<Map<String, String>> incrementViews(@PathVariable("noticeId") Integer noticeId) {
         try {
-            noticeService.incrementViews(id);
+            noticeService.incrementViews(noticeId);
             return ResponseEntity.ok(Map.of("message", "조회수가 증가하였습니다."));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

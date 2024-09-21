@@ -24,23 +24,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.disable())  // CORS 활성화 또는 비활성화 설정
+                .cors(cors -> cors.configure(http)) // CORS 활성화
                 .csrf(csrf -> csrf.disable())  // CSRF 비활성화
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/v1/login/post").permitAll() // 로그인 경로 허용
+                        .requestMatchers("/api/v1/login/post").permitAll()
                         .requestMatchers("/api/v1/signout/post").permitAll()
-                        .requestMatchers("/api/**").permitAll()  // "/api" 경로 접근 허용
-                        .anyRequest().authenticated()  // 그 외 모든 요청 인증 필요
+                        .requestMatchers("/api/v1/notice/**").permitAll()
+                        .requestMatchers("/api/**").permitAll()
+                        .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
-
-
