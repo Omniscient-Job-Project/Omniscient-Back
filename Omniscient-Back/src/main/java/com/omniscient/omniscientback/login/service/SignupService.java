@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 
@@ -24,13 +26,15 @@ public class SignupService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private EmailService emailService;
+    private Map<String, VerificationCode> verificationCodes = new HashMap<>();
 
 
     @Autowired
-    public SignupService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public SignupService(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
-
+        this.emailService = emailService;
 
     }
 
@@ -106,13 +110,87 @@ public class SignupService {
         return true;
     }
 
-//    public String generateVerificationCode() {
-//        Random random = new Random();
-//        int code = 100000 + random.nextInt(900000);
-//        return String.format("%06d", code);
-//    }
 
+    public String generateVerificationCode() {
+        Random random = new Random();
+        int code = 100000 + random.nextInt(900000);
+        return String.valueOf(code);
+    }
 
+    public void sendVerificationEmail(String email, String code) {
+        String subject = "이메일 인증 코드";
+        String text = "귀하의 인증 코드는 " + code + " 입니다. 이 코드는 30분 동안 유효합니다.";
+        emailService.sendSimpleMessage(email, subject, text);
+    }
+
+    public void sendIdRecoveryEmail(String email, String userId) {
+        String subject = "아이디 찾기";
+        String text = "귀하의 아이디는 " + userId + " 입니다.";
+        emailService.sendSimpleMessage(email, subject, text);
+    }
+
+    public void saveVerificationCode(String email, String code) {
+        verificationCodes.put(email, new VerificationCode(code, LocalDateTime.now().plusMinutes(30)));
+    }
+
+    public boolean verifyCode(String email, String code) {
+        VerificationCode savedCode = verificationCodes.get(email);
+        if (savedCode != null && savedCode.getCode().equals(code) && LocalDateTime.now().isBefore(savedCode.getExpiryTime())) {
+            verificationCodes.remove(email);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean sendVerificationCode(String email) {
+
+        if (!isEmailRegistered(email)) {
+            return false;
+        }
+        String code = generateVerificationCode();
+        sendVerificationEmail(email, code);
+        saveVerificationCode(email, code);
+        return true;
+    }
+
+    public boolean isEmailRegistered(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
+
+    public String findUserId(String email) {
+        return userRepository.findByEmail(email)
+                .map(UserEntity::getUserId)
+                .orElse(null);
+    }
+
+    public boolean resetPassword(String email, String newPassword) {
+        return userRepository.findByEmail(email)
+                .map(user -> {
+                    user.setPassword(passwordEncoder.encode(newPassword));
+                    userRepository.save(user);
+                    return true;
+                })
+                .orElse(false);
+    }
+
+    private static class VerificationCode {
+        private String code;
+        private LocalDateTime expiryTime;
+
+        public VerificationCode(String code, LocalDateTime expiryTime) {
+            this.code = code;
+            this.expiryTime = expiryTime;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public LocalDateTime getExpiryTime() {
+            return expiryTime;
+        }
+    }
+}
 //    @Transactional
 //    public boolean deactivateAccount(String userId) {
 //        try {
@@ -138,7 +216,7 @@ public class SignupService {
 //        }
 //    }
 
-}
+
 
 
 

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/login")
 public class LoginController {
@@ -64,25 +66,86 @@ public class LoginController {
             return ResponseEntity.status(400).body("로그아웃 실패");
         }
     }
-//    @PostMapping("/send-code")
-//    public ResponseEntity<String> sendVerificationCode(@RequestBody SignupDTO signupDTO) {
-//        if (signupDTO.getEmail() == null || signupDTO.getEmail().isEmpty()) {
-//            return ResponseEntity.badRequest().body("이메일 주소가 제공되지 않았습니다.");
-//        }
-//
-//        try {
-//            String code = signupService.generateVerificationCode();
-//            boolean isEmailSent = signupService.sendVerificationEmail(signupDTO.getEmail(), code);
-//
-//            if (isEmailSent) {
-//                return ResponseEntity.ok("인증 코드가 이메일로 전송되었습니다.");
-//            } else {
-//                return ResponseEntity.internalServerError().body("인증 코드 전송에 실패했습니다. 다시 시도해 주세요.");
-//            }
-//        } catch (Exception e) {
-//            return ResponseEntity.internalServerError().body("인증 코드 전송 중 오류가 발생했습니다: " + e.getMessage());
-//        }
-//    }
+
+    @PostMapping("/send-code")
+    public ResponseEntity<String> sendVerificationCode(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        if (email == null || email.isEmpty()) {
+            return ResponseEntity.badRequest().body("이메일 주소가 제공되지 않았습니다.");
+        }
+
+        try {
+            boolean sent = signupService.sendVerificationCode(email);
+            if (sent) {
+                return ResponseEntity.ok("인증 코드가 이메일로 전송되었습니다.");
+            } else {
+                return ResponseEntity.status(404).body("해당 이메일로 등록된 계정이 없습니다.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("인증 코드 전송 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
+
+
+    @PostMapping("/find-id")
+    public ResponseEntity<String> findId(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        if (email == null || email.isEmpty()) {
+            return ResponseEntity.badRequest().body("이메일 주소가 제공되지 않았습니다.");
+        }
+
+        String userId = signupService.findUserId(email);
+        if (userId != null) {
+            signupService.sendIdRecoveryEmail(email, userId);
+            return ResponseEntity.ok("아이디가 이메일로 전송되었습니다.");
+        } else {
+            return ResponseEntity.status(404).body("해당 이메일로 등록된 계정이 없습니다.");
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        String newPassword = body.get("newPassword");
+        String code = body.get("code");
+
+        if (email == null || newPassword == null || code == null) {
+            return ResponseEntity.badRequest().body("필요한 정보가 모두 제공되지 않았습니다.");
+        }
+
+        if (signupService.verifyCode(email, code)) {
+            boolean isReset = signupService.resetPassword(email, newPassword);
+            if (isReset) {
+                return ResponseEntity.ok("비밀번호가 성공적으로 재설정되었습니다.");
+            } else {
+                return ResponseEntity.status(500).body("비밀번호 재설정에 실패했습니다.");
+            }
+        } else {
+            return ResponseEntity.badRequest().body("잘못된 인증 코드입니다.");
+        }
+    }
+
+
+    @PostMapping("/confirm-reset")
+    public ResponseEntity<String> confirmReset(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        String code = body.get("code");
+        String newPassword = body.get("newPassword");
+
+        if (email == null || code == null || newPassword == null) {
+            return ResponseEntity.badRequest().body("필요한 정보가 모두 제공되지 않았습니다.");
+        }
+
+        if (signupService.verifyCode(email, code)) {
+            if (signupService.resetPassword(email, newPassword)) {
+                return ResponseEntity.ok("비밀번호가 성공적으로 재설정되었습니다.");
+            } else {
+                return ResponseEntity.status(500).body("비밀번호 재설정에 실패했습니다.");
+            }
+        } else {
+            return ResponseEntity.badRequest().body("잘못된 인증 코드입니다.");
+        }
+    }
 
 
 

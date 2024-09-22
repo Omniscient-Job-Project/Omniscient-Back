@@ -20,7 +20,7 @@ public class SignupController {
     //회원가입 요청
     @PostMapping("/post")
     public ResponseEntity<String> signup(@RequestBody SignupDTO signupDTO){
-
+        System.out.println("Received signup request: " + signupDTO);
 
         //모든 필드 빈값 검증
         if (!signupService.isAllFieldsValid(signupDTO)) {
