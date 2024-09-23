@@ -5,6 +5,8 @@ import com.omniscient.omniscientback.api.jobApi.service.JobabaService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -29,6 +31,8 @@ public class JobabaApiController {
     private String apiKey;
 
     private final JobabaService jobabaService;
+
+    private static final Logger logger = LoggerFactory.getLogger(JobabaApiController.class); // Logger 초기화
 
     @Autowired
     public JobabaApiController(JobabaService jobabaService) {
@@ -106,9 +110,15 @@ public class JobabaApiController {
             jobDTO.setRecrutFieldNm(jobJson.optString("RECRUT_FIELD_NM", "")); // 채용 분야 이름 설정
             jobDTO.setEmplmntPsncnt(jobJson.optInt("EMPLMNT_PSNCNT", 0)); // 고용 인원 수 설정
 
-            jobabaService.saveJob(jobDTO); // DTO를 서비스에 저장
-        }
 
+            boolean isSaved = jobabaService.saveJob(jobDTO); // DTO를 서비스에 저장하고 결과 확인
+
+            if (isSaved) {
+                logger.info("잡아바 데이터 저장 성공: {}", jobDTO.getCompanyName()); // 저장 성공 로그
+            } else {
+                logger.warn("잡아바 데이터 저장 실패: {}", jobDTO.getCompanyName()); // 저장 실패 로그
+            }
+        }
         return jsonData; // JSON 데이터 반환
     }
 
@@ -166,12 +176,13 @@ public class JobabaApiController {
             JSONObject jobJson = jsonArray.getJSONObject(i); // 현재 JSON 객체
             // 현재 JSON 객체의 "ENTRPRS_NM" 값이 jobId와 일치하는지 확인
             if (jobJson.getString("ENTRPRS_NM").equals(jobId)) {
-                // 해당 jobId에 맞는 데이터 반환 (예쁘게 출력, 4칸 들여쓰기)
+                // 해당 jobId에 맞는 데이터 반환 (4칸 들여쓰기)
                 return ResponseEntity.ok(jobJson.toString(4));
             }
         }
 
         // 해당 jobId가 없을 경우의 처리
+        logger.warn("Job ID {} not found", jobId); // ID 미발견 로그
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 채용정보의 ID값을 찾을 수 없습니다."); // 404 상태 코드와 함께 오류 메시지 반환
     }
 

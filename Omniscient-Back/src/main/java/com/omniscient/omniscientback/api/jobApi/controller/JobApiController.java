@@ -6,6 +6,8 @@ import org.apache.tomcat.util.json.ParseException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -30,6 +32,8 @@ public class JobApiController {
     private String apiKey;
 
     private JobService jobService;
+    private static final Logger logger = LoggerFactory.getLogger(JobApiController.class); // Logger 초기화
+
 
     @Autowired
     public JobApiController(JobService jobService) {
@@ -107,7 +111,13 @@ public class JobApiController {
             jobDTO.setWebInfoUrl("http://www.work.go.kr/empInfo/empInfoSrch/list/dtlEmpSrch.do?joReqstNo=" + jobJson.getString("JO_REQST_NO")); // 웹 정보 URL 설정
             jobDTO.setMobileInfoUrl("http://www.work.go.kr/empInfo/empInfoSrch/list/dtlEmpSrch.do?joReqstNo=" + jobJson.getString("JO_REQST_NO")); // 모바일 정보 URL 설정
 
-            jobService.saveJob(jobDTO); // DTO 객체를 서비스에 저장
+            boolean isSaved = jobService.saveJob(jobDTO);
+
+            if (isSaved) {
+                logger.info("잡 정보 저장 성공: {}", jobDTO.getCompanyName()); // 성공 로그
+            } else {
+                logger.error("잡 정보 저장 실패: {}", jobDTO.getCompanyName()); // 실패 로그
+            }
         }
 
         return jsonData; // JSON 데이터 반환
@@ -140,9 +150,11 @@ public class JobApiController {
         if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
             // 정상 응답인 경우 입력 스트림을 통해 읽기
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            logger.info("API 호출 성공: {}", urlBuilder.toString()); // 성공 로그
         } else {
             // 오류 응답인 경우 오류 스트림을 통해 읽기
             rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+            logger.error("API 호출 실패: {}", conn.getResponseCode()); // 실패 로그
         }
 
         StringBuilder sb = new StringBuilder(); // 응답 데이터를 저장할 StringBuilder 선언
@@ -166,11 +178,12 @@ public class JobApiController {
             JSONObject jobJson = jsonArray.getJSONObject(i); // 현재 JSON 객체
             // 현재 JSON 객체의 "JO_REQST_NO" 값이 jobId와 일치하는지 확인
             if (jobJson.getString("JO_REQST_NO").equals(jobId)) {
+                logger.info("잡 정보 ID 조회 성공: {}", jobId); // 성공 로그
                 // 해당 jobId에 맞는 데이터 반환
                 return ResponseEntity.ok(jobJson.toString()); // JSON 문자열 반환
             }
         }
-
+        logger.warn("잡 정보 ID 조회 실패: {}", jobId); // 경고 로그
         // 해당 jobId가 없을 경우의 처리
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 채용정보의 ID값을 찾을 수 없습니다."); // 404 상태 코드와 함께 오류 메시지 반환
     }
