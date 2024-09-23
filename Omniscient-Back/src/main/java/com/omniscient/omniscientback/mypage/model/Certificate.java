@@ -11,7 +11,7 @@ public class Certificate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;  // 자격증 고유 식별자
+    private Integer certificateId;  // 자격증 고유 식별자
 
     private String name;  // 자격증 이름
 
@@ -27,9 +27,8 @@ public class Certificate {
     public Certificate() {
     }
 
-    // 모든 필드를 포함한 생성자
-    public Certificate(Integer id, String name, String date, String issuer, String number, Boolean isActive) {
-        this.id = id;
+    public Certificate(Integer certificateId, String name, String date, String issuer, String number, Boolean isActive) {
+        this.certificateId = certificateId;
         this.name = name;
         this.date = date;
         this.issuer = issuer;
@@ -37,13 +36,12 @@ public class Certificate {
         this.isActive = isActive;
     }
 
-    // Getter와 Setter 메서드
-    public Integer getId() {
-        return id;
+    public Integer getCertificateId() {
+        return certificateId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setCertificateId(Integer certificateId) {
+        this.certificateId = certificateId;
     }
 
     public String getName() {
@@ -89,7 +87,7 @@ public class Certificate {
     @Override
     public String toString() {
         return "Certificate{" +
-                "id=" + id +
+                "certificateId=" + certificateId +
                 ", name='" + name + '\'' +
                 ", date='" + date + '\'' +
                 ", issuer='" + issuer + '\'' +
