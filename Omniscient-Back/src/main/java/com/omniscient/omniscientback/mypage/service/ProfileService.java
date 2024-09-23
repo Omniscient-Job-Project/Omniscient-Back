@@ -6,6 +6,7 @@ import com.omniscient.omniscientback.mypage.repository.ProfileRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -36,6 +37,7 @@ public class ProfileService {
         return convertToDTO(profile);
     }
 
+    @Transactional
     public ProfileDTO createProfile(ProfileDTO profileDTO, List<MultipartFile> profileImages) throws IOException {
         Profile profile = convertToEntity(profileDTO);
         profile.setStatus(true);
@@ -53,6 +55,7 @@ public class ProfileService {
         return convertToDTO(savedProfile);
     }
 
+    @Transactional
     public ProfileDTO updateProfile(ProfileDTO profileDTO, List<MultipartFile> profileImages) throws IOException {
         Profile existingProfile = profileRepository.findByIdAndStatusTrue(profileDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("활성화된 프로필을 찾을 수 없습니다"));
@@ -71,6 +74,7 @@ public class ProfileService {
         return convertToDTO(updatedProfile);
     }
 
+    @Transactional
     public void deactivateProfile(Integer id) {
         Profile profile = profileRepository.findByIdAndStatusTrue(id)
                 .orElseThrow(() -> new IllegalArgumentException("활성화된 프로필을 찾을 수 없습니다"));

@@ -5,6 +5,7 @@ import com.omniscient.omniscientback.api.jobApi.model.JobEntity;
 import com.omniscient.omniscientback.api.jobApi.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,7 @@ public class JobService {
         this.jobRepository = jobRepository;
     }
 
+    @Transactional
     public void saveJob(JobTotalDTO jobDTO) {
         JobEntity jobEntity = new JobEntity();
 

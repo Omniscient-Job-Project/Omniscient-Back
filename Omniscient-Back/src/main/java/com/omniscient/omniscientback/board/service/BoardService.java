@@ -6,6 +6,8 @@ import com.omniscient.omniscientback.board.model.BoardDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +32,7 @@ public class BoardService {
         return convertToDTO(board);
     }
 
+    @Transactional
     public BoardDTO createBoard(BoardDTO boardDTO) {
         Board board = convertToEntity(boardDTO);
         board.setStatus(true); // 새로 생성된 게시글은 활성 상태로 설정
@@ -37,6 +40,7 @@ public class BoardService {
         return convertToDTO(savedBoard);
     }
 
+    @Transactional
     public BoardDTO updateBoard(Integer id, BoardDTO boardDTO) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID의 게시글을 찾을 수 없습니다: " + id));
@@ -49,6 +53,7 @@ public class BoardService {
         return convertToDTO(updatedBoard);
     }
 
+    @Transactional
     public void updateBoardStatus(Integer id, boolean status) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID의 게시글을 찾을 수 없습니다: " + id));
