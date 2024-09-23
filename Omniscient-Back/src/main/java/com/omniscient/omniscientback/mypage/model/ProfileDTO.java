@@ -3,7 +3,7 @@ package com.omniscient.omniscientback.mypage.model;
 import java.util.List;
 
 public class ProfileDTO {
-    private Integer id;
+    private Integer profileId;
     private String name;
     private String jobTitle;
     private String email;
@@ -13,6 +13,9 @@ public class ProfileDTO {
     private List<String> certificates;
     private Boolean status;
     private List<String> profileImageBase64; // Base64 인코딩된 이미지 문자열 리스트
+
+    public ProfileDTO() {
+    }
 
     // Getters and setters
 
@@ -80,23 +83,22 @@ public class ProfileDTO {
         this.status = status;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getProfileId() {
+        return profileId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setProfileId(Integer profileId) {
+        this.profileId = profileId;
     }
 
-    public void setId(String id) {
+    // 기존의 setId 메서드에서 id를 profileId로 변경
+    public void setProfileId(String id) {
         if (id != null && !id.equals("null")) {
-            this.id = Integer.parseInt(id);
+            this.profileId = Integer.parseInt(id);
         } else {
-            this.id = null;
+            this.profileId = null;
         }
     }
-
-    // Other getters and setters remain the same
 
     public List<String> getProfileImageBase64() {
         return profileImageBase64;
@@ -109,7 +111,7 @@ public class ProfileDTO {
     @Override
     public String toString() {
         return "ProfileDTO{" +
-                "id=" + id +
+                "profileId=" + profileId +
                 ", name='" + name + '\'' +
                 ", jobTitle='" + jobTitle + '\'' +
                 ", email='" + email + '\'' +
@@ -120,8 +122,5 @@ public class ProfileDTO {
                 ", status=" + status +
                 ", profileImageBase64=" + (profileImageBase64 != null ? profileImageBase64.size() + " images" : "null") +
                 '}';
-    }
-
-    public ProfileDTO() {
     }
 }
