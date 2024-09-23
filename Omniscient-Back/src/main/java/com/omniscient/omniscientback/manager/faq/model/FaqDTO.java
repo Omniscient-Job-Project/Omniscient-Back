@@ -1,29 +1,29 @@
 package com.omniscient.omniscientback.manager.faq.model;
 
 public class FaqDTO {
-    private Integer id;
+    private Integer faqId;
     private String question;
     private String answer;
-    private Boolean status; // 추가된 필드: FAQ의 상태를 나타냅니다.
-    private Integer faqViews = 0;  // 조회수 필드 추가
+    private Boolean status;
+    private Integer faqViews = 0;
 
     public FaqDTO() {
     }
 
-    public FaqDTO(Integer id, String question, String answer, Boolean status, Integer faqViews) {
-        this.id = id;
+    public FaqDTO(Integer faqId, String question, String answer, Boolean status, Integer faqViews) {
+        this.faqId = faqId;
         this.question = question;
         this.answer = answer;
         this.status = status;
         this.faqViews = faqViews;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getFaqId() {
+        return faqId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setFaqId(Integer faqId) {
+        this.faqId = faqId;
     }
 
     public String getQuestion() {
@@ -56,16 +56,5 @@ public class FaqDTO {
 
     public void setFaqViews(Integer faqViews) {
         this.faqViews = faqViews;
-    }
-
-    @Override
-    public String toString() {
-        return "FaqDTO{" +
-                "id=" + id +
-                ", question='" + question + '\'' +
-                ", answer='" + answer + '\'' +
-                ", status=" + status +
-                ", faqViews=" + faqViews +
-                '}';
     }
 }
