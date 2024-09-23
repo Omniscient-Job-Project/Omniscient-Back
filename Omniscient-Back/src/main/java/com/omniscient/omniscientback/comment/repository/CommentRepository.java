@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
     List<Comment> findByBoardIdAndActiveTrue(Integer boardId);
-    Optional<Comment> findByIdAndBoardId(Integer id, Integer boardId);
+    Optional<Comment> findBycommentIdAndBoardId(Integer commentId, Integer boardId);
 }
