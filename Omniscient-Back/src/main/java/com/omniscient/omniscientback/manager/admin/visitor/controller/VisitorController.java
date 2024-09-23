@@ -20,7 +20,6 @@ public class VisitorController {
         this.visitorService = visitorService;
     }
 
-    // 유저가 방문자를 카운트할 수 있도록 설정
     @PostMapping("/todayVisitor")
     public ResponseEntity<Void> trackVisitorToday() {
         try {
@@ -31,7 +30,6 @@ public class VisitorController {
         }
     }
 
-    // 관리자만 방문자 수 확인 가능
     @GetMapping("/todayVisitor")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Integer> getTodayVisitorCount() {
@@ -43,7 +41,6 @@ public class VisitorController {
         }
     }
 
-    // 관리자만 일일 방문자 수 확인 가능
     @GetMapping("/dailyVisitors")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Integer>> getDailyVisitors() {
@@ -54,7 +51,6 @@ public class VisitorController {
         }
     }
 
-    // 관리자만 월별 방문자 수 확인 가능
     @GetMapping("/monthlyVisitors")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Integer>> getMonthlyVisitors() {

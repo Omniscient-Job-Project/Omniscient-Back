@@ -39,17 +39,17 @@ public class CertificateController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CertificateDTO> getCertificate(@PathVariable Integer id) {
-        logger.info("자격증 조회 요청: ID {}", id);
+    public ResponseEntity<CertificateDTO> getCertificate(@PathVariable Integer certificateId) {
+        logger.info("자격증 조회 요청: ID {}", certificateId);
         try {
-            CertificateDTO certificate = certificateService.getCertificate(id);
-            logger.info("자격증 조회 성공: ID {}", id);
+            CertificateDTO certificate = certificateService.getCertificate(certificateId);
+            logger.info("자격증 조회 성공: ID {}", certificateId);
             return ResponseEntity.ok(certificate);
         } catch (IllegalArgumentException e) {
-            logger.warn("자격증을 찾을 수 없음: ID {}", id);
+            logger.warn("자격증을 찾을 수 없음: ID {}", certificateId);
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            logger.error("자격증 조회 중 오류 발생: ID {}", id, e);
+            logger.error("자격증 조회 중 오류 발생: ID {}", certificateId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -71,30 +71,31 @@ public class CertificateController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CertificateDTO> updateCertificate(@PathVariable Integer id, @Valid @RequestBody CertificateDTO certificateDTO) {
-        logger.info("자격증 업데이트 요청: ID {}", id);
+    public ResponseEntity<CertificateDTO> updateCertificate(@PathVariable Integer certificateId, @Valid @RequestBody CertificateDTO certificateDTO) {
+        logger.info("자격증 업데이트 요청: ID {}", certificateId);
         try {
-            certificateDTO.setCertificateId(id);
+            certificateDTO.setCertificateId(certificateId);
+
             CertificateDTO updatedCertificate = certificateService.updateCertificate(certificateDTO);
-            logger.info("자격증 업데이트 성공: ID {}", id);
+            logger.info("자격증 업데이트 성공: ID {}", certificateId);
             return ResponseEntity.ok(updatedCertificate);
         } catch (IllegalArgumentException e) {
-            logger.warn("업데이트할 자격증을 찾을 수 없음: ID {}", id);
+            logger.warn("업데이트할 자격증을 찾을 수 없음: ID {}", certificateId);
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            logger.error("자격증 업데이트 중 오류 발생: ID {}", id, e);
+            logger.error("자격증 업데이트 중 오류 발생: ID {}", certificateId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @PutMapping("/{id}/deactivate")
-    public ResponseEntity<Map<String, Object>> deactivateCertificate(@PathVariable Integer id) {
+    public ResponseEntity<Map<String, Object>> deactivateCertificate(@PathVariable Integer certificateId) {
         try {
-            boolean deactivated = certificateService.deactivateCertificate(id);
+            boolean deactivated = certificateService.deactivateCertificate(certificateId);
             if (deactivated) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("message", "자격증이 성공적으로 비활성화되었습니다.");
-                response.put("id", id);
+                response.put("id", certificateId);
                 return ResponseEntity.ok(response);
             } else {
                 Map<String, Object> error = new HashMap<>();
@@ -102,7 +103,7 @@ public class CertificateController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
             }
         } catch (Exception e) {
-            logger.error("자격증 비활성화 중 오류 발생: ID {}", id, e);
+            logger.error("자격증 비활성화 중 오류 발생: ID {}", certificateId, e);
             Map<String, Object> error = new HashMap<>();
             error.put("error", "내부 서버 오류가 발생했습니다.");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);

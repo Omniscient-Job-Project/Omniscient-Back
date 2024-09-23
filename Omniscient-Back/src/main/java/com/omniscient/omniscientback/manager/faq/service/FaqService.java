@@ -19,54 +19,54 @@ public class FaqService {
 
     public List<FaqDTO> getAllFaqs() {
         return faqRepository.findAll().stream()
-                .filter(Faq::getFaqStatus)  // 활성 상태인 FAQ만 반환
+                .filter(Faq::getFaqStatus)
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    public FaqDTO getFaqById(Integer id) {
-        return faqRepository.findById(id)
-                .filter(Faq::getFaqStatus)  // 활성 상태인 FAQ만 반환
+    public FaqDTO getFaqByFaqId(Integer faqId) {
+        return faqRepository.findById(faqId)
+                .filter(Faq::getFaqStatus)
                 .map(this::toDto)
                 .orElseThrow(() -> new RuntimeException("FAQ not found"));
     }
 
     public FaqDTO createFaq(FaqDTO faqDTO) {
         Faq faq = fromDto(faqDTO);
-        faq.setFaqStatus(true);  // 생성 시 상태를 활성으로 설정
+        faq.setFaqStatus(true);
         Faq savedFaq = faqRepository.save(faq);
         return toDto(savedFaq);
     }
 
-    public FaqDTO updateFaq(Integer id, FaqDTO faqDTO) {
-        if (!faqRepository.existsById(id)) {
+    public FaqDTO updateFaq(Integer faqId, FaqDTO faqDTO) {
+        if (!faqRepository.existsById(faqId)) {
             throw new RuntimeException("FAQ not found");
         }
         Faq faq = fromDto(faqDTO);
-        faq.setId(id);
-        faq.setFaqStatus(true);  // 업데이트 시 상태를 활성으로 설정
+        faq.setFaqId(faqId);
+        faq.setFaqStatus(true);
         Faq updatedFaq = faqRepository.save(faq);
         return toDto(updatedFaq);
     }
 
-    public boolean deleteFaq(Integer id) {
-        Optional<Faq> faqOpt = faqRepository.findById(id);
+    public boolean deleteFaq(Integer faqId) {
+        Optional<Faq> faqOpt = faqRepository.findById(faqId);
         if (faqOpt.isEmpty()) {
             throw new RuntimeException("FAQ not found");
         }
         Faq faq = faqOpt.get();
-        faq.setFaqStatus(false);  // 상태를 비활성으로 변경
+        faq.setFaqStatus(false);
         faqRepository.save(faq);
-        return true;  // 삭제 성공 시 true 반환
+        return true;
     }
 
     private FaqDTO toDto(Faq faq) {
         FaqDTO dto = new FaqDTO();
-        dto.setId(faq.getId());
+        dto.setFaqId(faq.getFaqId());
         dto.setQuestion(faq.getQuestion());
         dto.setAnswer(faq.getAnswer());
-        dto.setFaqStatus(faq.getFaqStatus());  // 상태 필드 추가
-        dto.setFaqViews(faq.getFaqViews());  // 조회수 필드 추가
+        dto.setFaqStatus(faq.getFaqStatus());
+        dto.setFaqViews(faq.getFaqViews());
         return dto;
     }
 
@@ -74,14 +74,13 @@ public class FaqService {
         Faq faq = new Faq();
         faq.setQuestion(dto.getQuestion());
         faq.setAnswer(dto.getAnswer());
-        faq.setFaqStatus(dto.getFaqStatus());  // 상태 필드 추가
-        faq.setFaqViews(dto.getFaqViews());  // 조회수 필드 추가
+        faq.setFaqStatus(dto.getFaqStatus());
+        faq.setFaqViews(dto.getFaqViews());
         return faq;
     }
 
     @Transactional
     public Faq incrementViews(Integer faqId) {
-        System.out.println("Incrementing views for faqId: " + faqId);
         return faqRepository.findById(faqId)
                 .map(faq -> {
                     faq.setFaqViews(faq.getFaqViews() + 1);
