@@ -1,20 +1,11 @@
 package com.omniscient.omniscientback.login.service;
-
-
 import com.omniscient.omniscientback.login.model.SignupDTO;
 import com.omniscient.omniscientback.login.model.UserEntity;
 import com.omniscient.omniscientback.login.model.UserRole;
 import com.omniscient.omniscientback.login.repository.UserRepository;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -105,9 +96,14 @@ public class SignupService {
     }
 
     // Refresh 토큰 무효화 메서드
-    public boolean invalidateRefreshToken(String token) {
-
-        return true;
+    public boolean invalidateRefreshToken(String userId) {
+        return userRepository.findByUserId(userId)
+                .map(user -> {
+                    user.setRefreshToken(""); // 토큰 무효화
+                    userRepository.save(user);
+                    return true;
+                })
+                .orElse(false);
     }
 
 
@@ -190,6 +186,20 @@ public class SignupService {
             return expiryTime;
         }
     }
+
+//    public boolean resetPassword(String email, String newPassword, String code) {
+//        if (verifyCode(email, code)) { // 코드 검증 추가
+//            return userRepository.findByEmail(email)
+//                    .map(user -> {
+//                        user.setPassword(passwordEncoder.encode(newPassword));
+//                        userRepository.save(user);
+//                        return true;
+//                    })
+//                    .orElse(false);
+//        }
+//        return false; // 인증 코드가 유효하지 않음
+//    }
+
 }
 //    @Transactional
 //    public boolean deactivateAccount(String userId) {
