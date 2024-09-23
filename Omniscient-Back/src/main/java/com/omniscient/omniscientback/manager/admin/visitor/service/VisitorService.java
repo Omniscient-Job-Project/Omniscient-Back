@@ -38,12 +38,10 @@ public class VisitorService {
         Visitor visitor = visitorRepository.findByVisitDate(today);
         return (visitor != null) ? visitor.getVisitCount() : 0;
     }
+
     public List<Integer> getDailyVisitors() {
         LocalDate startDate = LocalDate.now().minusDays(30); // 최근 30일
-        List<Visitor> visitors = visitorRepository.findAll()
-                .stream()
-                .filter(visitor -> !visitor.getVisitDate().isBefore(startDate))
-                .collect(Collectors.toList());
+        List<Visitor> visitors = visitorRepository.findAllByVisitDateBetween(startDate, LocalDate.now());
 
         return IntStream.range(0, 30)
                 .mapToObj(i -> {
@@ -59,10 +57,7 @@ public class VisitorService {
 
     public List<Integer> getMonthlyVisitors() {
         LocalDate startDate = LocalDate.now().minusMonths(12); // 최근 12개월
-        List<Visitor> visitors = visitorRepository.findAll()
-                .stream()
-                .filter(visitor -> !visitor.getVisitDate().isBefore(startDate))
-                .collect(Collectors.toList());
+        List<Visitor> visitors = visitorRepository.findAllByVisitDateBetween(startDate, LocalDate.now());
 
         return IntStream.range(0, 12)
                 .mapToObj(i -> {
@@ -74,5 +69,4 @@ public class VisitorService {
                 })
                 .collect(Collectors.toList());
     }
-
 }
