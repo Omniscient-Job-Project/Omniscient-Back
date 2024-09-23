@@ -18,10 +18,10 @@ public interface ProfileRepository extends JpaRepository<Profile, Integer> {
 
     /**
      * 주어진 ID와 status가 true인 프로필을 조회합니다.
-     * @param id 조회할 프로필의 ID
+     * @param profileId 조회할 프로필의 ID
      * @return 활성화된 프로필 (Optional)
      */
-    Optional<Profile> findByIdAndStatusTrue(Integer id);
+    Optional<Profile> findByProfileIdAndStatusTrue(Integer profileId);  // 수정된 부분
 
     /**
      * 주어진 이메일과 status가 true인 프로필을 조회합니다.

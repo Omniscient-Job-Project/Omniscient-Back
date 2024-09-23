@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
 public class CertificateService {
     private static final Logger logger = LoggerFactory.getLogger(CertificateService.class);
@@ -40,7 +41,7 @@ public class CertificateService {
 
     public CertificateDTO getCertificate(Integer id) {
         logger.info("ID {}인 자격증 조회 시작", id);
-        Certificate certificate = certificateRepository.findByIdAndIsActiveTrue(id)
+        Certificate certificate = certificateRepository.findByCertificateIdAndIsActiveTrue(id)  // 수정된 부분
                 .orElseThrow(() -> {
                     logger.warn("ID {}인 자격증을 찾을 수 없음", id);
                     return new IllegalArgumentException("자격증을 찾을 수 없습니다");
@@ -77,7 +78,7 @@ public class CertificateService {
     @Transactional
     public CertificateDTO updateCertificate(CertificateDTO certificateDTO) {
         logger.info("자격증 업데이트 시작. ID: {}", certificateDTO.getCertificateId());
-        Certificate existingCertificate = certificateRepository.findByIdAndIsActiveTrue(certificateDTO.getCertificateId())
+        Certificate existingCertificate = certificateRepository.findByCertificateIdAndIsActiveTrue(certificateDTO.getCertificateId())  // 수정된 부분
                 .orElseThrow(() -> {
                     logger.warn("업데이트할 자격증을 찾을 수 없음. ID: {}", certificateDTO.getCertificateId());
                     return new IllegalArgumentException("자격증을 찾을 수 없습니다");
@@ -117,3 +118,4 @@ public class CertificateService {
         certificate.setIsActive(dto.getIsActive());
     }
 }
+

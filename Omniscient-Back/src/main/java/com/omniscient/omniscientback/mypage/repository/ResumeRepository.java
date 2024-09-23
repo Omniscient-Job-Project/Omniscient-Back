@@ -15,13 +15,13 @@ public interface ResumeRepository extends JpaRepository<Resume, Integer> {
      * @return 활성화된 이력서 목록
      */
     List<Resume> findAllByStatusTrue();
-
     /**
      * 주어진 ID와 활성화 상태인 이력서를 조회합니다.
-     * @param id 조회할 이력서의 ID
+     * @param resumeId 조회할 이력서의 ID
      * @return 활성화된 이력서 (Optional)
      */
-    Optional<Resume> findByIdAndStatusTrue(Integer id);
+
+    Optional<Resume> findByResumeIdAndStatusTrue(Integer resumeId);
 
     /**
      * 주어진 이름과 활성화 상태인 이력서를 조회합니다.
