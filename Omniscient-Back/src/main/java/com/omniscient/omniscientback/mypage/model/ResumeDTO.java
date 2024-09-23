@@ -8,7 +8,7 @@ import java.util.List;
 
 
 public class ResumeDTO {
-    private Integer id;  // 이력서 고유 식별자
+    private Integer resumeId;  // 이력서 고유 식별자
     private String title;  // 이력서 제목
     private String name;  // 이름
     private String email;  // 이메일
@@ -46,12 +46,12 @@ public class ResumeDTO {
     public ResumeDTO() {
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getResumeId() {
+        return resumeId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setResumeId(Integer resumeId) {
+        this.resumeId = resumeId;
     }
 
     public String getTitle() {
@@ -137,7 +137,7 @@ public class ResumeDTO {
     @Override
     public String toString() {
         return "ResumeDTO{" +
-                "id=" + id +
+                "resumeId=" + resumeId +
                 ", title='" + title + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
