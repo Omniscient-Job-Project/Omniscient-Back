@@ -75,6 +75,7 @@ public class CertificateController {
         logger.info("자격증 업데이트 요청: ID {}", certificateId);
         try {
             certificateDTO.setCertificateId(certificateId);
+
             CertificateDTO updatedCertificate = certificateService.updateCertificate(certificateDTO);
             logger.info("자격증 업데이트 성공: ID {}", certificateId);
             return ResponseEntity.ok(updatedCertificate);
