@@ -35,18 +35,18 @@ public class ResumeController {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ResumeDTO> getResume(@PathVariable Integer id) {
-        logger.info("이력서 조회 요청: ID {}", id);
+    @GetMapping("/{resumeId}")
+    public ResponseEntity<ResumeDTO> getResume(@PathVariable Integer resumeId) {
+        logger.info("이력서 조회 요청: ID {}", resumeId);
         try {
-            ResumeDTO resume = resumeService.getResume(id);
-            logger.info("이력서 조회 성공: ID {}", id);
+            ResumeDTO resume = resumeService.getResume(resumeId);
+            logger.info("이력서 조회 성공: ID {}", resumeId);
             return ResponseEntity.ok(resume);
         } catch (RuntimeException e) {
-            logger.warn("이력서를 찾을 수 없음: ID {}", id);
+            logger.warn("이력서를 찾을 수 없음: ID {}", resumeId);
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            logger.error("이력서 조회 중 오류 발생: ID {}", id, e);
+            logger.error("이력서 조회 중 오류 발생: ID {}", resumeId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -55,14 +55,13 @@ public class ResumeController {
     public ResponseEntity<ResumeDTO> createResume(@RequestBody ResumeDTO resumeDTO) {
         logger.info("새 이력서 생성 요청");
         try {
-            // null 체크 및 기본값 설정
             if (resumeDTO.getTitle() == null || resumeDTO.getTitle().trim().isEmpty()) {
                 logger.warn("이력서 제목이 비어있음");
                 return ResponseEntity.badRequest().build();
             }
 
             ResumeDTO createdResume = resumeService.createResume(resumeDTO);
-            logger.info("새 이력서 생성 성공: ID {}", createdResume.getId());
+            logger.info("새 이력서 생성 성공: ID {}", createdResume.getResumeId());
             return ResponseEntity.status(HttpStatus.CREATED).body(createdResume);
         } catch (Exception e) {
             logger.error("새 이력서 생성 중 오류 발생", e);
@@ -70,14 +69,13 @@ public class ResumeController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ResumeDTO> updateResume(@PathVariable Integer id, @RequestBody ResumeDTO resumeDTO) {
-        logger.info("이력서 업데이트 요청: ID {}", id);
+    @PutMapping("/{resumeId}")
+    public ResponseEntity<ResumeDTO> updateResume(@PathVariable Integer resumeId, @RequestBody ResumeDTO resumeDTO) {
+        logger.info("이력서 업데이트 요청: ID {}", resumeId);
         try {
-            // null 체크 및 기존 데이터 유지
-            ResumeDTO existingResume = resumeService.getResume(id);
+            ResumeDTO existingResume = resumeService.getResume(resumeId);
             if (existingResume == null) {
-                logger.warn("업데이트할 이력서를 찾을 수 없음: ID {}", id);
+                logger.warn("업데이트할 이력서를 찾을 수 없음: ID {}", resumeId);
                 return ResponseEntity.notFound().build();
             }
             // null이 아닌 필드만 업데이트
@@ -91,30 +89,30 @@ public class ResumeController {
             if (resumeDTO.getCertificates() != null) existingResume.setCertificates(resumeDTO.getCertificates());
             if (resumeDTO.getIntroduction() != null) existingResume.setIntroduction(resumeDTO.getIntroduction());
 
-            ResumeDTO updatedResume = resumeService.updateResume(id, existingResume);
-            logger.info("이력서 업데이트 성공: ID {}", id);
+            ResumeDTO updatedResume = resumeService.updateResume(resumeId, existingResume);
+            logger.info("이력서 업데이트 성공: ID {}", resumeId);
             return ResponseEntity.ok(updatedResume);
         } catch (RuntimeException e) {
-            logger.warn("업데이트할 이력서를 찾을 수 없음: ID {}", id);
+            logger.warn("업데이트할 이력서를 찾을 수 없음: ID {}", resumeId);
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            logger.error("이력서 업데이트 중 오류 발생: ID {}", id, e);
+            logger.error("이력서 업데이트 중 오류 발생: ID {}", resumeId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    @PutMapping("/{id}/deactivate")
-    public ResponseEntity<Void> deactivateResume(@PathVariable Integer id) {
-        logger.info("이력서 비활성화 요청: ID {}", id);
+    @PutMapping("/{resumeId}/deactivate")
+    public ResponseEntity<Void> deactivateResume(@PathVariable Integer resumeId) {
+        logger.info("이력서 비활성화 요청: ID {}", resumeId);
         try {
-            resumeService.deactivateResume(id);
-            logger.info("이력서 비활성화 성공: ID {}", id);
+            resumeService.deactivateResume(resumeId);
+            logger.info("이력서 비활성화 성공: ID {}", resumeId);
             return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
-            logger.warn("비활성화할 이력서를 찾을 수 없음: ID {}", id);
+            logger.warn("비활성화할 이력서를 찾을 수 없음: ID {}", resumeId);
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            logger.error("이력서 비활성화 중 오류 발생: ID {}", id, e);
+            logger.error("이력서 비활성화 중 오류 발생: ID {}", resumeId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

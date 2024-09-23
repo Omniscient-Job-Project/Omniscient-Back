@@ -32,14 +32,14 @@ public class ResumeService {
         return resumes;
     }
 
-    public ResumeDTO getResume(Integer id) {
-        logger.info("ID {}인 이력서 조회 시작", id);
-        Resume resume = resumeRepository.findByIdAndStatusTrue(id)
+    public ResumeDTO getResume(Integer resumeId) {
+        logger.info("ID {}인 이력서 조회 시작", resumeId);
+        Resume resume = resumeRepository.findByIdAndStatusTrue(resumeId)
                 .orElseThrow(() -> {
-                    logger.warn("ID {}인 이력서를 찾을 수 없음", id);
-                    return new RuntimeException("이력서를 찾을 수 없습니다: ID " + id);
+                    logger.warn("ID {}인 이력서를 찾을 수 없음", resumeId);
+                    return new RuntimeException("이력서를 찾을 수 없습니다: ID " + resumeId);
                 });
-        logger.info("ID {}인 이력서 조회 완료", id);
+        logger.info("ID {}인 이력서 조회 완료", resumeId);
         return convertToDTO(resume);
     }
 
@@ -49,35 +49,38 @@ public class ResumeService {
         Resume resume = convertToEntity(resumeDTO);
         resume.setStatus(true);
         Resume savedResume = resumeRepository.save(resume);
-        logger.info("새로운 이력서 생성 완료. ID: {}", savedResume.getId());
+        logger.info("새로운 이력서 생성 완료. ID: {}", savedResume.getResumeId());
         return convertToDTO(savedResume);
     }
 
     @Transactional
-    public ResumeDTO updateResume(Integer id, ResumeDTO resumeDTO) {
-        logger.info("이력서 업데이트 시작. ID: {}", id);
-        Resume existingResume = resumeRepository.findByIdAndStatusTrue(id)
+    public ResumeDTO updateResume(Integer resumeId, ResumeDTO resumeDTO) {
+        logger.info("이력서 업데이트 시작. ID: {}", resumeId);
+        Resume existingResume = resumeRepository.findByIdAndStatusTrue(resumeId)
                 .orElseThrow(() -> {
-                    logger.warn("업데이트할 이력서를 찾을 수 없음. ID: {}", id);
-                    return new RuntimeException("이력서를 찾을 수 없습니다: ID " + id);
+                    logger.warn("업데이트할 이력서를 찾을 수 없음. ID: {}", resumeId);
+                    return new RuntimeException("이력서를 찾을 수 없습니다: ID " + resumeId);
                 });
-        BeanUtils.copyProperties(resumeDTO, existingResume, "id", "status");
+
+        // 여기서 "id"를 "resumeId"로 변경
+        BeanUtils.copyProperties(resumeDTO, existingResume, "resumeId", "status");
+
         Resume updatedResume = resumeRepository.save(existingResume);
-        logger.info("이력서 업데이트 완료. ID: {}", id);
+        logger.info("이력서 업데이트 완료. ID: {}", resumeId);
         return convertToDTO(updatedResume);
     }
 
     @Transactional
-    public void deactivateResume(Integer id) {
-        logger.info("이력서 비활성화 시작. ID: {}", id);
-        Resume resume = resumeRepository.findByIdAndStatusTrue(id)
+    public void deactivateResume(Integer resumeId) {
+        logger.info("이력서 비활성화 시작. ID: {}", resumeId);
+        Resume resume = resumeRepository.findByIdAndStatusTrue(resumeId)
                 .orElseThrow(() -> {
-                    logger.warn("비활성화할 이력서를 찾을 수 없음. ID: {}", id);
-                    return new RuntimeException("이력서를 찾을 수 없습니다: ID " + id);
+                    logger.warn("비활성화할 이력서를 찾을 수 없음. ID: {}", resumeId);
+                    return new RuntimeException("이력서를 찾을 수 없습니다: ID " + resumeId);
                 });
         resume.setStatus(false);
         resumeRepository.save(resume);
-        logger.info("이력서 비활성화 완료. ID: {}", id);
+        logger.info("이력서 비활성화 완료. ID: {}", resumeId);
     }
 
     private ResumeDTO convertToDTO(Resume resume) {
