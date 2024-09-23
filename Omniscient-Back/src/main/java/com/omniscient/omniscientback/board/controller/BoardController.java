@@ -25,9 +25,9 @@ public class BoardController {
         return ResponseEntity.ok(boards);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<BoardDTO> getBoard(@PathVariable("id") Integer id) {
-        BoardDTO board = boardService.getBoard(id);
+    @GetMapping("/{boardId}")  // boardId로 수정
+    public ResponseEntity<BoardDTO> getBoard(@PathVariable("boardId") Integer boardId) {
+        BoardDTO board = boardService.getBoard(boardId);
         return ResponseEntity.ok(board);
     }
 
@@ -37,15 +37,15 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBoard);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<BoardDTO> updateBoard(@PathVariable("id") Integer id, @Valid @RequestBody BoardDTO boardDTO) {
-        BoardDTO updatedBoard = boardService.updateBoard(id, boardDTO);
+    @PutMapping("/{boardId}")  // boardId로 수정
+    public ResponseEntity<BoardDTO> updateBoard(@PathVariable("boardId") Integer boardId, @Valid @RequestBody BoardDTO boardDTO) {
+        BoardDTO updatedBoard = boardService.updateBoard(boardId, boardDTO);
         return ResponseEntity.ok(updatedBoard);
     }
 
-    @PutMapping("/delete/{id}")
-    public ResponseEntity<String> updateBoardStatus(@PathVariable("id") Integer id, @RequestParam("status") boolean status) {
-        boardService.updateBoardStatus(id, status);
+    @PutMapping("/delete/{boardId}")  // boardId로 수정
+    public ResponseEntity<String> updateBoardStatus(@PathVariable("boardId") Integer boardId, @RequestParam("status") boolean status) {
+        boardService.updateBoardStatus(boardId, status);
         String message = status ? "게시글이 활성화되었습니다." : "게시글이 비활성화되었습니다.";
         return ResponseEntity.ok(message);
     }
