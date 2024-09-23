@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id; // 게시글의 고유 식별자
+    private Integer boardid; // 게시글의 고유 식별자
 
     @Column(nullable = false, length = 30) // 게시글 제목 최대 30글자
     private String title;
@@ -51,12 +51,12 @@ public class Board {
         CERTIFICATION // 자격증 게시글
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getBoardid() {
+        return boardid;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setBoardid(Integer boardid) {
+        this.boardid = boardid;
     }
 
     public String getTitle() {
@@ -110,7 +110,7 @@ public class Board {
     @Override
     public String toString() {
         return "Board{" +
-                "id=" + id +
+                "boardid=" + boardid +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", category=" + category +
