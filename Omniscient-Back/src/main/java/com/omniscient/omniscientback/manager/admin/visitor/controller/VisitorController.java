@@ -1,4 +1,3 @@
-// VisitorController.java
 package com.omniscient.omniscientback.manager.admin.visitor.controller;
 
 import com.omniscient.omniscientback.manager.admin.visitor.service.VisitorService;
@@ -21,8 +20,8 @@ public class VisitorController {
         this.visitorService = visitorService;
     }
 
-    @PostMapping("/visitor-today")
-    @PreAuthorize("hasRole('USER')") // USER 역할만 접근 가능
+    // 유저가 방문자를 카운트할 수 있도록 설정
+    @PostMapping("/todayVisitor")
     public ResponseEntity<Void> trackVisitorToday() {
         try {
             visitorService.trackVisitorToday();
@@ -32,8 +31,9 @@ public class VisitorController {
         }
     }
 
-    @GetMapping("/visitor-today")
-    @PreAuthorize("hasRole('USER')")
+    // 관리자만 방문자 수 확인 가능
+    @GetMapping("/todayVisitor")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Integer> getTodayVisitorCount() {
         try {
             Integer count = visitorService.getTodayVisitorCount();
@@ -43,8 +43,9 @@ public class VisitorController {
         }
     }
 
+    // 관리자만 일일 방문자 수 확인 가능
     @GetMapping("/dailyVisitors")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Integer>> getDailyVisitors() {
         try {
             return ResponseEntity.ok(visitorService.getDailyVisitors());
@@ -53,8 +54,9 @@ public class VisitorController {
         }
     }
 
+    // 관리자만 월별 방문자 수 확인 가능
     @GetMapping("/monthlyVisitors")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Integer>> getMonthlyVisitors() {
         try {
             return ResponseEntity.ok(visitorService.getMonthlyVisitors());
