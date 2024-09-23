@@ -25,7 +25,14 @@ public class CertificateService {
     public List<CertificateDTO> getAllActiveCertificates() {
         logger.info("모든 활성화된 자격증 조회 시작");
         List<CertificateDTO> certificates = certificateRepository.findAllByIsActiveTrue().stream()
-                .map(this::convertToDTO)
+                .map(certificate -> new CertificateDTO(
+                        certificate.getCertificateId(),
+                        certificate.getName(),
+                        certificate.getDate(),
+                        certificate.getIssuer(),
+                        certificate.getNumber(),
+                        certificate.getIsActive()
+                ))
                 .collect(Collectors.toList());
         logger.info("활성화된 자격증 조회 완료. 총 {}개 조회됨", certificates.size());
         return certificates;
@@ -38,36 +45,55 @@ public class CertificateService {
                     logger.warn("ID {}인 자격증을 찾을 수 없음", id);
                     return new IllegalArgumentException("자격증을 찾을 수 없습니다");
                 });
-        CertificateDTO certificateDTO = convertToDTO(certificate);
-        logger.info("ID {}인 자격증 조회 완료", id);
-        return certificateDTO;
+
+        return new CertificateDTO(
+                certificate.getCertificateId(),
+                certificate.getName(),
+                certificate.getDate(),
+                certificate.getIssuer(),
+                certificate.getNumber(),
+                certificate.getIsActive()
+        );
     }
 
     @Transactional
     public CertificateDTO createCertificate(CertificateDTO certificateDTO) {
         logger.info("새로운 자격증 생성 시작: {}", certificateDTO);
-        Certificate certificate = convertToEntity(certificateDTO);
+        Certificate certificate = new Certificate();
+        updateCertificateFields(certificate, certificateDTO);
         certificate.setIsActive(true);
         Certificate savedCertificate = certificateRepository.save(certificate);
-        CertificateDTO savedDTO = convertToDTO(savedCertificate);
-        logger.info("새로운 자격증 생성 완료. ID: {}", savedDTO.getId());
-        return savedDTO;
+
+        return new CertificateDTO(
+                savedCertificate.getCertificateId(),
+                savedCertificate.getName(),
+                savedCertificate.getDate(),
+                savedCertificate.getIssuer(),
+                savedCertificate.getNumber(),
+                savedCertificate.getIsActive()
+        );
     }
 
     @Transactional
     public CertificateDTO updateCertificate(CertificateDTO certificateDTO) {
-        logger.info("자격증 업데이트 시작. ID: {}", certificateDTO.getId());
-        Certificate existingCertificate = certificateRepository.findByIdAndIsActiveTrue(certificateDTO.getId())
+        logger.info("자격증 업데이트 시작. ID: {}", certificateDTO.getCertificateId());
+        Certificate existingCertificate = certificateRepository.findByIdAndIsActiveTrue(certificateDTO.getCertificateId())
                 .orElseThrow(() -> {
-                    logger.warn("업데이트할 자격증을 찾을 수 없음. ID: {}", certificateDTO.getId());
+                    logger.warn("업데이트할 자격증을 찾을 수 없음. ID: {}", certificateDTO.getCertificateId());
                     return new IllegalArgumentException("자격증을 찾을 수 없습니다");
                 });
 
         updateCertificateFields(existingCertificate, certificateDTO);
         Certificate updatedCertificate = certificateRepository.save(existingCertificate);
-        CertificateDTO updatedDTO = convertToDTO(updatedCertificate);
-        logger.info("자격증 업데이트 완료. ID: {}", updatedDTO.getId());
-        return updatedDTO;
+
+        return new CertificateDTO(
+                updatedCertificate.getCertificateId(),
+                updatedCertificate.getName(),
+                updatedCertificate.getDate(),
+                updatedCertificate.getIssuer(),
+                updatedCertificate.getNumber(),
+                updatedCertificate.getIsActive()
+        );
     }
 
     @Transactional
@@ -83,33 +109,11 @@ public class CertificateService {
         return deactivated;
     }
 
-    private CertificateDTO convertToDTO(Certificate certificate) {
-        return new CertificateDTO(
-                certificate.getId(),
-                certificate.getName(),
-                certificate.getDate(),
-                certificate.getIssuer(),
-                certificate.getNumber(),
-                certificate.getIsActive()
-        );
-    }
-
-    private Certificate convertToEntity(CertificateDTO dto) {
-        return new Certificate(
-                dto.getId(),
-                dto.getName(),
-                dto.getDate(),
-                dto.getIssuer(),
-                dto.getNumber(),
-                dto.getIsActive()
-        );
-    }
-    // 프로필 이미지는 아직 구문 안만들었습니당
-    // 추후에 여기 코드에 추가
     private void updateCertificateFields(Certificate certificate, CertificateDTO dto) {
         certificate.setName(dto.getName());
         certificate.setDate(dto.getDate());
         certificate.setIssuer(dto.getIssuer());
         certificate.setNumber(dto.getNumber());
+        certificate.setIsActive(dto.getIsActive());
     }
 }
