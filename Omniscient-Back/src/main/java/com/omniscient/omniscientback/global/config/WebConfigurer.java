@@ -21,12 +21,19 @@ public class WebConfigurer implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins(allowedOrigins)  // Vue.js가 실행되는 도메인 추가
-                .allowedOrigins(allowedSwaggers) // 스웨거명세서
+                .allowedOrigins(concatArrays(allowedOrigins, allowedSwaggers)) // 두 배열을 합쳐서 사용
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .exposedHeaders("Custom-Header")
-                .allowCredentials(true)  // 쿠키나 인증 정보를 포함할 경우 true로 설정
-                .maxAge(MAX_AGE_SECS);  // Preflight 요청 캐시 지속 시간 설정
+                .allowCredentials(true)
+                .maxAge(MAX_AGE_SECS);
+    }
+
+    // 두 배열을 합치는 헬퍼 메서드
+    private String[] concatArrays(String[] array1, String[] array2) {
+        String[] result = new String[array1.length + array2.length];
+        System.arraycopy(array1, 0, result, 0, array1.length);
+        System.arraycopy(array2, 0, result, array1.length, array2.length);
+        return result;
     }
 }
