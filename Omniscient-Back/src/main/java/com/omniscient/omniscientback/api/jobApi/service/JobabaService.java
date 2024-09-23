@@ -5,6 +5,7 @@ import com.omniscient.omniscientback.api.jobApi.model.JobabaEntity;
 import com.omniscient.omniscientback.api.jobApi.repository.JobabaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,7 @@ public class JobabaService {
         this.jobabaRepository = jobabaRepository;
     }
 
+    @Transactional
     public void saveJob(JobTotalDTO jobDTO) {
         JobabaEntity jobabaEntity = new JobabaEntity();
 

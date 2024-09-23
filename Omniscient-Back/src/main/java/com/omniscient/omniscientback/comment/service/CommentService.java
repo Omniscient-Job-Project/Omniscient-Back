@@ -5,6 +5,7 @@ import com.omniscient.omniscientback.comment.model.CommentDTO;
 import com.omniscient.omniscientback.comment.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,6 +23,7 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
+    @Transactional
     public CommentDTO addComment(Integer boardId, CommentDTO commentDTO) {
         Comment comment = new Comment();
         comment.setBoardId(boardId);
@@ -38,6 +40,7 @@ public class CommentService {
         return comments.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
+    @Transactional
     public CommentDTO updateComment(Integer boardId, Integer commentId, CommentDTO commentDTO) {
         Comment comment = commentRepository.findByIdAndBoardId(commentId, boardId)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
@@ -46,6 +49,7 @@ public class CommentService {
         return convertToDTO(updatedComment);
     }
 
+    @Transactional
     public void deactivateComment(Integer boardId, Integer commentId) {
         Comment comment = commentRepository.findByIdAndBoardId(commentId, boardId)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));

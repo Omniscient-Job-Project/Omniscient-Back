@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,6 +43,7 @@ public class ResumeService {
         return convertToDTO(resume);
     }
 
+    @Transactional
     public ResumeDTO createResume(ResumeDTO resumeDTO) {
         logger.info("새로운 이력서 생성 시작");
         Resume resume = convertToEntity(resumeDTO);
@@ -50,6 +53,7 @@ public class ResumeService {
         return convertToDTO(savedResume);
     }
 
+    @Transactional
     public ResumeDTO updateResume(Integer id, ResumeDTO resumeDTO) {
         logger.info("이력서 업데이트 시작. ID: {}", id);
         Resume existingResume = resumeRepository.findByIdAndStatusTrue(id)
@@ -63,6 +67,7 @@ public class ResumeService {
         return convertToDTO(updatedResume);
     }
 
+    @Transactional
     public void deactivateResume(Integer id) {
         logger.info("이력서 비활성화 시작. ID: {}", id);
         Resume resume = resumeRepository.findByIdAndStatusTrue(id)
