@@ -43,6 +43,7 @@ public class CertificateService {
         return certificateDTO;
     }
 
+    @Transactional
     public CertificateDTO createCertificate(CertificateDTO certificateDTO) {
         logger.info("새로운 자격증 생성 시작: {}", certificateDTO);
         Certificate certificate = convertToEntity(certificateDTO);
@@ -53,6 +54,7 @@ public class CertificateService {
         return savedDTO;
     }
 
+    @Transactional
     public CertificateDTO updateCertificate(CertificateDTO certificateDTO) {
         logger.info("자격증 업데이트 시작. ID: {}", certificateDTO.getId());
         Certificate existingCertificate = certificateRepository.findByIdAndIsActiveTrue(certificateDTO.getId())
