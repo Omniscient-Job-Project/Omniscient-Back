@@ -51,11 +51,10 @@ public class ProfileController {
         }
     }
 
-
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProfileDTO> createProfile(
-            @ModelAttribute ProfileDTO profileDTO,  // ModelAttribute는 따로 파라미터 이름을 명시하지 않아도 됩니다.
-            @RequestParam(value = "profileImages", required = false) List<MultipartFile> profileImages) {  // RequestParam에 명시적 이름 지정
+            @ModelAttribute ProfileDTO profileDTO,
+            @RequestParam(value = "profileImages", required = false) List<MultipartFile> profileImages) {
         logger.info("새 프로필 생성: {}", profileDTO);
         try {
             ProfileDTO createdProfile = profileService.createProfile(profileDTO, profileImages);
@@ -69,16 +68,15 @@ public class ProfileController {
         }
     }
 
-
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProfileDTO> updateProfile(
-            @PathVariable("id") Integer id,  // PathVariable에 명시적 이름 지정
-            @ModelAttribute ProfileDTO profileDTO,  // ModelAttribute는 따로 파라미터 이름을 명시하지 않아도 됩니다.
-            @RequestParam(value = "profileImages", required = false) List<MultipartFile> profileImages) {  // RequestParam에 명시적 이름 지정
+            @PathVariable("id") Integer id,
+            @ModelAttribute ProfileDTO profileDTO,
+            @RequestParam(value = "profileImages", required = false) List<MultipartFile> profileImages) {
         logger.info("프로필 업데이트: ID {}", id);
         logger.debug("수신된 프로필 데이터: {}", profileDTO);
         try {
-            profileDTO.setId(id);
+            profileDTO.setProfileId(id);  // setId -> setProfileId
             ProfileDTO updatedProfile = profileService.updateProfile(profileDTO, profileImages);
             logger.info("프로필 업데이트 성공: ID {}", id);
             return ResponseEntity.ok(updatedProfile);
@@ -91,9 +89,8 @@ public class ProfileController {
         }
     }
 
-
     @PutMapping("/deactivate/{id}")
-    public ResponseEntity<Void> deactivateProfile(@PathVariable("id") Integer id) {  // PathVariable에 명시적 이름 지정
+    public ResponseEntity<Void> deactivateProfile(@PathVariable("id") Integer id) {
         logger.info("프로필 비활성화: ID {}", id);
         try {
             profileService.deactivateProfile(id);

@@ -9,7 +9,7 @@ import java.util.List;
 public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer profileId;
 
     private String name;
     private String jobTitle;
@@ -29,14 +29,16 @@ public class Profile {
     @Column(name = "image", length = 5 * 1024 * 1024) // 5MB 제한
     private List<byte[]> profileImages = new ArrayList<>();
 
-    // Getters and setters
-
-    public Integer getId() {
-        return id;
+    public Profile() {
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    // Getters and setters
+    public Integer getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(Integer profileId) {
+        this.profileId = profileId;
     }
 
     public String getName() {
@@ -114,7 +116,7 @@ public class Profile {
     @Override
     public String toString() {
         return "Profile{" +
-                "id=" + id +
+                "profileId=" + profileId +
                 ", name='" + name + '\'' +
                 ", jobTitle='" + jobTitle + '\'' +
                 ", email='" + email + '\'' +
@@ -127,6 +129,4 @@ public class Profile {
                 '}';
     }
 
-    public Profile() {
-    }
 }

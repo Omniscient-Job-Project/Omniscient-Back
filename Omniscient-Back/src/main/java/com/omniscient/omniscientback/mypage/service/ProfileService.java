@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProfileService {
+
     private final ProfileRepository profileRepository;
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
 
@@ -27,20 +28,67 @@ public class ProfileService {
 
     public List<ProfileDTO> getAllProfiles() {
         return profileRepository.findAllByStatusTrue().stream()
-                .map(this::convertToDTO)
+                .map(profile -> {
+                    ProfileDTO dto = new ProfileDTO();
+                    dto.setProfileId(profile.getProfileId());
+                    dto.setName(profile.getName());
+                    dto.setJobTitle(profile.getJobTitle());
+                    dto.setEmail(profile.getEmail());
+                    dto.setPhone(profile.getPhone());
+                    dto.setAge(profile.getAge());
+                    dto.setAddress(profile.getAddress());
+                    dto.setCertificates(profile.getCertificates());
+                    dto.setStatus(profile.getStatus());
+
+                    // 이미지 데이터를 Base64로 변환
+                    if (profile.getProfileImages() != null && !profile.getProfileImages().isEmpty()) {
+                        List<String> base64Images = profile.getProfileImages().stream()
+                                .map(imageBytes -> Base64.getEncoder().encodeToString(imageBytes))
+                                .collect(Collectors.toList());
+                        dto.setProfileImageBase64(base64Images);
+                    }
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
     public ProfileDTO getProfile(Integer id) {
         Profile profile = profileRepository.findByIdAndStatusTrue(id)
                 .orElseThrow(() -> new IllegalArgumentException("활성화된 프로필을 찾을 수 없습니다"));
-        return convertToDTO(profile);
+
+        ProfileDTO dto = new ProfileDTO();
+        dto.setProfileId(profile.getProfileId());
+        dto.setName(profile.getName());
+        dto.setJobTitle(profile.getJobTitle());
+        dto.setEmail(profile.getEmail());
+        dto.setPhone(profile.getPhone());
+        dto.setAge(profile.getAge());
+        dto.setAddress(profile.getAddress());
+        dto.setCertificates(profile.getCertificates());
+        dto.setStatus(profile.getStatus());
+
+        // 이미지 데이터를 Base64로 변환
+        if (profile.getProfileImages() != null && !profile.getProfileImages().isEmpty()) {
+            List<String> base64Images = profile.getProfileImages().stream()
+                    .map(imageBytes -> Base64.getEncoder().encodeToString(imageBytes))
+                    .collect(Collectors.toList());
+            dto.setProfileImageBase64(base64Images);
+        }
+        return dto;
     }
 
     @Transactional
     public ProfileDTO createProfile(ProfileDTO profileDTO, List<MultipartFile> profileImages) throws IOException {
-        Profile profile = convertToEntity(profileDTO);
-        profile.setStatus(true);
+        Profile profile = new Profile();
+        profile.setName(profileDTO.getName());
+        profile.setJobTitle(profileDTO.getJobTitle());
+        profile.setEmail(profileDTO.getEmail());
+        profile.setPhone(profileDTO.getPhone());
+        profile.setAge(profileDTO.getAge());
+        profile.setAddress(profileDTO.getAddress());
+        profile.setCertificates(profileDTO.getCertificates());
+        profile.setStatus(true); // 기본 활성화 상태 설정
+
         if (profileImages != null && !profileImages.isEmpty()) {
             List<byte[]> imageBytesList = new ArrayList<>();
             for (MultipartFile image : profileImages) {
@@ -51,15 +99,44 @@ public class ProfileService {
             }
             profile.setProfileImages(imageBytesList);
         }
+
         Profile savedProfile = profileRepository.save(profile);
-        return convertToDTO(savedProfile);
+
+        // 저장된 엔티티를 DTO로 수동 매핑
+        ProfileDTO createdProfileDTO = new ProfileDTO();
+        createdProfileDTO.setProfileId(savedProfile.getProfileId());
+        createdProfileDTO.setName(savedProfile.getName());
+        createdProfileDTO.setJobTitle(savedProfile.getJobTitle());
+        createdProfileDTO.setEmail(savedProfile.getEmail());
+        createdProfileDTO.setPhone(savedProfile.getPhone());
+        createdProfileDTO.setAge(savedProfile.getAge());
+        createdProfileDTO.setAddress(savedProfile.getAddress());
+        createdProfileDTO.setCertificates(savedProfile.getCertificates());
+        createdProfileDTO.setStatus(savedProfile.getStatus());
+
+        // 이미지 데이터를 Base64로 변환
+        if (savedProfile.getProfileImages() != null && !savedProfile.getProfileImages().isEmpty()) {
+            List<String> base64Images = savedProfile.getProfileImages().stream()
+                    .map(imageBytes -> Base64.getEncoder().encodeToString(imageBytes))
+                    .collect(Collectors.toList());
+            createdProfileDTO.setProfileImageBase64(base64Images);
+        }
+        return createdProfileDTO;
     }
 
     @Transactional
     public ProfileDTO updateProfile(ProfileDTO profileDTO, List<MultipartFile> profileImages) throws IOException {
-        Profile existingProfile = profileRepository.findByIdAndStatusTrue(profileDTO.getId())
+        Profile existingProfile = profileRepository.findByIdAndStatusTrue(profileDTO.getProfileId())
                 .orElseThrow(() -> new IllegalArgumentException("활성화된 프로필을 찾을 수 없습니다"));
-        updateProfileFields(existingProfile, profileDTO);
+
+        existingProfile.setName(profileDTO.getName());
+        existingProfile.setJobTitle(profileDTO.getJobTitle());
+        existingProfile.setEmail(profileDTO.getEmail());
+        existingProfile.setPhone(profileDTO.getPhone());
+        existingProfile.setAge(profileDTO.getAge());
+        existingProfile.setAddress(profileDTO.getAddress());
+        existingProfile.setCertificates(profileDTO.getCertificates());
+
         if (profileImages != null && !profileImages.isEmpty()) {
             List<byte[]> imageBytesList = new ArrayList<>();
             for (MultipartFile image : profileImages) {
@@ -70,8 +147,29 @@ public class ProfileService {
             }
             existingProfile.setProfileImages(imageBytesList);
         }
+
         Profile updatedProfile = profileRepository.save(existingProfile);
-        return convertToDTO(updatedProfile);
+
+        // 업데이트된 엔티티를 DTO로 수동 매핑
+        ProfileDTO updatedProfileDTO = new ProfileDTO();
+        updatedProfileDTO.setProfileId(updatedProfile.getProfileId());
+        updatedProfileDTO.setName(updatedProfile.getName());
+        updatedProfileDTO.setJobTitle(updatedProfile.getJobTitle());
+        updatedProfileDTO.setEmail(updatedProfile.getEmail());
+        updatedProfileDTO.setPhone(updatedProfile.getPhone());
+        updatedProfileDTO.setAge(updatedProfile.getAge());
+        updatedProfileDTO.setAddress(updatedProfile.getAddress());
+        updatedProfileDTO.setCertificates(updatedProfile.getCertificates());
+        updatedProfileDTO.setStatus(updatedProfile.getStatus());
+
+        // 이미지 데이터를 Base64로 변환
+        if (updatedProfile.getProfileImages() != null && !updatedProfile.getProfileImages().isEmpty()) {
+            List<String> base64Images = updatedProfile.getProfileImages().stream()
+                    .map(imageBytes -> Base64.getEncoder().encodeToString(imageBytes))
+                    .collect(Collectors.toList());
+            updatedProfileDTO.setProfileImageBase64(base64Images);
+        }
+        return updatedProfileDTO;
     }
 
     @Transactional
@@ -81,30 +179,5 @@ public class ProfileService {
         profile.setStatus(false);
         profileRepository.save(profile);
     }
-
-    private ProfileDTO convertToDTO(Profile profile) {
-        ProfileDTO dto = new ProfileDTO();
-        BeanUtils.copyProperties(profile, dto);
-        if (profile.getProfileImages() != null && !profile.getProfileImages().isEmpty()) {
-            dto.setProfileImageBase64(profile.getProfileImages().stream()
-                    .map(imageBytes -> Base64.getEncoder().encodeToString(imageBytes))
-                    .collect(Collectors.toList()));
-        }
-        return dto;
-    }
-    private Profile convertToEntity(ProfileDTO dto) {
-        Profile profile = new Profile();
-        BeanUtils.copyProperties(dto, profile);
-        return profile;
-    }
-
-    private void updateProfileFields(Profile profile, ProfileDTO dto) {
-        profile.setName(dto.getName());
-        profile.setJobTitle(dto.getJobTitle());
-        profile.setEmail(dto.getEmail());
-        profile.setPhone(dto.getPhone());
-        profile.setAge(dto.getAge());
-        profile.setAddress(dto.getAddress());
-        profile.setCertificates(dto.getCertificates());
-    }
 }
+
