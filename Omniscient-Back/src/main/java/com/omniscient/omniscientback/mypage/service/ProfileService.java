@@ -53,7 +53,7 @@ public class ProfileService {
     }
 
     public ProfileDTO getProfile(Integer id) {
-        Profile profile = profileRepository.findByIdAndStatusTrue(id)
+        Profile profile = profileRepository.findByProfileIdAndStatusTrue(id)
                 .orElseThrow(() -> new IllegalArgumentException("활성화된 프로필을 찾을 수 없습니다"));
 
         ProfileDTO dto = new ProfileDTO();
@@ -126,7 +126,7 @@ public class ProfileService {
 
     @Transactional
     public ProfileDTO updateProfile(ProfileDTO profileDTO, List<MultipartFile> profileImages) throws IOException {
-        Profile existingProfile = profileRepository.findByIdAndStatusTrue(profileDTO.getProfileId())
+        Profile existingProfile = profileRepository.findByProfileIdAndStatusTrue(profileDTO.getProfileId())
                 .orElseThrow(() -> new IllegalArgumentException("활성화된 프로필을 찾을 수 없습니다"));
 
         existingProfile.setName(profileDTO.getName());
@@ -174,7 +174,7 @@ public class ProfileService {
 
     @Transactional
     public void deactivateProfile(Integer id) {
-        Profile profile = profileRepository.findByIdAndStatusTrue(id)
+        Profile profile = profileRepository.findByProfileIdAndStatusTrue(id)
                 .orElseThrow(() -> new IllegalArgumentException("활성화된 프로필을 찾을 수 없습니다"));
         profile.setStatus(false);
         profileRepository.save(profile);

@@ -15,7 +15,7 @@ public interface CertificateRepository extends JpaRepository<Certificate, Intege
 
     List<Certificate> findAllByIsActiveTrue();
 
-    Optional<Certificate> findByIdAndIsActiveTrue(Integer id);
+    Optional<Certificate> findByCertificateIdAndIsActiveTrue(Integer certificateId);  // 수정된 부분
 
     Optional<Certificate> findByNameAndIsActiveTrue(String name);
 
@@ -47,6 +47,6 @@ public interface CertificateRepository extends JpaRepository<Certificate, Intege
      */
     @Modifying
     @Transactional
-    @Query("UPDATE Certificate c SET c.isActive = :isActive WHERE c.id = :id")
+    @Query("UPDATE Certificate c SET c.isActive = :isActive WHERE c.certificateId = :id")  // 수정된 부분
     int updateIsActiveById(Integer id, Boolean isActive);
 }

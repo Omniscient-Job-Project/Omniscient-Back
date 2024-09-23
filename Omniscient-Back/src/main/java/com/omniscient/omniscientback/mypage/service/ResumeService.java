@@ -34,7 +34,7 @@ public class ResumeService {
 
     public ResumeDTO getResume(Integer resumeId) {
         logger.info("ID {}인 이력서 조회 시작", resumeId);
-        Resume resume = resumeRepository.findByIdAndStatusTrue(resumeId)
+        Resume resume = resumeRepository.findByResumeIdAndStatusTrue(resumeId)
                 .orElseThrow(() -> {
                     logger.warn("ID {}인 이력서를 찾을 수 없음", resumeId);
                     return new RuntimeException("이력서를 찾을 수 없습니다: ID " + resumeId);
@@ -56,7 +56,7 @@ public class ResumeService {
     @Transactional
     public ResumeDTO updateResume(Integer resumeId, ResumeDTO resumeDTO) {
         logger.info("이력서 업데이트 시작. ID: {}", resumeId);
-        Resume existingResume = resumeRepository.findByIdAndStatusTrue(resumeId)
+        Resume existingResume = resumeRepository.findByResumeIdAndStatusTrue(resumeId)
                 .orElseThrow(() -> {
                     logger.warn("업데이트할 이력서를 찾을 수 없음. ID: {}", resumeId);
                     return new RuntimeException("이력서를 찾을 수 없습니다: ID " + resumeId);
@@ -73,7 +73,7 @@ public class ResumeService {
     @Transactional
     public void deactivateResume(Integer resumeId) {
         logger.info("이력서 비활성화 시작. ID: {}", resumeId);
-        Resume resume = resumeRepository.findByIdAndStatusTrue(resumeId)
+        Resume resume = resumeRepository.findByResumeIdAndStatusTrue(resumeId)
                 .orElseThrow(() -> {
                     logger.warn("비활성화할 이력서를 찾을 수 없음. ID: {}", resumeId);
                     return new RuntimeException("이력서를 찾을 수 없습니다: ID " + resumeId);
