@@ -12,7 +12,7 @@ import java.util.List;
 public class Resume {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;  // 이력서 고유 식별자
+    private Integer resumeId;  // 이력서 고유 식별자
 
     @Column(length = 50)
     private String title;  // 이력서 제목 (50자 제한)
@@ -155,18 +155,18 @@ public class Resume {
         this.status = status;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getResumeId() {
+        return resumeId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setResumeId(Integer resumeId) {
+        this.resumeId = resumeId;
     }
 
     @Override
     public String toString() {
         return "Resume{" +
-                "id=" + id +
+                "resumeId=" + resumeId +
                 ", title='" + title + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
