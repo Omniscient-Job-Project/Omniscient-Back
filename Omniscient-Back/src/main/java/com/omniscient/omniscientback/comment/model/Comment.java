@@ -10,7 +10,7 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer commentId;
 
     @Column(name = "board_id", nullable = false)
     private Integer boardId;
@@ -33,13 +33,12 @@ public class Comment {
     }
 
     // Getters and setters
-
-    public Integer getId() {
-        return id;
+    public Integer getCommentId() {
+        return commentId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setCommentId(Integer commentId) {
+        this.commentId = commentId;
     }
 
     public Integer getBoardId() {
@@ -85,7 +84,7 @@ public class Comment {
     @Override
     public String toString() {
         return "Comment{" +
-                "id=" + id +
+                "commentId=" + commentId +
                 ", boardId=" + boardId +
                 ", content='" + content + '\'' +
                 ", author='" + author + '\'' +
