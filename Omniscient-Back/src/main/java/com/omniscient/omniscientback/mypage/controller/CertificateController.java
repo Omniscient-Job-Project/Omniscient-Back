@@ -59,7 +59,7 @@ public class CertificateController {
         logger.info("새 자격증 생성 요청: {}", certificateDTO);
         try {
             CertificateDTO createdCertificate = certificateService.createCertificate(certificateDTO);
-            logger.info("새 자격증 생성 성공: ID {}", createdCertificate.getId());
+            logger.info("새 자격증 생성 성공: ID {}", createdCertificate.getCertificateId());
             return ResponseEntity.status(HttpStatus.CREATED).body(createdCertificate);
         } catch (IllegalArgumentException e) {
             logger.error("새 자격증 생성 중 검증 오류 발생: {}", e.getMessage());
@@ -74,7 +74,7 @@ public class CertificateController {
     public ResponseEntity<CertificateDTO> updateCertificate(@PathVariable Integer id, @Valid @RequestBody CertificateDTO certificateDTO) {
         logger.info("자격증 업데이트 요청: ID {}", id);
         try {
-            certificateDTO.setId(id);
+            certificateDTO.setCertificateId(id);
             CertificateDTO updatedCertificate = certificateService.updateCertificate(certificateDTO);
             logger.info("자격증 업데이트 성공: ID {}", id);
             return ResponseEntity.ok(updatedCertificate);
@@ -86,6 +86,7 @@ public class CertificateController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<Map<String, Object>> deactivateCertificate(@PathVariable Integer id) {
         try {

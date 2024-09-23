@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotBlank;
  */
 public class CertificateDTO {
 
-    private Integer id;  // 자격증 고유 식별자
+    private Integer certificateId;  // 자격증 고유 식별자
 
     @NotBlank(message = "자격증 이름은 필수입니다.")
     private String name;  // 자격증 이름
@@ -29,8 +29,8 @@ public class CertificateDTO {
     }
 
     // 모든 필드를 포함한 생성자
-    public CertificateDTO(Integer id, String name, String date, String issuer, String number, Boolean isActive) {
-        this.id = id;
+    public CertificateDTO(Integer certificateId, String name, String date, String issuer, String number, Boolean isActive) {
+        this.certificateId = certificateId;
         this.name = name;
         this.date = date;
         this.issuer = issuer;
@@ -39,12 +39,12 @@ public class CertificateDTO {
     }
 
     // Getter와 Setter 메서드
-    public Integer getId() {
-        return id;
+    public Integer getCertificateId() {
+        return certificateId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setCertificateId(Integer certificateId) {
+        this.certificateId = certificateId;
     }
 
     public String getName() {
@@ -90,7 +90,7 @@ public class CertificateDTO {
     @Override
     public String toString() {
         return "CertificateDTO{" +
-                "id=" + id +
+                "certificateId=" + certificateId +
                 ", name='" + name + '\'' +
                 ", date='" + date + '\'' +
                 ", issuer='" + issuer + '\'' +
