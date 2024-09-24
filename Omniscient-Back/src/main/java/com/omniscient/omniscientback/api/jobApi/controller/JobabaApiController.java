@@ -128,6 +128,65 @@ public class JobabaApiController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Job not found for id: " + jobId);
         }
     }
+    //    @GetMapping("/jobinfo/{Id}")
+//    public ResponseEntity<String> getJobInfoById(@PathVariable("Id") String jobId) throws IOException {
+//        // API 호출을 위한 URL 빌더 생성
+//        StringBuilder urlBuilder = new StringBuilder("https://openapi.gg.go.kr/GGJOBABARECRUSTM?");
+//        // API 키를 URL에 추가
+//        urlBuilder.append("KEY=").append(URLEncoder.encode(apiKey, StandardCharsets.UTF_8));
+//        // 응답 타입을 XML로 설정
+//        urlBuilder.append("&TYPE=").append(URLEncoder.encode("xml", StandardCharsets.UTF_8));
+//        // 페이지 인덱스를 1로 설정
+//        urlBuilder.append("&pIndex=").append(URLEncoder.encode("1", StandardCharsets.UTF_8));
+//        // 페이지 사이즈를 100으로 설정
+//        urlBuilder.append("&pSize=").append(URLEncoder.encode("100", StandardCharsets.UTF_8));
+//
+//        // 완성된 URL로 URL 객체 생성
+//        URL url = new URL(urlBuilder.toString());
+//        // HTTP 연결 생성
+//        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//        conn.setRequestMethod("GET"); // GET 방식으로 요청 설정
+//        conn.setRequestProperty("Content-type", "application/xml"); // 요청 헤더에 Content-type 설정
+//
+//        BufferedReader rd; // 응답을 읽기 위한 BufferedReader 선언
+//        // 응답 코드에 따라 입력 스트림을 설정
+//        if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+//            // 정상 응답인 경우 입력 스트림을 통해 읽기
+//            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+//        } else {
+//            // 오류 응답인 경우 오류 스트림을 통해 읽기
+//            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+//        }
+//
+//        StringBuilder sb = new StringBuilder(); // 응답 데이터를 저장할 StringBuilder 선언
+//        String line; // 한 줄씩 읽기 위한 변수
+//        // 응답을 한 줄씩 읽어 StringBuilder에 추가
+//        while ((line = rd.readLine()) != null) {
+//            sb.append(line); // 응답 데이터 추가
+//        }
+//        rd.close(); // BufferedReader 닫기
+//        conn.disconnect(); // HTTP 연결 종료
+//
+//        String rawData = sb.toString(); // 응답 데이터를 문자열로 변환
+//        String jsonData = convertXmlToJson(rawData); // XML 데이터를 JSON으로 변환
+//
+//        // JSON 데이터에서 특정 jobId에 맞는 데이터를 필터링하여 반환
+//        JSONObject jsonObject = new JSONObject(jsonData); // JSON 객체 생성
+//        JSONArray jsonArray = jsonObject.getJSONObject("GGJOBABARECRUSTM").getJSONArray("row"); // "row" 배열 가져오기
+//
+//        // JSON 배열을 순회하며 jobId에 맞는 데이터를 찾기
+//        for (int i = 0; i < jsonArray.length(); i++) {
+//            JSONObject jobJson = jsonArray.getJSONObject(i); // 현재 JSON 객체
+//            // 현재 JSON 객체의 "ENTRPRS_NM" 값이 jobId와 일치하는지 확인
+//            if (jobJson.getString("ENTRPRS_NM").equals(jobId)) {
+//                // 해당 jobId에 맞는 데이터가 발견된 경우 JSON 객체를 반환
+//                return ResponseEntity.ok(jobJson.toString());
+//            }
+//        }
+//
+//        // jobId에 맞는 데이터가 없는 경우 404 에러 반환
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Job not found for id: " + jobId);
+//    }
 
 
     // XML을 JSON으로 변환하는 메서드
