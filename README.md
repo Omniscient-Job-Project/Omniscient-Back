@@ -4,7 +4,8 @@
 <p align="center">
   <strong>혁신적인 채용정보 사이트로, <br>구직자들에게 정확하고 신뢰할 수 있는 채용 정보와 자격증 관련 정보를 제공합니다.</strong>
 </p>
-혁신적인 채용정보 플랫폼의 강력한 백엔드 시스템
+  <center>
+혁신적인 채용정보 플랫폼의 강력한 백엔드 시스템<br>
 🏗 아키텍처 •<br>
 🛠 기술 스택 •<br>
 💡 주요 기능 •<br>
@@ -14,7 +15,7 @@
 🔄 CI/CD 및 배포 •<br>
 ⚡ 성능 최적화 •<br>
 🔒 보안 •<br>
-🧪 테스트<br>
+🧪 테스트•<br>
 </div>
 <br>
 <br>
@@ -22,143 +23,141 @@
 전직자 백엔드는 확장성, 유지보수성, 그리고 고가용성을 위해 마이크로서비스 아키텍처를 채택하고 있습니다.<br>
 각 서비스는 독립적으로 개발, 배포, 스케일링될 수 있습니다.
 <br>
-mermaidCopygraph TD
-    A[API Gateway] --> B[인증 서비스]
-    A --> C[채용정보 서비스]
-    A --> D[자격증 서비스]
-    A --> E[사용자 서비스]
-    B --> F[(Auth DB)]
-    C --> G[(채용정보 DB)]
-    D --> H[(자격증 DB)]
-    E --> I[(사용자 DB)]
+mermaidCopygraph TD<br>
+    A[API Gateway] --> B[인증 서비스]<br>
+    A --> C[채용정보 서비스]<br>
+    A --> D[자격증 서비스]<br>
+    A --> E[사용자 서비스]<br>
+    B --> F[(Auth DB)]<br>
+    C --> G[(채용정보 DB)]<br>
+    D --> H[(자격증 DB)]<br>
+    E --> I[(사용자 DB)]<br>
 <br>
 🛠 기술 스택<br>
 <br>
-🖥 언어 & 프레임워크: Java 17, Spring Boot 2.7.x<br>
-🗃 ORM: Spring Data JPA, Hibernate<br>
-💾 데이터베이스: MySQL 8.0, Redis (캐싱)<br>
-🔐 보안: Spring Security, JWT<br>
-📘 API 문서화: Swagger (OpenAPI 3.0)<br>
-🏗 빌드 도구: Gradle<br>
-🐳 컨테이너화: Docker<br>
-🔄 CI/CD: Jenkins<br>
+🖥 •언어 & 프레임워크: Java 17, Spring Boot 2.7.x<br>
+🗃 •ORM: Spring Data JPA, Hibernate<br>
+💾 •데이터베이스: MySQL 8.0, Redis (캐싱)<br>
+🔐 •보안: Spring Security, JWT<br>
+📘 •API 문서화: Swagger (OpenAPI 3.0)<br>
+🏗 •빌드 도구: Gradle<br>
+🐳 •컨테이너화: Docker<br>
+🔄 •CI/CD: Jenkins<br>
 
 💡 주요 기능<br>
 
 주요 컴포넌트 설명:<br>
-API Gateway: 모든 클라이언트 요청의 진입점. 라우팅, 로드 밸런싱, 인증을 담당.<br>
-인증 서비스: JWT 기반 사용자 인증 및 권한 관리.<br>
-채용정보 서비스: 실시간 채용 정보 수집, 처리, 제공.<br>
-자격증 서비스: 자격증 정보 관리 및 연관 채용정보 매칭.<br>
-사용자 서비스: 사용자 프로필, 선호도, 활동 이력 관리<br>
+•API Gateway: 모든 클라이언트 요청의 진입점. 라우팅, 로드 밸런싱, 인증을 담당.<br>
+•인증 서비스: JWT 기반 사용자 인증 및 권한 관리.<br>
+•채용정보 서비스: 실시간 채용 정보 수집, 처리, 제공.<br>
+•자격증 서비스: 자격증 정보 관리 및 연관 채용정보 매칭.<br>
+•사용자 서비스: 사용자 프로필, 선호도, 활동 이력 관리<br>
 
 🛠 기술 스택<br>
-백엔드 프레임워크 및 언어<br>
+•백엔드 프레임워크 및 언어<br>
 
-🖥 Spring Boot (2.7.x): 주 애플리케이션 프레임워크<br>
-☕ Java (17): 주 프로그래밍 언어<br>
-🌿 Spring WebFlux: 반응형 프로그래밍 지원<br>
-🔄 Spring Cloud: 마이크로서비스 아키텍처 지원<br>
+🖥 •Spring Boot (2.7.x): 주 애플리케이션 프레임워크<br>
+☕ •Java (17): 주 프로그래밍 언어<br>
+🌿 •Spring WebFlux: 반응형 프로그래밍 지원<br>
+🔄 •Spring Cloud: 마이크로서비스 아키텍처 지원<br>
 
 데이터베이스 및 캐싱<br>
-💾 MySQL (8.0): 주 관계형 데이터베이스<br>
-🚀 Redis: 캐싱 및 세션 관리<br>
+💾 •MySQL (8.0): 주 관계형 데이터베이스<br>
+🚀 •Redis: 캐싱 및 세션 관리<br>
 
 ORM 및 데이터 접근<br>
-🔗 Spring Data JPA: 객체-관계 매핑<br>
-🔍 Querydsl: 타입-세이프 쿼리 작성v
+🔗 •Spring Data JPA: 객체-관계 매핑<br>
+🔍 •Querydsl: 타입-세이프 쿼리 작성v
 
 검색 엔진<br>
-🔎 Elasticsearch: 고성능 전문 검색 및 분석<br>
+🔎 •Elasticsearch: 고성능 전문 검색 및 분석<br>
 
 보안<br>
-🔐 Spring Security: 인증 및 권한 관리<br>
-🔑 JSON Web Token (JWT): 토큰 기반 인증<br>
+🔐 •Spring Security: 인증 및 권한 관리<br>
+🔑 •JSON Web Token (JWT): 토큰 기반 인증<br>
 
 빌드 및 패키징<br>
-🏗 Gradle: 빌드 자동화 및 의존성 관리<br>
-🐳 Docker: 애플리케이션 컨테이너화<br>
+🏗 •Gradle: 빌드 자동화 및 의존성 관리<br>
+🐳 •Docker: 애플리케이션 컨테이너화<br>
 
 CI/CD<br>
-🔄 Jenkins: 지속적 통합 및 배포<br>
+🔄 •Jenkins: 지속적 통합 및 배포<br>
 주요 기능<br>
 
 🔄 실시간 채용 정보 동기화<br>
-다양한 채용 사이트 API 연동 (사람인, 워크넷 등)<br>
-웹 크롤링을 통한 추가 정보 수집<br>
-Apache Kafka를 활용한 실시간 데이터 스트리밍 처리<br>
-중복 데이터 제거 및 정보 정규화 프로세스<br>
+•다양한 채용 사이트 API 연동 (사람인, 워크넷 등)<br>
+•웹 크롤링을 통한 추가 정보 수집<br>
+•Apache Kafka를 활용한 실시간 데이터 스트리밍 처리<br>
+•중복 데이터 제거 및 정보 정규화 프로세스<br>
 
 
 🔍 고성능 검색 엔진<br>
-Elasticsearch를 활용한 전문 검색 기능 구현<br>
-자동완성, 오타 교정, 동의어 처리 기능 제공<br>
-검색 결과 랭킹 알고리즘 구현 (관련성, 최신성, 인기도 고려)<br>
-필터링 및 패싯 검색 지원 (지역, 연봉, 경력, 기업 규모 등)<br>
+•Elasticsearch를 활용한 전문 검색 기능 구현<br>
+•자동완성, 오타 교정, 동의어 처리 기능 제공<br>
+•검색 결과 랭킹 알고리즘 구현 (관련성, 최신성, 인기도 고려)<br>
+•필터링 및 패싯 검색 지원 (지역, 연봉, 경력, 기업 규모 등)<br>
 
 
 📊 데이터 분석 파이프라인<br>
-채용 시장 트렌드 분석 리포트 생성<br>
-사용자 행동 패턴 분석 및 인사이트 도출<br>
+•채용 시장 트렌드 분석 리포트 생성<br>
+•사용자 행동 패턴 분석 및 인사이트 도출<br>
 
 🔍 고성능 검색 엔진<br>
-Elasticsearch를 활용한 전문 검색 기능 구현<br>
-자동완성, 오타 교정 기능 제공<br>
+•Elasticsearch를 활용한 전문 검색 기능 구현<br>
+•자동완성, 오타 교정 기능 제공<br>
 
 
 📚 API 문서<br>
 Swagger UI를 통해 API 문서를 제공합니다. 서버 실행 후 http://localhost:8080/swagger-ui/index.html에서 확인 가능합니다.<br>
 
-주요 엔드포인트:<br>
+•주요 엔드포인트:<br>
 🏢 /api/v1/jobs: 채용 정보 관련 API<br>
 🏅 /api/v1/certifications: 자격증 정보 관련 API<br>
 👤 /api/v1/users: 사용자 관리 API<br>
 🔐 /api/v1/auth: 인증 관련 API<br>
 
 🔄 CI/CD 및 배포<br>
-전직자 프로젝트는 Docker와 Jenkins를 활용한 강력한 CI/CD 파이프라인을 구축하여 지속적인 통합과 배포를 실현합니다.<br>
+•전직자 프로젝트는 Docker와 Jenkins를 활용한 강력한 CI/CD <br>
+•파이프라인을 구축하여 지속적인 통합과 배포를 실현합니다.<br>
 
 📊 CI/CD 파이프라인 개요<br>
-mermaidCopygraph TD
-    A[개발자 Push] -->|트리거| B[Jenkins Job 시작]
-    B --> C[코드 체크아웃]
-    C --> D[의존성 설치]
-    D --> E[단위 테스트]
-    E --> F[통합 테스트]
-    F --> G[코드 품질 검사]
-    G --> H[Docker 이미지 빌드]
-    H --> I[Docker 이미지 푸시]
-    I --> J[배포 스크립트 실행]
-    J --> K[운영 서버 배포]
-🚀 배포 프로세스
+mermaidCopygraph TD<br>
+    A[개발자 Push] -->|트리거| B[Jenkins Job 시작]<br>
+    B --> C[코드 체크아웃]<br>
+    C --> D[의존성 설치]<br>
+    D --> E[단위 테스트]<br>
+    E --> F[통합 테스트]<br>
+    F --> G[코드 품질 검사]<br>
+    G --> H[Docker 이미지 빌드]<br>
+    H --> I[Docker 이미지 푸시]<br>
+    I --> J[배포 스크립트 실행]<br>
+    J --> K[운영 서버 배포]<br>
+🚀 배포 프로세스<br>
 <br>
 <br>
-개발자가 GitHub 저장소에 코드를 push합니다.<br>
-Jenkins가 변경을 감지하고 파이프라인을 트리거합니다.<br>
-코드를 체크아웃하고 Gradle을 사용하여 빌드합니다.<br>
-단위 테스트와 통합 테스트를 실행합니다.<br>
-Docker 이미지를 빌드하고 레지스트리에 푸시합니다.<br>
-Ansible 플레이북을 사용하여 운영 서버에 새 버전을 배포합니다.<br>
+1.개발자가 GitHub 저장소에 코드를 push합니다.<br>
+2.Jenkins가 변경을 감지하고 파이프라인을 트리거합니다.<br>
+3.코드를 체크아웃하고 Gradle을 사용하여 빌드합니다.<br>
+4.단위 테스트와 통합 테스트를 실행합니다.<br>
+5.Docker 이미지를 빌드하고 레지스트리에 푸시합니다.<br>
+6.Ansible 플레이북을 사용하여 운영 서버에 새 버전을 배포합니다.<br>
 
 🔙 롤백 전략<br>
-문제 발생 시 빠른 롤백을 위해 다음 전략을 사용합니다.<br>
-이전 버전의 Docker 이미지 태그를 유지<br>
-Blue-Green 배포 방식 채택<br>
-자동 모니터링 및 알림 시스템 구축<br>
-
-📊 모니터링 및 로깅<br>
-📚 ELK 스택 (Elasticsearch, Logstash, Kibana)을 활용한 중앙 집중식 로깅<br>
+1.문제 발생 시 빠른 롤백을 위해 다음 전략을 사용합니다.<br>
+2.이전 버전의 Docker 이미지 태그를 유지<br>
+3.Blue-Green 배포 방식 채택<br>
+4.자동 모니터링 및 알림 시스템 구축<br>
 
 💾 데이터베이스<br>
-데이터 모델링 주요 고려사항:<br>
-확장성을 고려한 샤딩 전략<br>
-읽기 성능 향상을 위한 비정규화 적용<br>
-히스토리 tracking을 위한 temporal table 설계<br>
+•데이터 모델링 주요 고려사항:<br>
+•확장성을 고려한 샤딩 전략<br>
+•읽기 성능 향상을 위한 비정규화 적용<br>
+•히스토리 tracking을 위한 temporal table 설계<br>
 
 인덱싱 전략:<br>
-복합 인덱스 활용으로 쿼리 성능 최적화<br>
-전문 검색을 위한 full-text 인덱스 적용<br>
-인덱스 사용 모니터링 및 주기적 최적화<br>
+•복합 인덱스 활용으로 쿼리 성능 최적화<br>
+•전문 검색을 위한 full-text 인덱스 적용<br>
+•인덱스 사용 모니터링 및 주기적 최적화<br>
 
 ⚡ 성능 최적화<br>
 📊 데이터베이스 인덱싱 전략<br>
@@ -241,7 +240,7 @@ Blue-Green 배포 방식 채택<br>
 <br>
 <br>
 <div align="center">
-  <h3>🌟 전지적 구직자 시점(전직자) 프로젝트에 기여해주셔서 감사합니다! 🌟</h3>
+  <h3>🌟 전지적 구직자 시점(전직자) 프로젝트에 기여해주셔서 <br>감사합니다! 🌟</h3>
   <p>문의사항이나 제안이 있으시면 언제든 연락 주세요.</p>
   <a href="mailto:project@example.com">📧 이메일 문의</a> •
   <a href="https://github.com/your-username/your-repo/issues">🐛 이슈 리포트</a>
