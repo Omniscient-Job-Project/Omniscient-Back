@@ -12,13 +12,15 @@ public class SignupDTO {
     private String refreshToken="";
     private long accessTokenExpireTime; // 만료 시간 (long 타입)
     private long refreshTokenExpireTime; // 만료 시간 (long 타입
+    private boolean isAdmin; // 관리자 여부 추가
+    private String role;
 
 
 
     public SignupDTO() {
     }
 
-    public SignupDTO(String userId, String username, String password, String birthDate, String phoneNumber, String email, String accessToken, String refreshToken, long accessTokenExpireTime, long refreshTokenExpireTime) {
+    public SignupDTO(String userId, String username, String password, String birthDate, String phoneNumber, String email, String accessToken, String refreshToken, long accessTokenExpireTime, long refreshTokenExpireTime, boolean isAdmin, String role) {
         this.userId = userId;
         this.username = username;
         this.password = password;
@@ -29,7 +31,10 @@ public class SignupDTO {
         this.refreshToken = refreshToken;
         this.accessTokenExpireTime = accessTokenExpireTime;
         this.refreshTokenExpireTime = refreshTokenExpireTime;
+        this.isAdmin = isAdmin;
+        this.role = role;
     }
+
 
     public String getUserId() {
         return userId;
@@ -111,12 +116,28 @@ public class SignupDTO {
         this.refreshTokenExpireTime = refreshTokenExpireTime;
     }
 
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public String toString() {
         return "SignupDTO{" +
                 "userId='" + userId + '\'' +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
+                ", password='[PROTECTED]'" +
                 ", birthDate='" + birthDate + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", email='" + email + '\'' +
@@ -124,6 +145,8 @@ public class SignupDTO {
                 ", refreshToken='" + refreshToken + '\'' +
                 ", accessTokenExpireTime=" + accessTokenExpireTime +
                 ", refreshTokenExpireTime=" + refreshTokenExpireTime +
+                ", isAdmin=" + isAdmin +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

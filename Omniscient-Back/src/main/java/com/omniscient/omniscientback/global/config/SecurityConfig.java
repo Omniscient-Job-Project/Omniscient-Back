@@ -33,6 +33,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/login/post").permitAll()
                         .requestMatchers("/api/v1/signup/post").permitAll()
                         .requestMatchers("/api/v1/signout/post").permitAll()
+                        .requestMatchers("/api/v1/login/admin/login").permitAll()
+                        .requestMatchers("/api/v1/signup/admin/signup").permitAll()
                         .requestMatchers("/api/v1/notice/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/v1/user/{userId}").hasRole("ADMIN") // 관리자만 허용
                         .requestMatchers("/api/**").permitAll()

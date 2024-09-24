@@ -122,7 +122,8 @@ public class JwtTokenProvider {
         return new JwtTokenDTO(accessToken, refreshToken,
                 ExpireTime.ACCESS_TOKEN_EXPIRE_TIME,
                 ExpireTime.REFRESH_TOKEN_EXPIRE_TIME,
-                null); // 또는 적절한 에러 메시지를 여기에 넣어줍니다.
+                null,
+                null);
     }
 
 

@@ -2,13 +2,14 @@ package com.omniscient.omniscientback.login.controller;
 import com.omniscient.omniscientback.login.exception.JwtTokenException;
 import com.omniscient.omniscientback.login.model.JwtTokenDTO;
 import com.omniscient.omniscientback.login.model.SignupDTO;
+import com.omniscient.omniscientback.login.model.UserEntity;
 import com.omniscient.omniscientback.login.service.JwtTokenProvider;
 import com.omniscient.omniscientback.login.service.SignupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Map;
+
 
 @RestController
 @RequestMapping("/api/v1/login")
@@ -23,7 +24,8 @@ public class LoginController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    //로그인
+
+    //로그인(일반 사용자)
     @PostMapping("/post")
     public ResponseEntity<JwtTokenDTO> login(@RequestBody SignupDTO signupDTO) {
         boolean isAuthenticated = signupService.authenticate(signupDTO.getUserId(), signupDTO.getPassword());
@@ -41,15 +43,56 @@ public class LoginController {
                     refreshToken,
                     jwtTokenProvider.getAccessTokenExpiry(),
                     jwtTokenProvider.getRefreshTokenExpiry(),
+                    "USER",
                     null
             );
         } else {
             tokenDTO.setErrorMessage("로그인 실패: 잘못된 아이디 또는 비밀번호입니다");
-            return ResponseEntity.status(401).body(tokenDTO); // 오류 메시지를 포함한 DTO 반환
+            return ResponseEntity.status(401).body(tokenDTO); // 실패 시 401 상태 코드와 오류 메시지 반환
+        }
+        return ResponseEntity.ok(tokenDTO);  // 인증 성공 시, JWT 토큰과 함께 응답 반환
+    }
+
+
+
+    // 로그인(관리자)
+    @PostMapping("/admin/login")
+    public ResponseEntity<JwtTokenDTO> adminLogin(@RequestBody SignupDTO signupDTO) {
+        System.out.println("관리자 로그인 요청 받음: " + signupDTO.getUserId());
+
+        try {
+            boolean isAuthenticated = signupService.authenticateAdmin(signupDTO.getUserId(), signupDTO.getPassword());
+
+            if (isAuthenticated) {
+                System.out.println("관리자 인증 성공: " + signupDTO.getUserId());
+                String accessToken = jwtTokenProvider.createAccessToken(signupDTO.getUserId());
+                String refreshToken = jwtTokenProvider.createRefreshJwt(signupDTO.getUserId());
+
+                JwtTokenDTO tokenDTO = new JwtTokenDTO(
+                        accessToken,
+                        refreshToken,
+                        jwtTokenProvider.getAccessTokenExpiry(),
+                        jwtTokenProvider.getRefreshTokenExpiry(),
+                        "ADMIN",
+                        null
+                );
+                return ResponseEntity.ok(tokenDTO);
+            } else {
+                System.out.println("관리자 인증 실패: " + signupDTO.getUserId());
+                JwtTokenDTO errorDTO = new JwtTokenDTO();
+                errorDTO.setErrorMessage("관리자 로그인 실패: 잘못된 아이디 또는 비밀번호입니다");
+                return ResponseEntity.status(401).body(errorDTO);
+            }
+        } catch (Exception e) {
+            System.err.println("관리자 로그인 처리 중 예외 발생: " + e.getMessage());
+            e.printStackTrace();
+            JwtTokenDTO errorDTO = new JwtTokenDTO();
+            errorDTO.setErrorMessage("서버 오류: 로그인 처리 중 문제가 발생했습니다");
+            return ResponseEntity.status(500).body(errorDTO);
         }
 
-        return ResponseEntity.ok(tokenDTO); // JWT 토큰을 클라이언트에 반환
     }
+
 
     // 로그아웃
     @PostMapping("/logout")
@@ -67,6 +110,7 @@ public class LoginController {
         }
     }
 
+    //이메일로 인증 코드를 전송하는 API
     @PostMapping("/send-code")
     public ResponseEntity<String> sendVerificationCode(@RequestBody Map<String, String> body) {
         String email = body.get("email");
@@ -87,6 +131,7 @@ public class LoginController {
     }
 
 
+    //아이디 찾기
     @PostMapping("/find-id")
     public ResponseEntity<String> findId(@RequestBody Map<String, String> body) {
         String email = body.get("email");
@@ -103,6 +148,7 @@ public class LoginController {
         }
     }
 
+    //비밀번호 재설정
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestBody Map<String, String> body) {
         String email = body.get("email");
@@ -126,6 +172,7 @@ public class LoginController {
     }
 
 
+    //비밀번호 재설정 확인
     @PostMapping("/confirm-reset")
     public ResponseEntity<String> confirmReset(@RequestBody Map<String, String> body) {
         String email = body.get("email");
@@ -180,6 +227,7 @@ public class LoginController {
 //            return ResponseEntity.status(404).body(e.getMessage());
 //        } catch (Exception e) {
 //            return ResponseEntity.status(500).body("서버 오류가 발생했습니다.");
+
 
 
 

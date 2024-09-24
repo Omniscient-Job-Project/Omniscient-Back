@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -37,10 +36,10 @@ public class UserEntity implements UserDetails {
     @Column(name = "birth_date")
     private String birthDate; // 생년월일
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(name = "phone_number")
     private String phoneNumber; // 전화번호
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", unique = true)
     private String email; // 이메일
 
     @Column(name = "refresh_token")
@@ -64,14 +63,26 @@ public class UserEntity implements UserDetails {
         this.active = builder.active;
     }
 
+    public UserEntity build() {
+        UserEntity user = new UserEntity();
+        user.userId = this.userId;
+        user.username = this.username;
+        user.password = this.password;
+        user.role = this.role;
+        return user;
+    }
+
     // 기본 생성자
-    public UserEntity() {}
+    public UserEntity() {
+
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         if (this.role != null) {
-            authorities.add(new SimpleGrantedAuthority(this.role.name())); // ROLE_ 접두사 없이 추가
+            authorities.add(new SimpleGrantedAuthority(this.role.name()));
         }
         return authorities;
     }
