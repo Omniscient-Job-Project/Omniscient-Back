@@ -83,4 +83,12 @@ public class UserController {
         String role = userService.getUserRole(userId);
         return ResponseEntity.ok(role);
     }
+    @PutMapping("/delete/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
+        userService.deleteUser(userId);
+        return ResponseEntity.ok().build();
+    }
+
+
 }

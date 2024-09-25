@@ -4,6 +4,7 @@ import com.omniscient.omniscientback.login.model.UserEntity;
 import com.omniscient.omniscientback.login.model.UserDTO;
 import com.omniscient.omniscientback.login.model.UserRole;
 import com.omniscient.omniscientback.login.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -84,5 +85,13 @@ public class UserService {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return user.getRole().name(); // 사용자 역할 반환
+    }
+    @Transactional
+    public void deleteUser(String userId) {
+        UserEntity user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with userId: " + userId));
+
+        // 사용자 상태를 비활성화하거나 실제로 데이터베이스에서 삭제
+        userRepository.delete(user); // 실제로 DB에서 삭제하거나, 필요시 상태를 업데이트하는 로직으로 변경 가능
     }
 }
