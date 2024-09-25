@@ -210,7 +210,7 @@ public class LoginController {
 //
 //            String token = authorization.substring(7); // "Bearer " 이후의 토큰 부분만 가져옴
 
-            // 토큰에서 사용자 ID 추출
+    // 토큰에서 사용자 ID 추출
 //            String userId = jwtTokenProvider.getUserIdFromToken(token);
 //
 //            if (userId != null) {
@@ -245,10 +245,3 @@ public class LoginController {
         }
     }
 }
-
-
-
-
-
-
-

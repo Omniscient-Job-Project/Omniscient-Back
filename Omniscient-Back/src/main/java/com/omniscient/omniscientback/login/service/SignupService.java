@@ -131,10 +131,6 @@ public class SignupService {
     }
 
 
-
-
-
-
     // 로그인
     public boolean authenticate(String userId, String password) {
         System.out.println("Authenticating admin: " + userId);
@@ -144,9 +140,9 @@ public class SignupService {
 
         if (userEntity != null && userEntity.getPassword() != null) {
             boolean passwordMatch = passwordEncoder.matches(password, userEntity.getPassword());
-            boolean isAdmin = userEntity.getRole() == UserRole.ADMIN;
-            System.out.println("Password match: " + passwordMatch + ", Is Admin: " + isAdmin);
-            return passwordMatch && isAdmin;
+            boolean isUser = userEntity.getRole() == UserRole.USER;
+            System.out.println("Password match: " + passwordMatch + ", Is User: " + isUser);
+            return passwordMatch && isUser;
         }
 
         System.out.println("User not found or password is null");
@@ -309,11 +305,3 @@ public class SignupService {
 //            throw new RuntimeException("계정 비활성화 중 오류가 발생했습니다: " + e.getMessage());
 //        }
 //    }
-
-
-
-
-
-
-
-
