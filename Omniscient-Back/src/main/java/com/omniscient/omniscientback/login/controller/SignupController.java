@@ -17,7 +17,6 @@ public class SignupController {
         this.signupService = signupService;
     }
 
-
     //회원가입(사용자)
     @PostMapping("/post")
     public ResponseEntity<String> signup(@RequestBody SignupDTO signupDTO) {
