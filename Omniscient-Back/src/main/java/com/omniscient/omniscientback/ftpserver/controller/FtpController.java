@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/imag")
+@RequestMapping("/api/v1/ftp")
 public class FtpController {
 
     private final FtpImgLoaderUtil2 ftpFileUploadService; // FTP 파일 업로드 및 다운로드를 처리하는 서비스 객체

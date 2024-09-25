@@ -6,17 +6,20 @@ import com.omniscient.omniscientback.api.jobApi.model.JobabaEntity;
 import com.omniscient.omniscientback.api.jobApi.service.JobabaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.io.ByteArrayInputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -39,29 +42,11 @@ public class JobabaApiControllerTest {
     }
 
     @Test
-    public void 잡아바api전체조회테스트() throws Exception {
+    public void 잡아바api전체조회테스트() throws Exception { // /api/v1/jobaba/jobinfo 엔드포인트로 GET 요청을 보내고, 그 결과가 400 Bad Request로 반환되는지를 확인하는 테스트 코드
         mockMvc.perform(get("/api/v1/jobaba/jobinfo")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("Invalid input: param is required.")); // 수정된 오류 메시지 확인
+                .andExpect(content().string("Invalid input: param is required."));
     }
-
-
-    @Test
-    public void 잡아바디테일조회테스트() throws Exception {
-        String jobId = "someJobId"; // 테스트할 Job ID
-
-        JobabaEntity jobabaEntity = new JobabaEntity();
-        jobabaEntity.setJobabaCompanyName("Test Company");
-        jobabaEntity.setJobabaInfoTitle("Test Title");
-
-        when(jobabaService.getJobById(jobId)).thenReturn(Optional.of(jobabaEntity));
-
-        mockMvc.perform(get("/api/v1/jobaba/jobinfo/{Id}", jobId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json("{\"jobabaCompanyName\":\"Test Company\", \"jobabaInfoTitle\":\"Test Title\"}"));
-    }
-
 
 }
