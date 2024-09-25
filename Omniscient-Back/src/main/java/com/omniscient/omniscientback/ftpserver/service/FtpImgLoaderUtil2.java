@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 @Configuration
 public class FtpImgLoaderUtil2 {
 
-    private static final Logger logger = Logger.getLogger(FtpImgLoaderUtil2.class.getName()); // 로깅을 위한 Logger 객체 생성
+    private static final Logger logger = Logger.getLogger(FtpImgLoaderUtil2.class.getName());
 
     @Value("${ftp.server}")
     private String server;
@@ -45,7 +45,6 @@ public class FtpImgLoaderUtil2 {
     private String password = pass;
 
     public FtpImgLoaderUtil2() {
-
     }
 
     // 파일 업로드 메서드
