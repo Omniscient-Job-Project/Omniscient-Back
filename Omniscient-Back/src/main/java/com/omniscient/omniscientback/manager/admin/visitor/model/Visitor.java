@@ -13,7 +13,7 @@ public class Visitor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer visitorId;
 
     private LocalDate visitDate;
     private Integer visitCount;
@@ -21,18 +21,18 @@ public class Visitor {
     public Visitor() {
     }
 
-    public Visitor(Integer id, LocalDate visitDate, Integer visitCount) {
-        this.id = id;
+    public Visitor(Integer visitorId, LocalDate visitDate, Integer visitCount) {
+        this.visitorId = visitorId;
         this.visitDate = visitDate;
         this.visitCount = visitCount;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getVisitorId() {
+        return visitorId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setVisitorId(Integer visitorId) {
+        this.visitorId = visitorId;
     }
 
     public LocalDate getVisitDate() {
@@ -56,11 +56,11 @@ public class Visitor {
         if (this == o) return true;
         if (!(o instanceof Visitor)) return false;
         Visitor visitor = (Visitor) o;
-        return Objects.equals(id, visitor.id);
+        return Objects.equals(visitorId, visitor.visitorId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(visitorId);
     }
 }

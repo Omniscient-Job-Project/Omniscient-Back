@@ -40,7 +40,7 @@ public class VisitorService {
     }
 
     public List<Integer> getDailyVisitors() {
-        LocalDate startDate = LocalDate.now().minusDays(30); // 최근 30일
+        LocalDate startDate = LocalDate.now().minusDays(30);
         List<Visitor> visitors = visitorRepository.findAllByVisitDateBetween(startDate, LocalDate.now());
 
         return IntStream.range(0, 30)
@@ -56,7 +56,7 @@ public class VisitorService {
     }
 
     public List<Integer> getMonthlyVisitors() {
-        LocalDate startDate = LocalDate.now().minusMonths(12); // 최근 12개월
+        LocalDate startDate = LocalDate.now().minusMonths(12);
         List<Visitor> visitors = visitorRepository.findAllByVisitDateBetween(startDate, LocalDate.now());
 
         return IntStream.range(0, 12)

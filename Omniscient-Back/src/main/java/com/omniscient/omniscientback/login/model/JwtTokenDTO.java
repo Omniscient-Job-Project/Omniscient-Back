@@ -7,16 +7,18 @@ public class JwtTokenDTO {
     private long accessTokenExpiry;
     private long refreshTokenExpiry;
     private String errorMessage;
+    private UserRole userRole;
 
     public JwtTokenDTO() {
     }
 
-    public JwtTokenDTO(String accessToken, String refreshToken, long accessTokenExpiry, long refreshTokenExpiry, String errorMessage) {
+    public JwtTokenDTO(String accessToken, String refreshToken, long accessTokenExpiry, long refreshTokenExpiry, String errorMessage, UserRole userRole) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.accessTokenExpiry = accessTokenExpiry;
         this.refreshTokenExpiry = refreshTokenExpiry;
         this.errorMessage = errorMessage;
+        this.userRole = userRole;
     }
 
     public String getErrorMessage() {
@@ -59,6 +61,14 @@ public class JwtTokenDTO {
         this.refreshTokenExpiry = refreshTokenExpiry;
     }
 
+    public UserRole getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
+
     @Override
     public String toString() {
         return "JwtTokenDTO{" +
@@ -67,6 +77,7 @@ public class JwtTokenDTO {
                 ", accessTokenExpiry=" + accessTokenExpiry +
                 ", refreshTokenExpiry=" + refreshTokenExpiry +
                 ", errorMessage='" + errorMessage + '\'' +
+                ", userRole=" + userRole +
                 '}';
     }
 }

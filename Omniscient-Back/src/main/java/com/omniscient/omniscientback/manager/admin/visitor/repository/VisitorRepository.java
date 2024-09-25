@@ -9,5 +9,5 @@ import java.util.List;
 public interface VisitorRepository extends JpaRepository<Visitor, Integer> {
     Visitor findByVisitDate(LocalDate visitDate);
 
-    List<Visitor> findAllByVisitDateBetween(LocalDate startDate, LocalDate endDate); // 날짜 범위 검색
+    List<Visitor> findAllByVisitDateBetween(LocalDate startDate, LocalDate endDate);
 }
