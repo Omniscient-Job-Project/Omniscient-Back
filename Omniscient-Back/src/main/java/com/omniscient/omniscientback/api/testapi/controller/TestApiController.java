@@ -30,11 +30,17 @@ import java.time.format.DateTimeParseException;
 
 @RestController
 @RequestMapping("/api/v1/testjob")
+
 // 한국산업인력공단_국가자격 시험일정 조회 서비스
 public class TestApiController {
 
     @Value("${api_grade.key}")
     private String apiTestKey;
+
+    @PostConstruct
+    public void init() {
+    }
+
 
 
     private final TestApiService testApiService;
@@ -52,14 +58,12 @@ public class TestApiController {
         String dataFormat = "xml";
         String implYy = "2024";
         String qualgbCd = "T";
-        System.out.println(apiTestKey);
 
 
         // URL 생성
         StringBuilder urlBuilder = new StringBuilder(serviceUrl);
         try {
             if (apiTestKey == null || apiTestKey.isEmpty()) {
-                System.out.println(apiTestKey);
                 throw new IllegalArgumentException("API 키가 설정되지 않았습니다.");
             } else {
                 urlBuilder.append("?ServiceKey=").append(URLEncoder.encode(apiTestKey, "UTF-8"));
