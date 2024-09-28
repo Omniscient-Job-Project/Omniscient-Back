@@ -2,30 +2,42 @@ package com.omniscient.omniscientback.api.testapi;
 
 
 import com.omniscient.omniscientback.api.testapi.controller.TestApiController;
+import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@TestPropertySource(properties = {
-        "api_grade.key=testApiKey1"  // API 키를 빈 값으로 설정 시(빈 문자열 생성)
-})
+
 public class TestApiControllerTest {
 
     private MockMvc mockMvc;
 
-    @Value("${api_grade.key:#{null}}")
-    private String apiTestKey;
+    @Value("${api_grade.key}")
+    private String apiTestKey; // API 키 주입
+
+    @PostConstruct
+    public void init() {
+        System.out.println("API Key: " + apiTestKey);
+    }
 
     @InjectMocks
     private TestApiController testApiController;
@@ -66,4 +78,6 @@ public class TestApiControllerTest {
         }).isInstanceOf(AssertionError.class)
                 .hasMessageContaining("API 키가 올바르지 않습니다.");
     }
+
+
 }
