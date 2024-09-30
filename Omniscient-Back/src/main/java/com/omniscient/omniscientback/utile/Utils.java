@@ -48,7 +48,7 @@ public class Utils {
         Utils.USER_PASS = pass;
     }
 
-    private static FTPClient initFtpClient() {
+    public static FTPClient initFtpClient() {
         if(FTP_CLIENT != null){
             return FTP_CLIENT;
         }
