@@ -92,42 +92,37 @@ public class SignupService {
 
     // 관리자 회원가입
     public boolean adminSignup(SignupDTO signupDTO) {
-        logger.info("Validating fields for admin signup: {}", signupDTO);
-        // 필수 필드 검증
-        if (signupDTO.getUserId() == null || signupDTO.getPassword() == null || signupDTO.getUsername() == null) {
+        logger.info("Attempting admin signup for userId: {}", signupDTO.getUserId());
+
+        if (userRepository.existsByUserId(signupDTO.getUserId())) {
+            logger.warn("Admin signup failed: UserId already exists: {}", signupDTO.getUserId());
             return false;
         }
 
-        String userId = signupDTO.getUserId();
-        String password = signupDTO.getPassword();
-        String username = signupDTO.getUsername();
-
-        // 아이디 중복 체크
-        if (userRepository.existsByUserId(signupDTO.getUserId())) {
-            return false; // 이미 존재하는 경우 false 반환
-        }
-
         // 비밀번호 암호화
-        String encodedPassword = passwordEncoder.encode(password);
+        String encodedPassword = passwordEncoder.encode(signupDTO.getPassword());
 
-        // UserEntity 생성
         UserEntity userEntity = new UserEntity.Builder()
-                .userId(signupDTO.getUserId()) // signupDTO에서 사용자 ID 가져오기
-                .username(signupDTO.getUsername()) // signupDTO에서 사용자 이름 가져오기
+                .userId(signupDTO.getUserId())
+                .username(signupDTO.getUsername())
                 .password(encodedPassword)
-                .role(UserRole.ADMIN) // 관리자 역할 설정
-                .userStatus(true) // 기본 사용자 상태 설정
+                .role(UserRole.ADMIN)
+                .userStatus(true)
                 .build();
 
         try {
-            userRepository.save(userEntity); // 사용자 저장
+            userRepository.save(userEntity);
+            logger.info("Admin signup successful for userId: {}", signupDTO.getUserId());
+            return true;
         } catch (Exception e) {
-            // 로그 기록 및 예외 처리
-            e.printStackTrace();
-            return false; // 저장 실패 시 false 반환
+            logger.error("Error during admin signup: ", e);
+            return false;
         }
-
-        return true;
+    }
+    public boolean isAdminSignupFieldsValid(SignupDTO signupDTO) {
+        return signupDTO.getUserId() != null && !signupDTO.getUserId().trim().isEmpty() &&
+                signupDTO.getPassword() != null && !signupDTO.getPassword().trim().isEmpty() &&
+                signupDTO.getUsername() != null && !signupDTO.getUsername().trim().isEmpty();
     }
 
 
@@ -163,20 +158,23 @@ public class SignupService {
 
     //관리자 로그인
     public boolean authenticateAdmin(String userId, String password) {
-        // userRepository에서 userId로 사용자를 찾음
-        UserEntity userEntity = userRepository.findByUserId(userId).orElse(null);
+        logger.info("Attempting to authenticate admin: {}", userId);
 
-        // 사용자 정보가 존재하는지 확인
-        if (userEntity != null && userEntity.getPassword() != null) {
-            // 입력된 비밀번호와 데이터베이스에 저장된 암호화된 비밀번호 비교
-            if (passwordEncoder.matches(password, userEntity.getPassword())) {
-                // 사용자 역할이 ADMIN인지 확인
-                return userEntity.getRole() == UserRole.ADMIN;
-            }
+        UserEntity userEntity = userRepository.findByUserId(userId).orElse(null);
+        if (userEntity == null) {
+            logger.warn("Admin authentication failed: User not found for userId: {}", userId);
+            return false;
         }
 
-        // 관리자가 아니거나 비밀번호가 잘못된 경우 인증 실패
-        return false;
+        logger.info("User found: {}", userEntity);
+        logger.info("User role: {}", userEntity.getRole());
+
+        boolean passwordMatches = passwordEncoder.matches(password, userEntity.getPassword());
+        boolean isAdmin = userEntity.getRole() == UserRole.ADMIN;
+
+        logger.info("Password matches: {}, Is Admin: {}", passwordMatches, isAdmin);
+
+        return passwordMatches && isAdmin;
     }
 
 

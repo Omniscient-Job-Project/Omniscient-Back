@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 
 @RestController
@@ -17,6 +20,7 @@ public class LoginController {
 
     private final SignupService signupService;
     private final JwtTokenProvider jwtTokenProvider;
+    private static final Logger logger = LoggerFactory.getLogger(SignupService.class);
 
     @Autowired
     public LoginController(SignupService signupService, JwtTokenProvider jwtTokenProvider) {
@@ -58,13 +62,13 @@ public class LoginController {
     // 로그인(관리자)
     @PostMapping("/admin/login")
     public ResponseEntity<JwtTokenDTO> adminLogin(@RequestBody SignupDTO signupDTO) {
-        System.out.println("관리자 로그인 요청 받음: " + signupDTO.getUserId());
+        logger.info("Received admin login request: {}", signupDTO);
 
         try {
             boolean isAuthenticated = signupService.authenticateAdmin(signupDTO.getUserId(), signupDTO.getPassword());
 
             if (isAuthenticated) {
-                System.out.println("관리자 인증 성공: " + signupDTO.getUserId());
+                logger.info("Admin authentication successful for userId: {}", signupDTO.getUserId());
                 String accessToken = jwtTokenProvider.createAccessToken(signupDTO.getUserId());
                 String refreshToken = jwtTokenProvider.createRefreshJwt(signupDTO.getUserId());
 
@@ -78,14 +82,13 @@ public class LoginController {
                 );
                 return ResponseEntity.ok(tokenDTO);
             } else {
-                System.out.println("관리자 인증 실패: " + signupDTO.getUserId());
+                logger.warn("Admin authentication failed for userId: {}", signupDTO.getUserId());
                 JwtTokenDTO errorDTO = new JwtTokenDTO();
                 errorDTO.setErrorMessage("관리자 로그인 실패: 잘못된 아이디 또는 비밀번호입니다");
                 return ResponseEntity.status(401).body(errorDTO);
             }
         } catch (Exception e) {
-            System.err.println("관리자 로그인 처리 중 예외 발생: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Error during admin login for userId: {}", signupDTO.getUserId(), e);
             JwtTokenDTO errorDTO = new JwtTokenDTO();
             errorDTO.setErrorMessage("서버 오류: 로그인 처리 중 문제가 발생했습니다");
             return ResponseEntity.status(500).body(errorDTO);
