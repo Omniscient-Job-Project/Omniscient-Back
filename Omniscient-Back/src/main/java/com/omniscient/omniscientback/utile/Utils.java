@@ -58,7 +58,6 @@ public class Utils {
     }
 
     private static FTPClient connectFTP() {
-
         FTPClient ftpClient = new FTPClient();
         ftpClient.setControlEncoding("utf-8");
 

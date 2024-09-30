@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-//시험일정 조회 테스틐  코드
+
 public class TestApiControllerTest {
 
     private MockMvc mockMvc;
