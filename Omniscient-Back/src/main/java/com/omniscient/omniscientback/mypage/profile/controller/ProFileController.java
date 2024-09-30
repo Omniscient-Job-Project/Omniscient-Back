@@ -42,7 +42,7 @@ public class ProFileController {
     }
 
 
-    // 프로필 업데이트
+    // 프로필 업데이트g
     @PutMapping("/update/{id}")
     public ResponseEntity<ProFileEntity> updateProfile(@PathVariable Integer id, @RequestBody ProFileDTO proFileDTO) {
         return ResponseEntity.ok(proFileService.updateProfile(id, proFileDTO));
