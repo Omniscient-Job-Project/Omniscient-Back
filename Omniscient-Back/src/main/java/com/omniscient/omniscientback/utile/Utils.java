@@ -48,7 +48,7 @@ public class Utils {
         Utils.USER_PASS = pass;
     }
 
-    public static FTPClient initFtpClient() {
+    private static FTPClient initFtpClient() {
         if(FTP_CLIENT != null){
             return FTP_CLIENT;
         }
@@ -58,6 +58,7 @@ public class Utils {
     }
 
     private static FTPClient connectFTP() {
+
         FTPClient ftpClient = new FTPClient();
         ftpClient.setControlEncoding("utf-8");
 

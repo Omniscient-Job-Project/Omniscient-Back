@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -23,6 +24,22 @@ public class ProFileService {
     @Autowired
     public ProFileService(ProFileRepository proFileRepository) {
         this.proFileRepository = proFileRepository;
+    }
+
+    public ProFileEntity saveProfile(ProFileDTO profileDTO) {
+        // DTO를 엔티티로 변환
+        ProFileEntity profileEntity = new ProFileEntity();
+        profileEntity.setProfileName(profileDTO.getProfileName());
+        profileEntity.setProfilePosition(profileDTO.getProfilePosition());
+        profileEntity.setProfileEmail(profileDTO.getProfileEmail());
+        profileEntity.setProfilePhone(profileDTO.getProfilePhone());
+        profileEntity.setProfileAge(profileDTO.getProfileAge());
+        profileEntity.setProfileAddress(profileDTO.getProfileAddress());
+        profileEntity.setProfileimageFileName(profileDTO.getProfileimageFileName());
+        profileEntity.setProfileactive(profileDTO.getProfileactive());
+
+        // 엔티티를 DB에 저장
+        return proFileRepository.save(profileEntity);
     }
 
     // 프로필 전체 조회
