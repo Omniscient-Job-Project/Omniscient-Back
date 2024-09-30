@@ -9,7 +9,7 @@ public class Faq {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "faq_id", updatable = false, nullable = false)  // ID 필드는 NULL 값이 없어야 합니다.
-    private Integer id;
+    private Integer faqId;
 
     @Column(name = "faq_question", length = 1000, nullable = false)  // question 필드에 1000자 제한과 NULL 값 불허 설정
     private String question;
@@ -27,20 +27,20 @@ public class Faq {
     public Faq() {
     }
 
-    public Faq(Integer id, String question, String answer, Boolean status, Integer faqViews) {
-        this.id = id;
+    public Faq(Integer faqId, String question, String answer, Boolean status, Integer faqViews) {
+        this.faqId = faqId;
         this.question = question;
         this.answer = answer;
         this.status = status;
         this.faqViews = faqViews;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getFaqId() {
+        return faqId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setFaqId(Integer faqId) {
+        this.faqId = faqId;
     }
 
     public String getQuestion() {
@@ -78,7 +78,7 @@ public class Faq {
     @Override
     public String toString() {
         return "Faq{" +
-                "id=" + id +
+                "faqId=" + faqId +
                 ", question='" + question + '\'' +
                 ", answer='" + answer + '\'' +
                 ", status=" + status +

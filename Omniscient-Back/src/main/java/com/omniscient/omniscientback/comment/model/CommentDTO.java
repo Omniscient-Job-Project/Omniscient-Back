@@ -2,7 +2,7 @@ package com.omniscient.omniscientback.comment.model;
 
 public class CommentDTO {
 
-    private Integer id;
+    private Integer commentId;
     private Integer boardId;
     private String content;
     private String author;
@@ -13,8 +13,8 @@ public class CommentDTO {
     public CommentDTO() {}
 
     // 모든 필드를 포함한 생성자
-    public CommentDTO(Integer id, Integer boardId, String content, String author, String createdAt, boolean active) {
-        this.id = id;
+    public CommentDTO(Integer commentId, Integer boardId, String content, String author, String createdAt, boolean active) {
+        this.commentId = commentId;
         this.boardId = boardId;
         this.content = content;
         this.author = author;
@@ -22,14 +22,12 @@ public class CommentDTO {
         this.active = active;
     }
 
-    // Getters and Setters
-
-    public Integer getId() {
-        return id;
+    public Integer getCommentId() {
+        return commentId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setCommentId(Integer commentId) {
+        this.commentId = commentId;
     }
 
     public Integer getBoardId() {
@@ -75,7 +73,7 @@ public class CommentDTO {
     @Override
     public String toString() {
         return "CommentDTO{" +
-                "id=" + id +
+                "commentId=" + commentId +
                 ", boardId=" + boardId +
                 ", content='" + content + '\'' +
                 ", author='" + author + '\'' +

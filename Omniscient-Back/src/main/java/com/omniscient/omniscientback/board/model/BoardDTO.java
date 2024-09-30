@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class BoardDTO {
-    private Integer id;
+    private Integer boardid;
 
     @NotBlank(message = "제목은 필수 입력 항목입니다.")
     @Size(max = 30, message = "제목은 30자를 초과할 수 없습니다.")
@@ -22,12 +22,15 @@ public class BoardDTO {
     private String createdAt;
     private String updatedAt;
 
-    public Integer getId() {
-        return id;
+    public BoardDTO() {
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public Integer getBoardid() {
+        return boardid;
+    }
+
+    public void setBoardid(Integer boardid) {
+        this.boardid = boardid;
     }
 
     public @NotBlank(message = "제목은 필수 입력 항목입니다.") @Size(max = 30, message = "제목은 30자를 초과할 수 없습니다.") String getTitle() {
@@ -81,7 +84,7 @@ public class BoardDTO {
     @Override
     public String toString() {
         return "BoardDTO{" +
-                "id=" + id +
+                "boardid=" + boardid +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", category=" + category +
@@ -91,6 +94,4 @@ public class BoardDTO {
                 '}';
     }
 
-    public BoardDTO() {
-    }
 }

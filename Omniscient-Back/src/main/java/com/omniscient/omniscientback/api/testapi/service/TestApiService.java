@@ -5,8 +5,8 @@ import com.omniscient.omniscientback.api.testapi.model.TestEntity;
 import com.omniscient.omniscientback.api.testapi.repository.TestApiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +21,6 @@ public class TestApiService {
     }
 
     public void saveTestJob(TestDTO testDTO) {
-        validateTestDTO(testDTO);
 
         TestEntity testEntity = convertToEntity(testDTO);
 
@@ -44,9 +43,6 @@ public class TestApiService {
     private TestEntity convertToEntity(TestDTO testDTO) {
         TestEntity testEntity = new TestEntity();
 
-        testEntity.setNumOfRows(testDTO.getNumOfRows());
-        testEntity.setPageNo(testDTO.getPageNo());
-        testEntity.setDataFormat(testDTO.getDataFormat());
         testEntity.setImplYy(testDTO.getImplYy());
         testEntity.setResultCode(testDTO.getResultCode());
         testEntity.setResultMsg(testDTO.getResultMsg());
@@ -72,33 +68,5 @@ public class TestApiService {
         return testEntity;
     }
 
-    private void validateTestDTO(TestDTO testDTO) {
-        if (testDTO.getImplSeq() == null || testDTO.getImplSeq().isEmpty()) {
-            throw new IllegalArgumentException("ImplSeq는 null 또는 빈 값입니다.");
-        }
 
-        // 날짜 형식 검증 예제 (YYYY-MM-DD)
-        validateDate(testDTO.getDocRegStartDt(), "DocRegStartDt");
-        validateDate(testDTO.getDocRegEndDt(), "DocRegEndDt");
-        validateDate(testDTO.getDocExamStartDt(), "DocExamStartDt");
-        validateDate(testDTO.getDocExamEndDt(), "DocExamEndDt");
-        validateDate(testDTO.getPracRegStartDt(), "PracRegStartDt");
-        validateDate(testDTO.getPracRegEndDt(), "PracRegEndDt");
-        validateDate(testDTO.getPracExamStartDt(), "PracExamStartDt");
-        validateDate(testDTO.getPracExamEndDt(), "PracExamEndDt");
-        validateDate(testDTO.getPracPassDt(), "PracPassDt");
-
-        // 다른 필드에 대한 검증 추가
-    }
-
-    private void validateDate(String date, String fieldName) {
-        if (date == null || date.isEmpty()) {
-            return; // 빈 날짜 필드는 무시 또는 처리 논리에 따라 조정 가능
-        }
-        try {
-            java.time.LocalDate.parse(date); // ISO_LOCAL_DATE 형식 (YYYY-MM-DD)으로 파싱 시도
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException(fieldName + " 유효한 날짜 형식이 아닙니다.");
-        }
-    }
 }

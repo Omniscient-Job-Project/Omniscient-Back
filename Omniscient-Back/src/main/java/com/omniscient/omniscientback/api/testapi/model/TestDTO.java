@@ -1,15 +1,9 @@
 package com.omniscient.omniscientback.api.testapi.model;
 
+import java.time.LocalDate;
+
 public class TestDTO {
 
-    // 한 페이지 결과 수
-    private String numOfRows;
-
-    // 페이지 번호
-    private String pageNo;
-
-    // 응답 데이터 포맷
-    private String dataFormat;
 
     // 시행년도
     private String implYy;
@@ -30,34 +24,34 @@ public class TestDTO {
     private String description;
 
     // 필기시험 원서접수 시작일자
-    private String docRegStartDt;
+    private LocalDate docRegStartDt;
 
     // 필기시험 원서접수 종료일자
-    private String docRegEndDt;
+    private LocalDate docRegEndDt;
 
     // 필기시험 시작일자
-    private String docExamStartDt;
+    private LocalDate docExamStartDt;
 
     // 필기시험 종료일자
-    private String docExamEndDt;
+    private LocalDate docExamEndDt;
 
     // 필기시험 합격(예정)자 발표일자
-    private String docPassDt;
+    private LocalDate docPassDt;
 
     // 실기(작업)/면접 시험 원서접수 시작일자
-    private String pracRegStartDt;
+    private LocalDate pracRegStartDt;
 
     // 실기(작업)/면접 시험 원서접수 종료일자
-    private String pracRegEndDt;
+    private LocalDate pracRegEndDt;
 
     // 실기(작업)/면접 시험 시작일자
-    private String pracExamStartDt;
+    private LocalDate pracExamStartDt;
 
     // 실기(작업)/면접 시험 종료일자
-    private String pracExamEndDt;
+    private LocalDate pracExamEndDt;
 
     // 실기(작업)/면접 합격자 발표일자
-    private String pracPassDt;
+    private LocalDate pracPassDt;
 
     // 데이터 총 개수
     private String totalCount;
@@ -65,10 +59,7 @@ public class TestDTO {
     public TestDTO() {
     }
 
-    public TestDTO(String numOfRows, String pageNo, String dataFormat, String implYy, String resultCode, String resultMsg, String implSeq, String qualgbNm, String description, String docRegStartDt, String docRegEndDt, String docExamStartDt, String docExamEndDt, String docPassDt, String pracRegStartDt, String pracRegEndDt, String pracExamStartDt, String pracExamEndDt, String pracPassDt, String totalCount) {
-        this.numOfRows = numOfRows;
-        this.pageNo = pageNo;
-        this.dataFormat = dataFormat;
+    public TestDTO(String implYy, String resultCode, String resultMsg, String implSeq, String qualgbNm, String description, LocalDate docRegStartDt, LocalDate docRegEndDt, LocalDate docExamStartDt, LocalDate docExamEndDt, LocalDate docPassDt, LocalDate pracRegStartDt, LocalDate pracRegEndDt, LocalDate pracExamStartDt, LocalDate pracExamEndDt, LocalDate pracPassDt, String totalCount) {
         this.implYy = implYy;
         this.resultCode = resultCode;
         this.resultMsg = resultMsg;
@@ -86,30 +77,6 @@ public class TestDTO {
         this.pracExamEndDt = pracExamEndDt;
         this.pracPassDt = pracPassDt;
         this.totalCount = totalCount;
-    }
-
-    public String getNumOfRows() {
-        return numOfRows;
-    }
-
-    public void setNumOfRows(String numOfRows) {
-        this.numOfRows = numOfRows;
-    }
-
-    public String getPageNo() {
-        return pageNo;
-    }
-
-    public void setPageNo(String pageNo) {
-        this.pageNo = pageNo;
-    }
-
-    public String getDataFormat() {
-        return dataFormat;
-    }
-
-    public void setDataFormat(String dataFormat) {
-        this.dataFormat = dataFormat;
     }
 
     public String getImplYy() {
@@ -160,83 +127,83 @@ public class TestDTO {
         this.description = description;
     }
 
-    public String getDocRegStartDt() {
+    public LocalDate getDocRegStartDt() {
         return docRegStartDt;
     }
 
-    public void setDocRegStartDt(String docRegStartDt) {
+    public void setDocRegStartDt(LocalDate docRegStartDt) {
         this.docRegStartDt = docRegStartDt;
     }
 
-    public String getDocRegEndDt() {
+    public LocalDate getDocRegEndDt() {
         return docRegEndDt;
     }
 
-    public void setDocRegEndDt(String docRegEndDt) {
+    public void setDocRegEndDt(LocalDate docRegEndDt) {
         this.docRegEndDt = docRegEndDt;
     }
 
-    public String getDocExamStartDt() {
+    public LocalDate getDocExamStartDt() {
         return docExamStartDt;
     }
 
-    public void setDocExamStartDt(String docExamStartDt) {
+    public void setDocExamStartDt(LocalDate docExamStartDt) {
         this.docExamStartDt = docExamStartDt;
     }
 
-    public String getDocExamEndDt() {
+    public LocalDate getDocExamEndDt() {
         return docExamEndDt;
     }
 
-    public void setDocExamEndDt(String docExamEndDt) {
+    public void setDocExamEndDt(LocalDate docExamEndDt) {
         this.docExamEndDt = docExamEndDt;
     }
 
-    public String getDocPassDt() {
+    public LocalDate getDocPassDt() {
         return docPassDt;
     }
 
-    public void setDocPassDt(String docPassDt) {
+    public void setDocPassDt(LocalDate docPassDt) {
         this.docPassDt = docPassDt;
     }
 
-    public String getPracRegStartDt() {
+    public LocalDate getPracRegStartDt() {
         return pracRegStartDt;
     }
 
-    public void setPracRegStartDt(String pracRegStartDt) {
+    public void setPracRegStartDt(LocalDate pracRegStartDt) {
         this.pracRegStartDt = pracRegStartDt;
     }
 
-    public String getPracRegEndDt() {
+    public LocalDate getPracRegEndDt() {
         return pracRegEndDt;
     }
 
-    public void setPracRegEndDt(String pracRegEndDt) {
+    public void setPracRegEndDt(LocalDate pracRegEndDt) {
         this.pracRegEndDt = pracRegEndDt;
     }
 
-    public String getPracExamStartDt() {
+    public LocalDate getPracExamStartDt() {
         return pracExamStartDt;
     }
 
-    public void setPracExamStartDt(String pracExamStartDt) {
+    public void setPracExamStartDt(LocalDate pracExamStartDt) {
         this.pracExamStartDt = pracExamStartDt;
     }
 
-    public String getPracExamEndDt() {
+    public LocalDate getPracExamEndDt() {
         return pracExamEndDt;
     }
 
-    public void setPracExamEndDt(String pracExamEndDt) {
+    public void setPracExamEndDt(LocalDate pracExamEndDt) {
         this.pracExamEndDt = pracExamEndDt;
     }
 
-    public String getPracPassDt() {
+    public LocalDate getPracPassDt() {
         return pracPassDt;
     }
 
-    public void setPracPassDt(String pracPassDt) {
+    public void setPracPassDt(LocalDate pracPassDt) {
         this.pracPassDt = pracPassDt;
     }
 
@@ -251,25 +218,22 @@ public class TestDTO {
     @Override
     public String toString() {
         return "TestDTO{" +
-                "numOfRows='" + numOfRows + '\'' +
-                ", pageNo='" + pageNo + '\'' +
-                ", dataFormat='" + dataFormat + '\'' +
-                ", implYy='" + implYy + '\'' +
+                "implYy='" + implYy + '\'' +
                 ", resultCode='" + resultCode + '\'' +
                 ", resultMsg='" + resultMsg + '\'' +
                 ", implSeq='" + implSeq + '\'' +
                 ", qualgbNm='" + qualgbNm + '\'' +
                 ", description='" + description + '\'' +
-                ", docRegStartDt='" + docRegStartDt + '\'' +
-                ", docRegEndDt='" + docRegEndDt + '\'' +
-                ", docExamStartDt='" + docExamStartDt + '\'' +
-                ", docExamEndDt='" + docExamEndDt + '\'' +
-                ", docPassDt='" + docPassDt + '\'' +
-                ", pracRegStartDt='" + pracRegStartDt + '\'' +
-                ", pracRegEndDt='" + pracRegEndDt + '\'' +
-                ", pracExamStartDt='" + pracExamStartDt + '\'' +
-                ", pracExamEndDt='" + pracExamEndDt + '\'' +
-                ", pracPassDt='" + pracPassDt + '\'' +
+                ", docRegStartDt=" + docRegStartDt +
+                ", docRegEndDt=" + docRegEndDt +
+                ", docExamStartDt=" + docExamStartDt +
+                ", docExamEndDt=" + docExamEndDt +
+                ", docPassDt=" + docPassDt +
+                ", pracRegStartDt=" + pracRegStartDt +
+                ", pracRegEndDt=" + pracRegEndDt +
+                ", pracExamStartDt=" + pracExamStartDt +
+                ", pracExamEndDt=" + pracExamEndDt +
+                ", pracPassDt=" + pracPassDt +
                 ", totalCount='" + totalCount + '\'' +
                 '}';
     }

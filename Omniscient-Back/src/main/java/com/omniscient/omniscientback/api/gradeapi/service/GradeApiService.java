@@ -34,16 +34,13 @@ public class GradeApiService {
         return gradeApiRepository.findAll();
     }
 
-    public Optional<GradeEntity> getGradeById(Integer id) {
-        return gradeApiRepository.findById(id);
+    public Optional<GradeEntity> getGradeById(Integer gradeId) {
+        return gradeApiRepository.findById(gradeId);
     }
 
     private GradeEntity convertToEntity(GradeDTO gradeDTO) {
         GradeEntity gradeEntity = new GradeEntity();
 
-        gradeEntity.setGrdCd(gradeDTO.getGrdCd());
-        gradeEntity.setBaseYY(gradeDTO.getBaseYY());
-        gradeEntity.setPageNo(gradeDTO.getPageNo());
         gradeEntity.setNumOfRows(gradeDTO.getNumOfRows());
         gradeEntity.setResultCode(gradeDTO.getResultCode());
         gradeEntity.setResultMsg(gradeDTO.getResultMsg());

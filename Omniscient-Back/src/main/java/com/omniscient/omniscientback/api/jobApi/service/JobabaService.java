@@ -5,6 +5,7 @@ import com.omniscient.omniscientback.api.jobApi.model.JobabaEntity;
 import com.omniscient.omniscientback.api.jobApi.repository.JobabaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,8 @@ public class JobabaService {
         this.jobabaRepository = jobabaRepository;
     }
 
-    public void saveJob(JobTotalDTO jobDTO) {
+    @Transactional
+    public boolean saveJob(JobTotalDTO jobDTO) {
         JobabaEntity jobabaEntity = new JobabaEntity();
 
         jobabaEntity.setJobabaCompanyName(jobDTO.getCompanyName());
@@ -34,7 +36,12 @@ public class JobabaService {
         jobabaEntity.setJobabaPostedDate(jobDTO.getPostedDate());  // LocalDate로 저장
         jobabaEntity.setJobabaClosingDate(jobDTO.getClosingDate());  // LocalDate로 저장
 
-        jobabaRepository.save(jobabaEntity);
+        try {
+            jobabaRepository.save(jobabaEntity); // 저장 시도
+            return true; // 저장 성공 시 true 반환
+        } catch (Exception e) {
+            return false; // 저장 실패 시 false 반환
+        }
     }
 
     public List<JobabaEntity> getAllJobs() {

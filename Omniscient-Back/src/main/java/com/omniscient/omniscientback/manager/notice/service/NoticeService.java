@@ -33,51 +33,37 @@ public class NoticeService {
         notice.setUserId(noticeDTO.getUserId());
         notice.setNoticeTitle(noticeDTO.getNoticeTitle());
         notice.setNoticeContent(noticeDTO.getNoticeContent());
-        notice.setNoticeCreateAt(noticeDTO.getNoticeCreateAt());
-        notice.setNoticeUpdateAt(noticeDTO.getNoticeUpdateAt());
-        notice.setNoticeStatus(noticeDTO.getNoticeStatus());  // 상태 필드 설정
+        notice.setNoticeCreateAt(LocalDateTime.now()); // 생성 시간 설정
+        notice.setNoticeUpdateAt(LocalDateTime.now()); // 업데이트 시간 설정
+        notice.setNoticeStatus(noticeDTO.getNoticeStatus());
 
         return noticeRepository.save(notice);
     }
 
     @Transactional
-    public Notice updateNotice(Notice notice) {
-        if (notice.getNoticeId() == null || !noticeRepository.existsById(notice.getNoticeId())) {
-            throw new IllegalArgumentException("Invalid notice ID");
-        }
-
-        Notice existingNotice = noticeRepository.findById(notice.getNoticeId())
+    public Notice updateNotice(Integer noticeId, NoticeDTO noticeDTO) {
+        Notice existingNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid notice ID"));
 
-        existingNotice.setNoticeTitle(notice.getNoticeTitle());
-        existingNotice.setNoticeContent(notice.getNoticeContent());
-        existingNotice.setNoticeUpdateAt(notice.getNoticeUpdateAt() != null ? notice.getNoticeUpdateAt() : LocalDateTime.now());
-        existingNotice.setNoticeStatus(notice.getNoticeStatus()); // 상태 필드도 업데이트
+        existingNotice.setNoticeTitle(noticeDTO.getNoticeTitle());
+        existingNotice.setNoticeContent(noticeDTO.getNoticeContent());
+        existingNotice.setNoticeUpdateAt(LocalDateTime.now()); // 업데이트 시간 설정
+        existingNotice.setNoticeStatus(noticeDTO.getNoticeStatus());
 
         return noticeRepository.save(existingNotice);
     }
 
     @Transactional
-    public boolean deleteNotice(Integer noticeId) {
-        Optional<Notice> noticeOpt = noticeRepository.findById(noticeId);
-        if (noticeOpt.isEmpty()) {
-            return false;
-        }
-        Notice notice = noticeOpt.get();
-        notice.setNoticeStatus(false);
+    public void softDeleteNotice(Integer noticeId) {
+        Notice notice = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid notice ID"));
+
+        notice.setNoticeStatus(false); // 상태를 비활성화로 변경
         noticeRepository.save(notice);
-        return true;
-    }
-
-
-    @Transactional
-    public Notice save(NoticeDTO noticeDTO) {
-        return createNotice(noticeDTO); // createNotice()와 동일한 동작 수행
     }
 
     @Transactional
     public Notice incrementViews(Integer noticeId) {
-        System.out.println("Incrementing views for noticeId: " + noticeId);
         return noticeRepository.findById(noticeId)
                 .map(notice -> {
                     notice.setNoticeViews(notice.getNoticeViews() + 1);
@@ -85,5 +71,4 @@ public class NoticeService {
                 })
                 .orElse(null);
     }
-
 }

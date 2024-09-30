@@ -3,53 +3,54 @@ package com.omniscient.omniscientback.login.model;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
+import org.springframework.security.core.userdetails.UserDetails;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
-public class UserEntity {
+@Table(name = "user_entity")
+public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id; // 변경된 부분: 'Id'를 'id'로 수정
+    private Integer id;
 
-    @Column(name = "user_id", nullable = false)
-    private String userId;
+    @Column(name = "user_id", nullable = false, unique = true)
+    private String userId; // 사용자 ID
 
     @Column(name = "user_name", nullable = false)
-    private String username;
+    private String username; // 사용자 이름
 
     @Column(name = "user_password", nullable = false)
-    private String password;
+    private String password; // 비밀번호
 
     @Column(name = "user_status")
-    private boolean userStatus;
+    private boolean userStatus; // 사용자 상태
 
-    @Enumerated(EnumType.STRING) // Enum을 문자열로 저장
-    @Column(name = "user_role")
-    private UserRole role;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_role", nullable = false)
+    private UserRole role; // 사용자 역할
 
     @Column(name = "birth_date")
-    private String birthDate;
+    private String birthDate; // 생년월일
 
-    @Column(name = "phone_number", nullable = false)
-    private String phoneNumber;
+    @Column(name = "phone_number")
+    private String phoneNumber; // 전화번호
 
-    @Column(name = "email", nullable = false)
-    private String email;
+    @Column(name = "email", unique = true)
+    private String email; // 이메일
 
-    @Column(name = "refresh_token", nullable = false) // 변경된 부분: 'refresh_Token'을 'refresh_token'으로 수정
-    private String refreshToken;
+    @Column(name = "refresh_token")
+    private String refreshToken; // 리프레시 토큰
 
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        // 사용자의 권한을 반환하는 로직
-        return List.of(new SimpleGrantedAuthority("ROLE_USER")); // 예시로 ROLE_USER 권한 반환
-    }
+    @Column(name = "is_active")
+    private boolean active = true; // 활성화 상태
 
+    // Builder 패턴을 위한 생성자
     private UserEntity(Builder builder) {
-        this.id = builder.id; // 변경된 부분: 'Id'를 'id'로 수정
+        this.id = builder.id;
         this.userId = builder.userId;
         this.username = builder.username;
         this.password = builder.password;
@@ -59,25 +60,85 @@ public class UserEntity {
         this.phoneNumber = builder.phoneNumber;
         this.email = builder.email;
         this.refreshToken = builder.refreshToken;
+        this.active = builder.active;
     }
 
+    public UserEntity build() {
+        UserEntity user = new UserEntity();
+        user.userId = this.userId;
+        user.username = this.username;
+        user.password = this.password;
+        user.role = this.role;
+        return user;
+    }
+
+    // 기본 생성자
     public UserEntity() {
+
     }
 
-    // Builder 패턴 적용
-    public static class Builder {
-        private Integer id; // 변경된 부분: 'Id'를 'id'로 수정
-        private String userId;
-        private String username;
-        private String password;
-        private boolean userStatus;
-        private UserRole role;
-        private String birthDate;
-        private String phoneNumber;
-        private String email;
-        private String refreshToken;
 
-        public Builder id(Integer id) { // 변경된 부분: 'Id'를 'id'로 수정
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        if (this.role != null) {
+            authorities.add(new SimpleGrantedAuthority(this.role.name()));
+        }
+        return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return password; // 비밀번호 반환
+    }
+
+    @Override
+    public String getUsername() {
+        return username; // 사용자 이름 반환
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true; // 계정 만료 여부
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true; // 계정 잠김 여부
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true; // 자격 증명 만료 여부
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return userStatus; // 사용자 활성화 여부
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role; // 사용자 역할 설정
+    }
+
+    public UserRole getRole() {
+        return role; // 사용자 역할 반환
+    }
+
+    public static class Builder {
+        private Integer id; // 사용자 ID
+        private String userId; // 사용자 ID
+        private String username; // 사용자 이름
+        private String password; // 비밀번호
+        private boolean userStatus; // 사용자 상태
+        private UserRole role; // 사용자 역할
+        private String birthDate; // 생년월일
+        private String phoneNumber; // 전화번호
+        private String email; // 이메일
+        private String refreshToken; // 리프레시 토큰
+        private boolean active = true;
+
+        public Builder id(Integer id) {
             this.id = id;
             return this;
         }
@@ -127,13 +188,18 @@ public class UserEntity {
             return this;
         }
 
-        // build() 메서드: UserEntity 객체를 반환
+        public Builder active(boolean active) {
+            this.active = active;
+            return this;
+        }
+
         public UserEntity build() {
-            return new UserEntity(this);
+            return new UserEntity(this); // UserEntity 객체 반환
         }
     }
 
-    public Integer getId() { // 변경된 부분: 'Id'를 'id'로 수정
+    // Getter 및 Setter 메서드
+    public Integer getId() {
         return id;
     }
 
@@ -141,20 +207,8 @@ public class UserEntity {
         return userId;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
     public boolean isUserStatus() {
         return userStatus;
-    }
-
-    public UserRole getRole() {
-        return role;
     }
 
     public String getBirthDate() {
@@ -173,10 +227,6 @@ public class UserEntity {
         return refreshToken;
     }
 
-    public void setId(Integer id) { // 변경된 부분: 'Id'를 'id'로 수정
-        this.id = id;
-    }
-
     public void setUserId(String userId) {
         this.userId = userId;
     }
@@ -191,10 +241,6 @@ public class UserEntity {
 
     public void setUserStatus(boolean userStatus) {
         this.userStatus = userStatus;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
     }
 
     public void setBirthDate(String birthDate) {

@@ -122,7 +122,8 @@ public class JwtTokenProvider {
         return new JwtTokenDTO(accessToken, refreshToken,
                 ExpireTime.ACCESS_TOKEN_EXPIRE_TIME,
                 ExpireTime.REFRESH_TOKEN_EXPIRE_TIME,
-                null); // 또는 적절한 에러 메시지를 여기에 넣어줍니다.
+                null,
+                null);
     }
 
 
@@ -147,7 +148,11 @@ public class JwtTokenProvider {
     // 토큰 정보를 검증하는 메서드
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .setAllowedClockSkewSeconds(60)  // 60초의 시간 차이를 허용
+                    .build()
+                    .parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
             System.err.println("Invalid JWT Token: " + e.getMessage());
@@ -179,5 +184,40 @@ public class JwtTokenProvider {
         }
         return null;
     }
+
+    // 토큰에서 사용자 ID를 추출하는 메서드
+    public String getUserIdFromToken(String token) {
+        try {
+            Claims claims = parseClaims(token);
+            return claims.getSubject();
+        } catch (ExpiredJwtException e) {
+            throw new JwtTokenException("토큰이 만료되었습니다.");
+        } catch (JwtException e) {
+            throw new JwtTokenException("유효하지 않은 토큰입니다.");
+        }
+    }
+
+
+    // 새로운 Access Token 발급 메서드
+    public String renewAccessToken(String refreshToken) {
+        try {
+            // Refresh Token 검증 (만료되었으면 ExpiredJwtException 발생)
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(refreshToken);
+
+            // Refresh Token이 유효한 경우 사용자 ID 추출
+            String userId = getUserIdFromToken(refreshToken);
+
+            // 새로운 Access Token 발급
+            return createAccessToken(userId);
+        } catch (ExpiredJwtException e) {
+            throw new JwtTokenException("Refresh Token이 만료되었습니다.");
+        } catch (JwtException e) {
+            throw new JwtTokenException("유효하지 않은 Refresh Token입니다.");
+        }
+    }
+
 
 }
