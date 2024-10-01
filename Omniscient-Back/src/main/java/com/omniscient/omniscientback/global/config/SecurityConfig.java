@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,6 +24,13 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
+    // RoleHierarchy 설정 추가
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
+        return roleHierarchy;
+    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -36,7 +45,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/login/admin/login").permitAll()
                         .requestMatchers("/api/v1/signup/admin/signup").permitAll()
                         .requestMatchers("/api/v1/notice/**").permitAll()
+                        .requestMatchers("/api/v1/testjob").permitAll()  // 인증 없이 접근 허용
+                        // 경로 변수 {userId}를 '*'로 수정하여 경로 매칭 정확도 향상
                         .requestMatchers(HttpMethod.PUT, "/api/v1/user/{userId}").hasRole("ADMIN") // 관리자만 허용
+                        .requestMatchers(HttpMethod.GET, "/api/v1/user/me").authenticated() // 인증된 사용자만 허용
                         .requestMatchers("/api/**").permitAll()
 
                         .anyRequest().authenticated()
@@ -46,11 +58,8 @@ public class SecurityConfig {
         return http.build();
     }
 
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
-
-
