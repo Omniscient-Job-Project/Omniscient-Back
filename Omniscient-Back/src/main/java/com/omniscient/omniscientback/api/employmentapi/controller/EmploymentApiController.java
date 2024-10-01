@@ -35,9 +35,7 @@ public class EmploymentApiController {
     }
 
     @GetMapping
-    public String getWomanList(
-            @RequestParam(defaultValue = "1") Integer pIndex,
-            @RequestParam(defaultValue = "107") Integer pSize) throws IOException {
+    public String getWomanList(Integer pIndex, Integer pSize) throws IOException {
 
 
         String serviceUrl = "https://openapi.gg.go.kr/GGEMPLTSP";
