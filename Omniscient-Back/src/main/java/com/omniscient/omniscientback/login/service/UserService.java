@@ -30,16 +30,15 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    // 특정 사용자 조회
-    public UserEntity getUserById(Integer id) {
-        return userRepository.findById(id).orElse(null);
+    // 특정 사용자 조회 (userId로 검색)
+    public UserEntity getUserByUserId(String userId) { // userId를 String으로 변경
+        return userRepository.findByUserId(userId).orElseThrow(() -> new UsernameNotFoundException("User not found with userId: " + userId));
     }
 
-    // 현재 로그인한 사용자 조회 (userId로 조회)
+    // 현재 로그인한 사용자 조회
     public UserEntity getCurrentUser() {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with userId: " + userId));
+        return getUserByUserId(userId); // 재사용
     }
 
     // 회원수 조회 (관리자 전용)
@@ -64,34 +63,33 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // 사용자 업데이트
-    public UserEntity updateUser(Integer userId, UserDTO userDto) {
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    // 사용자 업데이트 (userId를 String으로 변경)
+    public UserEntity updateUser(String userId, UserDTO userDto) {
+        UserEntity user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with userId: " + userId));
         user.setRole(UserRole.valueOf(userDto.getRole())); // 역할 업데이트
         return userRepository.save(user);
     }
 
-    // 사용자 역할 설정
-    public void setUserRole(Integer userId, String role) {
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    // 사용자 역할 설정 (userId를 String으로 처리)
+    public void setUserRole(String userId, String role) {
+        UserEntity user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with userId: " + userId));
         user.setRole(UserRole.valueOf(role)); // 역할 업데이트
         userRepository.save(user);
     }
 
     // 사용자 역할 조회
-    public String getUserRole(Integer userId) {
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public String getUserRole(String userId) { // userId를 String으로 변경
+        UserEntity user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with userId: " + userId));
         return user.getRole().name(); // 사용자 역할 반환
     }
+
     @Transactional
     public void deleteUser(String userId) {
         UserEntity user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with userId: " + userId));
-
-        // 사용자 상태를 비활성화하거나 실제로 데이터베이스에서 삭제
-        userRepository.delete(user); // 실제로 DB에서 삭제하거나, 필요시 상태를 업데이트하는 로직으로 변경 가능
+        userRepository.delete(user); // DB에서 사용자 삭제
     }
 }

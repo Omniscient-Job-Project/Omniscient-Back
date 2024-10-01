@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -35,7 +36,6 @@ public class UserController {
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserEntity> getCurrentUser() {
-        // 현재 인증된 사용자 정보 가져오기
         UserEntity currentUser = userService.getCurrentUser();
         return ResponseEntity.ok(currentUser);
     }
@@ -43,8 +43,8 @@ public class UserController {
     // 특정 사용자 정보 조회 (관리자 또는 해당 사용자만 가능)
     @GetMapping("/{userId}")
     @PreAuthorize("hasRole('ADMIN') or #userId == authentication.name")
-    public ResponseEntity<UserEntity> getUserById(@PathVariable Integer userId) {
-        UserEntity user = userService.getUserById(userId);
+    public ResponseEntity<UserEntity> getUserById(@PathVariable String userId) { // userId를 String으로 변경
+        UserEntity user = userService.getUserByUserId(userId);
         return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
     }
 
@@ -56,39 +56,29 @@ public class UserController {
         return ResponseEntity.ok(count);
     }
 
+    // 사용자 정보 수정 (관리자 또는 본인만 가능)
     @PutMapping("/{userId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserEntity> updateUser(@PathVariable Integer userId, @Valid @RequestBody UserDTO userDto) {
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.name")
+    public ResponseEntity<UserEntity> updateUser(@PathVariable String userId, @Valid @RequestBody UserDTO userDto) {
         UserEntity updatedUser = userService.updateUser(userId, userDto);
         return ResponseEntity.ok(updatedUser);
     }
 
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserEntity> createUser(@Valid @RequestBody UserDTO userDto) {
-        UserEntity user = userService.createUser(userDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
-    }
-
+    // 사용자 역할 변경 (관리자만 가능)
     @PutMapping("/{userId}/role")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> setUserRole(@PathVariable Integer userId, @RequestParam String role) {
-        userService.setUserRole(userId, role);
+    public ResponseEntity<Void> setUserRole(@PathVariable String userId, @RequestBody Map<String, String> body) {
+        String role = body.get("role");
+        userService.setUserRole(userId, role); // 역할 변경
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{userId}/role")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> getUserRole(@PathVariable Integer userId) {
-        String role = userService.getUserRole(userId);
-        return ResponseEntity.ok(role);
-    }
+
+    // 사용자 삭제 (관리자만 가능, PUT 사용)
     @PutMapping("/delete/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
         userService.deleteUser(userId);
         return ResponseEntity.ok().build();
     }
-
-
 }
